@@ -22,7 +22,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } => "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Target, TrendingDown, TrendingUp, Scale, Apple, Scissors, Beef } from "lucide-react"; // Importar ícones
 import { Label } from "@/components/ui/label"; // Importar Label
@@ -41,6 +41,8 @@ const UserGoalsForm = () => {
       goal: undefined,
     },
   });
+
+  const selectedGoal = form.watch("goal"); // Observar o valor selecionado
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
@@ -84,53 +86,77 @@ const UserGoalsForm = () => {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex flex-col space-y-3"
+                        className="flex flex-col space-y-2" // Ajustado para space-y-2 para consistência
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
+                        <FormItem
+                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                            selectedGoal === "weight_loss" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="weight_loss" id="goal-weight-loss" className="sr-only" />
                           </FormControl>
-                          <Label htmlFor="goal-weight-loss" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                          <Label htmlFor="goal-weight-loss" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <TrendingDown className="size-4 mr-2 text-primary" /> Emagrecimento
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
+                        <FormItem
+                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                            selectedGoal === "muscle_gain" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="muscle_gain" id="goal-muscle-gain" className="sr-only" />
                           </FormControl>
-                          <Label htmlFor="goal-muscle-gain" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                          <Label htmlFor="goal-muscle-gain" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <TrendingUp className="size-4 mr-2 text-primary" /> Ganho de Massa Muscular
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
+                        <FormItem
+                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                            selectedGoal === "maintenance" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="maintenance" id="goal-maintenance" className="sr-only" />
                           </FormControl>
-                          <Label htmlFor="goal-maintenance" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                          <Label htmlFor="goal-maintenance" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <Scale className="size-4 mr-2 text-primary" /> Manutenção de Peso
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
+                        <FormItem
+                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                            selectedGoal === "bulking" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="bulking" id="goal-bulking" className="sr-only" />
                           </FormControl>
-                          <Label htmlFor="goal-bulking" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                          <Label htmlFor="goal-bulking" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <Beef className="size-4 mr-2 text-primary" /> Bulking (Ganho de peso para massa)
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
+                        <FormItem
+                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                            selectedGoal === "cutting" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="cutting" id="goal-cutting" className="sr-only" />
                           </FormControl>
-                          <Label htmlFor="goal-cutting" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                          <Label htmlFor="goal-cutting" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <Scissors className="size-4 mr-2 text-primary" /> Cutting (Definição muscular)
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
+                        <FormItem
+                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                            selectedGoal === "healthy_eating" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="healthy_eating" id="goal-healthy-eating" className="sr-only" />
                           </FormControl>
-                          <Label htmlFor="goal-healthy-eating" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                          <Label htmlFor="goal-healthy-eating" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <Apple className="size-4 mr-2 text-primary" /> Apenas ter uma alimentação saudável
                           </Label>
                         </FormItem>
