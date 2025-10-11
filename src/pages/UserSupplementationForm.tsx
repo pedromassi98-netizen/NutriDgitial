@@ -28,7 +28,7 @@ import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Pill, Check, X, Milk, Zap, Heart, TrendingUp, TrendingDown, Apple, ShieldCheck } from "lucide-react"; // Importar ícones
+import { Pill, Check, X, Milk, Zap, Heart, TrendingUp, TrendingDown, Apple, ShieldCheck, Scissors, Fish, Coffee } from "lucide-react"; // Importar ícones
 import { Label } from "@/components/ui/label"; // Importar Label
 
 const formSchema = z.object({

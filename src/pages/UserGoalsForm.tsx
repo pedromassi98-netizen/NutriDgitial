@@ -24,7 +24,7 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Target, TrendingDown, TrendingUp, Scale, Apple, Cut, Beef } from "lucide-react"; // Importar ícones
+import { Target, TrendingDown, TrendingUp, Scale, Apple, Scissors, Beef } from "lucide-react"; // Importar ícones
 
 const formSchema = z.object({
   goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "bulking", "cutting", "healthy_eating"], {
@@ -122,7 +122,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="cutting" id="goal-cutting" className="sr-only" />
                           </FormControl>
                           <Label htmlFor="goal-cutting" className="flex items-center font-normal text-foreground cursor-pointer w-full">
-                            <Cut className="size-4 mr-2 text-primary" /> Cutting (Definição muscular)
+                            <Scissors className="size-4 mr-2 text-primary" /> Cutting (Definição muscular)
                           </Label>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
