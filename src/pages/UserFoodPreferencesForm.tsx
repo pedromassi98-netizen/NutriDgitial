@@ -143,9 +143,14 @@ const UserFoodPreferencesForm = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Finalizar e Gerar Dieta 🎉
-              </Button>
+              <div className="flex justify-between space-x-4">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+                  Voltar ⬅️
+                </Button>
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  Finalizar e Gerar Dieta 🎉
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

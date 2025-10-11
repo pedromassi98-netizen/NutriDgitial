@@ -130,9 +130,14 @@ const UserGoalsForm = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Próximo ➡️
-              </Button>
+              <div className="flex justify-between space-x-4">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+                  Voltar ⬅️
+                </Button>
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  Próximo ➡️
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

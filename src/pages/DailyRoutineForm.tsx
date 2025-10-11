@@ -29,6 +29,7 @@ const formSchema = z.object({
   breakfastTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   lunchTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   snackTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).").optional().or(z.literal('')),
+  dinnerTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."), // Novo campo
   sleepTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
 });
 
@@ -41,6 +42,7 @@ const DailyRoutineForm = () => {
       breakfastTime: "",
       lunchTime: "",
       snackTime: "",
+      dinnerTime: "", // Valor padrão para o novo campo
       sleepTime: "",
     },
   });
@@ -124,6 +126,19 @@ const DailyRoutineForm = () => {
               />
               <FormField
                 control={form.control}
+                name="dinnerTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Que horas você janta? 🍲</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} className="bg-input text-foreground" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="sleepTime"
                 render={({ field }) => (
                   <FormItem>
@@ -135,9 +150,14 @@ const DailyRoutineForm = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Próximo ➡️
-              </Button>
+              <div className="flex justify-between space-x-4">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+                  Voltar ⬅️
+                </Button>
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  Próximo ➡️
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
