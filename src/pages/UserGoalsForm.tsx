@@ -22,7 +22,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { useNavigate } => "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Correção aqui
 import { AllFormData } from "@/utils/dietCalculations";
 import { Target, TrendingDown, TrendingUp, Scale, Apple, Scissors, Beef } from "lucide-react"; // Importar ícones
 import { Label } from "@/components/ui/label"; // Importar Label
