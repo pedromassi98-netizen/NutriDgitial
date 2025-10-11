@@ -65,9 +65,9 @@ const WelcomeForm = () => {
             Sua Transformação Começa Agora! ✨
           </p>
           <CardDescription className="text-center text-muted-foreground space-y-2">
-            <p className="bg-accent/20 p-1 rounded-md text-foreground">Seu nutricionista digital 24h, na palma da sua mão! 🍏</p>
-            <p className="bg-accent/20 p-1 rounded-md text-foreground">Método comprovado por diversos nutricionistas. 👩‍⚕️👨‍⚕️</p>
-            <p className="bg-accent/20 p-1 rounded-md text-foreground">Resultados rápidos em 30 dias! 💪</p>
+            <p className="bg-accent/20 p-1 rounded-md text-foreground font-semibold">Seu nutricionista digital 24h, na palma da sua mão! 🍏</p>
+            <p className="bg-accent/20 p-1 rounded-md text-foreground font-semibold">Método comprovado por diversos nutricionistas. 👩‍⚕️👨‍⚕️</p>
+            <p className="bg-accent/20 p-1 rounded-md text-foreground font-semibold">Resultados rápidos em 30 dias! 💪</p>
             <p className="mt-4">Preencha seus dados e comece sua jornada para uma vida mais saudável!</p>
           </CardDescription>
         </CardHeader>
