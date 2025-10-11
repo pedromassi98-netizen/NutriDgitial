@@ -34,6 +34,7 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Dumbbell, Heart, Clock, Gauge, Check, X } from "lucide-react"; // Importar ícones
+import { Label } from "@/components/ui/label"; // Importar Label
 
 const formSchema = z.object({
   practicesPhysicalActivity: z.enum(["yes", "no"], {
