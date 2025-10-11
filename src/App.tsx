@@ -8,8 +8,9 @@ import UserProfileForm from "./pages/UserProfileForm";
 import UserActivityForm from "./pages/UserActivityForm";
 import UserGoalsForm from "./pages/UserGoalsForm";
 import DailyRoutineForm from "./pages/DailyRoutineForm";
-import UserSupplementationForm from "./pages/UserSupplementationForm"; // Importar a nova tela de suplementação
+import UserSupplementationForm from "./pages/UserSupplementationForm";
 import UserFoodPreferencesForm from "./pages/UserFoodPreferencesForm";
+import DietPlanPage from "./pages/DietPlanPage"; // Importar a nova tela de dieta
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,8 +27,9 @@ const App = () => (
           <Route path="/activity" element={<UserActivityForm />} />
           <Route path="/goals" element={<UserGoalsForm />} />
           <Route path="/daily-routine" element={<DailyRoutineForm />} />
-          <Route path="/supplementation" element={<UserSupplementationForm />} /> {/* Nova rota */}
+          <Route path="/supplementation" element={<UserSupplementationForm />} />
           <Route path="/food-preferences" element={<UserFoodPreferencesForm />} />
+          <Route path="/diet-plan" element={<DietPlanPage />} /> {/* Nova rota para a dieta */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

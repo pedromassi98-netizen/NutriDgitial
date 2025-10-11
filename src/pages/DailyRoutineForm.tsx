@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
+import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
 
 const formSchema = z.object({
   wakeUpTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
@@ -57,6 +58,11 @@ const DailyRoutineForm = () => {
       ),
     });
     console.log("Rotina diária do usuário:", values);
+
+    // Salvar dados no localStorage
+    const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
+    localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, routine: values }));
+
     navigate("/supplementation"); // Navega para a próxima tela: Suplementação
   }
 

@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
+import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
@@ -51,6 +52,11 @@ const WelcomeForm = () => {
       ),
     });
     console.log("Dados de contato do usuário:", values);
+
+    // Salvar dados no localStorage
+    const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
+    localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, welcome: values }));
+
     navigate("/profile"); // Navega para a próxima tela
   }
 

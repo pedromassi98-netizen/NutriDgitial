@@ -32,6 +32,7 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
 
 const formSchema = z.object({
   practicesPhysicalActivity: z.enum(["yes", "no"], {
@@ -95,6 +96,11 @@ const UserActivityForm = () => {
       ),
     });
     console.log("Atividade física do usuário:", values);
+
+    // Salvar dados no localStorage
+    const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
+    localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, activity: values }));
+
     navigate("/goals"); // Navega para a próxima tela
   }
 

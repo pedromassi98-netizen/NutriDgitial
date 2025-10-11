@@ -30,6 +30,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
+import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
 
 // Esquema de validação com Zod
 const formSchema = z.object({
@@ -63,6 +64,11 @@ const UserProfileForm = () => {
       ),
     });
     console.log("Dados do usuário:", values);
+
+    // Salvar dados no localStorage
+    const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
+    localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, profile: values }));
+
     // Navega para a próxima tela após a submissão
     navigate("/activity");
   }

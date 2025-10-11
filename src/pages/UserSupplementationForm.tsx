@@ -27,6 +27,7 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
 
 const formSchema = z.object({
   usesSupplements: z.enum(["yes", "no"], {
@@ -97,6 +98,11 @@ const UserSupplementationForm = () => {
       ),
     });
     console.log("Suplementação do usuário:", values);
+
+    // Salvar dados no localStorage
+    const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
+    localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, supplementation: values }));
+
     navigate("/food-preferences"); // Navega para a próxima tela
   }
 

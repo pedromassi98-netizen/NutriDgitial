@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
+import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
 
 const formSchema = z.object({
   preferredCarbs: z.string().optional(),
@@ -56,10 +57,13 @@ const UserFoodPreferencesForm = () => {
       ),
     });
     console.log("Preferências do usuário:", values);
-    // Em uma aplicação real, você enviaria todos os dados coletados
-    // para um backend ou para uma função que calcula a dieta.
-    // Por enquanto, vamos apenas mostrar o toast e voltar para o início.
-    navigate("/");
+
+    // Salvar dados no localStorage
+    const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
+    localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, foodPreferences: values }));
+
+    // Navega para a tela da dieta
+    navigate("/diet-plan");
   }
 
   return (
