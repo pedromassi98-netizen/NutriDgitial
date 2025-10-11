@@ -18,6 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription, // Adicionado FormDescription aqui
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,7 +33,7 @@ const formSchema = z.object({
     required_error: "Por favor, selecione se você usa suplementos.",
   }),
   currentSupplements: z.array(z.string()).optional(),
-  wantsToUseSupplements: z.enum(["yes", "no"]).optional(),
+  wantsToToUseSupplements: z.enum(["yes", "no"]).optional(),
   supplementationGoals: z.array(z.string()).optional(),
   otherSupplementationGoals: z.string().optional(),
 }).superRefine((data, ctx) => {
@@ -43,7 +44,7 @@ const formSchema = z.object({
       path: ["currentSupplements"],
     });
   }
-  if (data.wantsToUseSupplements === "yes" && (!data.supplementationGoals || data.supplementationGoals.length === 0) && !data.otherSupplementationGoals) {
+  if (data.wantsToToUseSupplements === "yes" && (!data.supplementationGoals || data.supplementationGoals.length === 0) && !data.otherSupplementationGoals) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: "Por favor, selecione seus objetivos com a suplementação ou descreva outros.",
@@ -77,14 +78,14 @@ const UserSupplementationForm = () => {
     defaultValues: {
       usesSupplements: undefined,
       currentSupplements: [],
-      wantsToUseSupplements: undefined,
+      wantsToToUseSupplements: undefined,
       supplementationGoals: [],
       otherSupplementationGoals: "",
     },
   });
 
   const usesSupplements = form.watch("usesSupplements");
-  const wantsToUseSupplements = form.watch("wantsToUseSupplements");
+  const wantsToToUseSupplements = form.watch("wantsToToUseSupplements");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
@@ -195,7 +196,7 @@ const UserSupplementationForm = () => {
 
               <FormField
                 control={form.control}
-                name="wantsToUseSupplements"
+                name="wantsToToUseSupplements"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel>Você deseja começar a usar alguma suplementação?</FormLabel>
@@ -224,7 +225,7 @@ const UserSupplementationForm = () => {
                 )}
               />
 
-              {wantsToUseSupplements === "yes" && (
+              {wantsToToUseSupplements === "yes" && (
                 <>
                   <FormField
                     control={form.control}
