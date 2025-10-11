@@ -95,6 +95,7 @@ const WelcomeForm = () => {
             <ul className="list-none space-y-1 text-sm">
               <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Transformação comprovada em 30 dias! 🚀</li>
               <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Método aprovado por nutricionistas! ✅</li>
+              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Aprovado por milhares de clientes! 🌟</li>
             </ul>
           </div>
 
