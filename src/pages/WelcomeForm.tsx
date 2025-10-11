@@ -58,14 +58,17 @@ const WelcomeForm = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">
-            NUTRIDIGITAL: Sua Transformação Começa Agora! ✨
+          <CardTitle className="text-4xl font-extrabold text-center text-primary mb-2">
+            NutriDigital
           </CardTitle>
-          <CardDescription className="text-center text-muted-foreground mt-2 space-y-1">
-            <p>Seu nutricionista digital 24h, na palma da sua mão! 🍏</p>
-            <p>Método comprovado por diversos nutricionistas. 👩‍⚕️👨‍⚕️</p>
-            <p>Resultados rápidos em 30 dias! 💪</p>
-            <p>Preencha seus dados e comece sua jornada para uma vida mais saudável!</p>
+          <p className="text-xl font-semibold text-center text-foreground mb-4">
+            Sua Transformação Começa Agora! ✨
+          </p>
+          <CardDescription className="text-center text-muted-foreground space-y-2">
+            <p className="bg-accent/20 p-1 rounded-md">Seu nutricionista digital 24h, na palma da sua mão! 🍏</p>
+            <p className="bg-accent/20 p-1 rounded-md">Método comprovado por diversos nutricionistas. 👩‍⚕️👨‍⚕️</p>
+            <p className="bg-accent/20 p-1 rounded-md">Resultados rápidos em 30 dias! 💪</p>
+            <p className="mt-4">Preencha seus dados e comece sua jornada para uma vida mais saudável!</p>
           </CardDescription>
         </CardHeader>
         <CardContent>

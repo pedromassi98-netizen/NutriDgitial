@@ -49,7 +49,7 @@ const UserGoalsForm = () => {
       ),
     });
     console.log("Objetivo do usuário:", values);
-    navigate("/food-preferences");
+    navigate("/daily-routine"); // Navega para a próxima tela: Rotina Diária
   }
 
   return (
