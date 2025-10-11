@@ -25,6 +25,7 @@ import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Target, TrendingDown, TrendingUp, Scale, Apple, Scissors, Beef } from "lucide-react"; // Importar ícones
+import { Label } from "@/components/ui/label"; // Importar Label
 
 const formSchema = z.object({
   goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "bulking", "cutting", "healthy_eating"], {
