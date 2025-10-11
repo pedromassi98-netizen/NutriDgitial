@@ -27,7 +27,9 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
+import { AllFormData } from "@/utils/dietCalculations";
+import { Pill, Check, X, Milk, Zap, Heart, TrendingUp, TrendingDown, Apple, ShieldCheck } from "lucide-react"; // Importar ícones
+import { Label } from "@/components/ui/label"; // Importar Label
 
 const formSchema = z.object({
   usesSupplements: z.enum(["yes", "no"], {
@@ -55,21 +57,21 @@ const formSchema = z.object({
 });
 
 const commonSupplements = [
-  { id: "whey_protein", label: "Whey Protein 🥛" },
-  { id: "creatine", label: "Creatina 💪" },
-  { id: "caffeine", label: "Cafeína ☕" },
-  { id: "multivitamin", label: "Multivitamínico 💊" },
-  { id: "bcaa", label: "BCAA ✨" },
-  { id: "omega_3", label: "Ômega 3 🐟" },
-  { id: "pre_workout", label: "Pré-treino 🚀" },
+  { id: "whey_protein", label: "Whey Protein", icon: <Milk className="size-4 mr-2 text-primary" /> },
+  { id: "creatine", label: "Creatina", icon: <Zap className="size-4 mr-2 text-primary" /> },
+  { id: "caffeine", label: "Cafeína", icon: <Coffee className="size-4 mr-2 text-primary" /> },
+  { id: "multivitamin", label: "Multivitamínico", icon: <Pill className="size-4 mr-2 text-primary" /> },
+  { id: "bcaa", label: "BCAA", icon: <Heart className="size-4 mr-2 text-primary" /> },
+  { id: "omega_3", label: "Ômega 3", icon: <Fish className="size-4 mr-2 text-primary" /> },
+  { id: "pre_workout", label: "Pré-treino", icon: <Zap className="size-4 mr-2 text-primary" /> },
 ];
 
 const supplementationGoalsOptions = [
-  { id: "muscle_gain", label: "Ganho de Massa Muscular 💪" },
-  { id: "weight_loss", label: "Emagrecimento 📉" },
-  { id: "energy", label: "Mais Energia e Disposição ⚡" },
-  { id: "recovery", label: "Melhora na Recuperação Pós-treino 🩹" },
-  { id: "health", label: "Saúde Geral e Bem-estar 🍎" },
+  { id: "muscle_gain", label: "Ganho de Massa Muscular", icon: <TrendingUp className="size-4 mr-2 text-primary" /> },
+  { id: "weight_loss", label: "Emagrecimento", icon: <TrendingDown className="size-4 mr-2 text-primary" /> },
+  { id: "energy", label: "Mais Energia e Disposição", icon: <Zap className="size-4 mr-2 text-primary" /> },
+  { id: "recovery", label: "Melhora na Recuperação Pós-treino", icon: <ShieldCheck className="size-4 mr-2 text-primary" /> },
+  { id: "health", label: "Saúde Geral e Bem-estar", icon: <Apple className="size-4 mr-2 text-primary" /> },
 ];
 
 const UserSupplementationForm = () => {
@@ -99,25 +101,27 @@ const UserSupplementationForm = () => {
     });
     console.log("Suplementação do usuário:", values);
 
-    // Salvar dados no localStorage
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, supplementation: values }));
 
-    navigate("/food-preferences"); // Navega para a próxima tela
+    navigate("/food-preferences");
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-      <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">Sua Suplementação 💊</CardTitle>
+    <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+      <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
+        <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <Pill className="size-8 text-primary mr-2" />
+            <CardTitle className="text-2xl font-bold text-primary">Sua Suplementação</CardTitle>
+          </div>
           <CardDescription className="text-center text-muted-foreground">
             Conte-nos sobre seu uso de suplementos para uma dieta ainda mais completa.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="usesSupplements"
@@ -128,19 +132,29 @@ const UserSupplementationForm = () => {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex flex-col space-y-3"
+                        className="flex space-x-4"
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
                           <FormControl>
-                            <RadioGroupItem value="yes" />
+                            <RadioGroupItem value="yes" id="supplements-yes" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">Sim ✅</FormLabel>
+                          <Label
+                            htmlFor="supplements-yes"
+                            className="flex items-center font-normal text-foreground cursor-pointer"
+                          >
+                            <Check className="size-4 mr-2 text-primary" /> Sim
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
                           <FormControl>
-                            <RadioGroupItem value="no" />
+                            <RadioGroupItem value="no" id="supplements-no" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">Não ❌</FormLabel>
+                          <Label
+                            htmlFor="supplements-no"
+                            className="flex items-center font-normal text-foreground cursor-pointer"
+                          >
+                            <X className="size-4 mr-2 text-destructive" /> Não
+                          </Label>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -170,7 +184,7 @@ const UserSupplementationForm = () => {
                             return (
                               <FormItem
                                 key={item.id}
-                                className="flex flex-row items-start space-x-3 space-y-0"
+                                className="flex flex-row items-start space-x-3 space-y-0 bg-secondary p-3 rounded-md"
                               >
                                 <FormControl>
                                   <Checkbox
@@ -184,10 +198,11 @@ const UserSupplementationForm = () => {
                                             )
                                           );
                                     }}
+                                    className="mt-1"
                                   />
                                 </FormControl>
-                                <FormLabel className="font-normal">
-                                  {item.label}
+                                <FormLabel className="font-normal flex items-center">
+                                  {item.icon} {item.label}
                                 </FormLabel>
                               </FormItem>
                             );
@@ -210,19 +225,29 @@ const UserSupplementationForm = () => {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex flex-col space-y-3"
+                        className="flex space-x-4"
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
                           <FormControl>
-                            <RadioGroupItem value="yes" />
+                            <RadioGroupItem value="yes" id="wants-supplements-yes" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">Sim, quero explorar! 💡</FormLabel>
+                          <Label
+                            htmlFor="wants-supplements-yes"
+                            className="flex items-center font-normal text-foreground cursor-pointer"
+                          >
+                            <Check className="size-4 mr-2 text-primary" /> Sim
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
                           <FormControl>
-                            <RadioGroupItem value="no" />
+                            <RadioGroupItem value="no" id="wants-supplements-no" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">Não, obrigado(a). 🙏</FormLabel>
+                          <Label
+                            htmlFor="wants-supplements-no"
+                            className="flex items-center font-normal text-foreground cursor-pointer"
+                          >
+                            <X className="size-4 mr-2 text-destructive" /> Não
+                          </Label>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -253,7 +278,7 @@ const UserSupplementationForm = () => {
                               return (
                                 <FormItem
                                   key={item.id}
-                                  className="flex flex-row items-start space-x-3 space-y-0"
+                                  className="flex flex-row items-start space-x-3 space-y-0 bg-secondary p-3 rounded-md"
                                 >
                                   <FormControl>
                                     <Checkbox
@@ -267,10 +292,11 @@ const UserSupplementationForm = () => {
                                               )
                                             );
                                       }}
+                                      className="mt-1"
                                     />
                                   </FormControl>
-                                  <FormLabel className="font-normal">
-                                    {item.label}
+                                  <FormLabel className="font-normal flex items-center">
+                                    {item.icon} {item.label}
                                   </FormLabel>
                                 </FormItem>
                               );
@@ -290,7 +316,7 @@ const UserSupplementationForm = () => {
                         <FormControl>
                           <Textarea
                             placeholder="Descreva outros objetivos que você tem em mente..."
-                            className="resize-none bg-input text-foreground"
+                            className="resize-none bg-input text-foreground border-border"
                             {...field}
                           />
                         </FormControl>
@@ -301,11 +327,11 @@ const UserSupplementationForm = () => {
                 </>
               )}
 
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full rounded-md py-2 text-lg font-semibold border-border">
                   Voltar ⬅️
                 </Button>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
                   Próximo ➡️
                 </Button>
               </div>

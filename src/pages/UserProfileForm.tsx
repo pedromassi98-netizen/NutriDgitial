@@ -30,9 +30,9 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
-import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
+import { AllFormData } from "@/utils/dietCalculations";
+import { Scale, Ruler, CalendarDays, User } from "lucide-react"; // Importar ícones
 
-// Esquema de validação com Zod
 const formSchema = z.object({
   weight: z.coerce.number().min(20, "Peso deve ser no mínimo 20 kg").max(300, "Peso deve ser no máximo 300 kg"),
   age: z.coerce.number().min(1, "Idade deve ser no mínimo 1 ano").max(120, "Idade deve ser no máximo 120 anos"),
@@ -65,34 +65,37 @@ const UserProfileForm = () => {
     });
     console.log("Dados do usuário:", values);
 
-    // Salvar dados no localStorage
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, profile: values }));
 
-    // Navega para a próxima tela após a submissão
     navigate("/activity");
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-      <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">Suas Medidas Essenciais 📏</CardTitle>
+    <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+      <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
+        <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <User className="size-8 text-primary mr-2" />
+            <CardTitle className="text-2xl font-bold text-primary">Suas Medidas Essenciais</CardTitle>
+          </div>
           <CardDescription className="text-center text-muted-foreground">
             Preencha suas informações para criar sua dieta personalizada.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="weight"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peso (kg) ⚖️</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Scale className="size-4 mr-2 text-primary" /> Peso (kg)
+                    </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Ex: 70" {...field} className="bg-input text-foreground" />
+                      <Input type="number" placeholder="Ex: 70" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -103,9 +106,11 @@ const UserProfileForm = () => {
                 name="age"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Idade 🎂</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <CalendarDays className="size-4 mr-2 text-primary" /> Idade
+                    </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Ex: 30" {...field} className="bg-input text-foreground" />
+                      <Input type="number" placeholder="Ex: 30" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -116,9 +121,11 @@ const UserProfileForm = () => {
                 name="height"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Altura (cm) ⬆️</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Ruler className="size-4 mr-2 text-primary" /> Altura (cm)
+                    </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Ex: 175" {...field} className="bg-input text-foreground" />
+                      <Input type="number" placeholder="Ex: 175" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,10 +136,12 @@ const UserProfileForm = () => {
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gênero 🚻</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <User className="size-4 mr-2 text-primary" /> Gênero
+                    </FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger className="bg-input text-foreground">
+                        <SelectTrigger className="bg-input text-foreground border-border">
                           <SelectValue placeholder="Selecione seu gênero" />
                         </SelectTrigger>
                       </FormControl>
@@ -146,11 +155,11 @@ const UserProfileForm = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full rounded-md py-2 text-lg font-semibold border-border">
                   Voltar ⬅️
                 </Button>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
                   Próximo 💪
                 </Button>
               </div>

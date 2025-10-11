@@ -52,6 +52,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        info: { // New info color
+          DEFAULT: "hsl(var(--info-background))",
+          foreground: "hsl(var(--info-foreground))",
+        },
+        warning: { // New warning color
+          DEFAULT: "hsl(var(--warning-background))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -67,6 +75,7 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "1rem", // For larger rounded corners on cards
       },
       keyframes: {
         "accordion-down": {

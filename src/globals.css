@@ -4,36 +4,43 @@
 
 @layer base {
   :root {
-    --background: 120 60% 98%; /* Very light green */
-    --foreground: 160 10% 20%; /* Dark green-gray */
+    --background: 0 0% 100%; /* White */
+    --foreground: 222.2 47.4% 11.2%; /* Dark text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 160 10% 20%;
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 222.2 47.4% 11.2%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 160 10% 20%;
+    --popover-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 140 70% 40%; /* Medium green */
+    --primary: 140 70% 40%; /* Medium green for active elements */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 120 20% 90%; /* Light green-gray */
-    --secondary-foreground: 160 10% 20%;
+    --secondary: 210 40% 96.1%; /* Light gray/off-white */
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 120 20% 90%;
-    --muted-foreground: 160 10% 40%;
+    --muted: 210 40% 96.1%; /* Light gray/off-white */
+    --muted-foreground: 215.4 16.3% 46.9%; /* Muted gray text */
 
-    --accent: 140 50% 85%; /* Lighter green */
-    --accent-foreground: 160 10% 20%;
+    --accent: 120 60% 98%; /* Very light green for card headers/accents */
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 120 15% 85%;
-    --input: 120 15% 85%;
-    --ring: 140 70% 40%;
+    --border: 214.3 31.8% 91.4%; /* Light gray border */
+    --input: 214.3 31.8% 91.4%; /* Light gray input background */
+    --ring: 140 70% 40%; /* Primary green for focus rings */
 
     --radius: 0.5rem;
 
+    /* New colors for info/warning sections */
+    --info-background: 210 80% 95%; /* Light blue */
+    --info-foreground: 210 70% 40%; /* Darker blue */
+    --warning-background: 30 80% 95%; /* Light orange */
+    --warning-foreground: 30 70% 40%; /* Darker orange */
+
+    /* Sidebar colors (keep existing for now, might not be used in this app) */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -45,33 +52,40 @@
   }
 
   .dark {
-    --background: 160 10% 10%; /* Dark green-gray */
-    --foreground: 120 60% 90%; /* Light green */
+    /* Adjust dark mode colors if necessary, but images are light-themed */
+    --background: 222.2 47.4% 11.2%;
+    --foreground: 210 40% 98%;
 
-    --card: 160 10% 10%;
-    --card-foreground: 120 60% 90%;
+    --card: 217.2 32.6% 17.5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 160 10% 10%;
-    --popover-foreground: 120 60% 90%;
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 140 70% 40%; /* Same medium green */
+    --primary: 140 70% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 160 10% 20%;
-    --secondary-foreground: 120 60% 90%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 160 10% 20%;
-    --muted-foreground: 160 10% 60%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 160 10% 25%;
-    --accent-foreground: 120 60% 90%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 160 10% 25%;
-    --input: 160 10% 25%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
     --ring: 140 70% 40%;
+
+    --info-background: 210 80% 20%;
+    --info-foreground: 210 80% 80%;
+    --warning-background: 30 80% 20%;
+    --warning-foreground: 30 80% 80%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

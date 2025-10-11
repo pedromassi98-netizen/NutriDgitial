@@ -23,14 +23,15 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
-import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
+import { AllFormData } from "@/utils/dietCalculations";
+import { Sun, Coffee, Utensils, Apple, Moon, Clock, Lightbulb } from "lucide-react"; // Importar ícones
 
 const formSchema = z.object({
   wakeUpTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   breakfastTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   lunchTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   snackTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).").optional().or(z.literal('')),
-  dinnerTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."), // Novo campo
+  dinnerTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   sleepTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
 });
 
@@ -43,7 +44,7 @@ const DailyRoutineForm = () => {
       breakfastTime: "",
       lunchTime: "",
       snackTime: "",
-      dinnerTime: "", // Valor padrão para o novo campo
+      dinnerTime: "",
       sleepTime: "",
     },
   });
@@ -59,33 +60,37 @@ const DailyRoutineForm = () => {
     });
     console.log("Rotina diária do usuário:", values);
 
-    // Salvar dados no localStorage
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, routine: values }));
 
-    navigate("/supplementation"); // Navega para a próxima tela: Suplementação
+    navigate("/supplementation");
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-      <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">Sua Rotina Diária 🗓️</CardTitle>
+    <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+      <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
+        <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <Clock className="size-8 text-primary mr-2" />
+            <CardTitle className="text-2xl font-bold text-primary">Sua Rotina Diária</CardTitle>
+          </div>
           <CardDescription className="text-center text-muted-foreground">
-            Para uma dieta perfeita, precisamos entender seu dia a dia.
+            Horários das suas refeições para MÁXIMOS resultados
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="wakeUpTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Que horas você acorda? ☀️</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Sun className="size-4 mr-2 text-primary" /> Acordar
+                    </FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} className="bg-input text-foreground" />
+                      <Input type="time" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -96,9 +101,11 @@ const DailyRoutineForm = () => {
                 name="breakfastTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Que horas você toma café da manhã? ☕</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Coffee className="size-4 mr-2 text-primary" /> Café da manhã
+                    </FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} className="bg-input text-foreground" />
+                      <Input type="time" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -109,9 +116,11 @@ const DailyRoutineForm = () => {
                 name="lunchTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Que horas você almoça? 🍽️</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Utensils className="size-4 mr-2 text-primary" /> Almoço
+                    </FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} className="bg-input text-foreground" />
+                      <Input type="time" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -122,9 +131,11 @@ const DailyRoutineForm = () => {
                 name="snackTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Que horas você faz um lanche? (Opcional) 🍎</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Apple className="size-4 mr-2 text-primary" /> Lanche (Opcional)
+                    </FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} className="bg-input text-foreground" />
+                      <Input type="time" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -135,9 +146,11 @@ const DailyRoutineForm = () => {
                 name="dinnerTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Que horas você janta? 🍲</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Utensils className="size-4 mr-2 text-primary" /> Jantar
+                    </FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} className="bg-input text-foreground" />
+                      <Input type="time" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,19 +161,31 @@ const DailyRoutineForm = () => {
                 name="sleepTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Que horas você costuma dormir? 😴</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Moon className="size-4 mr-2 text-primary" /> Dormir
+                    </FormLabel>
                     <FormControl>
-                      <Input type="time" {...field} className="bg-input text-foreground" />
+                      <Input type="time" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+              <div className="bg-info p-4 rounded-md space-y-2 text-info-foreground">
+                <h3 className="font-bold text-lg flex items-center">
+                  <Lightbulb className="size-5 mr-2" /> DICA DE OURO
+                </h3>
+                <ul className="list-none space-y-1 text-sm">
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Horários regulares aceleram o metabolismo em até 23%</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Melhora a queima de gordura e absorção de nutrientes</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Resultados 3x mais rápidos com disciplina nos horários</li>
+                </ul>
+              </div>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full rounded-md py-2 text-lg font-semibold border-border">
                   Voltar ⬅️
                 </Button>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
                   Próximo ➡️
                 </Button>
               </div>

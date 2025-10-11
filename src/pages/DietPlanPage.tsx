@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { UtensilsCrossed, Droplet, Download } from "lucide-react"; // Importar ícones
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
@@ -130,16 +131,16 @@ const DietPlanPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-        <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-primary">Gerando Sua Dieta Personalizada... ⏳</CardTitle>
+      <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+        <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
+          <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+            <CardTitle className="text-2xl font-bold text-primary">Gerando Sua Dieta Personalizada...</CardTitle>
             <CardDescription className="text-center text-muted-foreground">
               Estamos calculando tudo para você!
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center">
-            <p>Por favor, aguarde um momento.</p>
+          <CardContent className="text-center p-6">
+            <p className="text-lg">Por favor, aguarde um momento.</p>
           </CardContent>
         </Card>
         <MadeWithDyad />
@@ -149,16 +150,16 @@ const DietPlanPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-        <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-destructive">Erro ao Gerar Dieta ⚠️</CardTitle>
+      <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+        <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
+          <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+            <CardTitle className="text-2xl font-bold text-destructive">Erro ao Gerar Dieta ⚠️</CardTitle>
             <CardDescription className="text-center text-muted-foreground">
               {error}
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center">
-            <Button onClick={() => navigate("/")} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+          <CardContent className="text-center p-6">
+            <Button onClick={() => navigate("/")} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
               Voltar ao Início
             </Button>
           </CardContent>
@@ -169,35 +170,42 @@ const DietPlanPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-      <Card className="w-full max-w-2xl bg-card text-card-foreground shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center text-primary">Sua Dieta Personalizada! 🎉</CardTitle>
+    <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+      <Card className="w-full max-w-2xl bg-card text-card-foreground shadow-xl rounded-xl border-none">
+        <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <UtensilsCrossed className="size-8 text-primary mr-2" />
+            <CardTitle className="text-3xl font-bold text-primary">Sua Dieta Personalizada!</CardTitle>
+          </div>
           <CardDescription className="text-center text-muted-foreground mt-2">
             Aqui está o plano alimentar que criamos para você, baseado nas suas informações.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div ref={dietPlanRef} className="p-2"> {/* Conteúdo a ser baixado como PDF */}
-            <div className="text-center bg-accent/20 p-4 rounded-md">
-              <h3 className="text-xl font-semibold text-foreground mb-2">Resumo da Dieta</h3>
-              <p className="text-lg">Calorias Diárias: <span className="font-bold text-primary">{totalCalories} kcal</span></p>
-              <p className="text-lg">Ingestão de Água: <span className="font-bold text-primary">{waterIntake} litros/dia</span></p>
+        <CardContent className="p-6 space-y-6">
+          <div ref={dietPlanRef} className="p-2">
+            <div className="text-center bg-info p-4 rounded-md text-info-foreground">
+              <h3 className="text-xl font-semibold text-info-foreground mb-2 flex items-center justify-center">
+                <UtensilsCrossed className="size-5 mr-2" /> Resumo da Dieta
+              </h3>
+              <p className="text-lg flex items-center justify-center">Calorias Diárias: <span className="font-bold text-primary ml-2">{totalCalories} kcal</span></p>
+              <p className="text-lg flex items-center justify-center">
+                <Droplet className="size-5 mr-2 text-blue-500" /> Ingestão de Água: <span className="font-bold text-primary ml-2">{waterIntake} litros/dia</span>
+              </p>
             </div>
 
-            <Separator className="my-6" />
+            <Separator className="my-6 bg-border" />
 
             <h3 className="text-2xl font-bold text-center text-primary mb-4">Seu Plano de Refeições</h3>
             <div className="space-y-8">
               {dietPlan.map((meal, index) => (
-                <div key={index} className="bg-muted/30 p-4 rounded-lg shadow-sm">
+                <div key={index} className="bg-secondary p-4 rounded-lg shadow-sm border border-border">
                   <h4 className="text-xl font-semibold text-foreground mb-2">{meal.name} ({meal.time})</h4>
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm text-muted-foreground mb-2">
                     Total da Refeição: <span className="font-bold">{meal.totalMealCalories} kcal</span> | P: <span className="font-bold">{meal.totalMealProtein}g</span> | C: <span className="font-bold">{meal.totalMealCarbs}g</span> | G: <span className="font-bold">{meal.totalMealFat}g</span>
                   </p>
-                  <ul className="list-disc list-inside space-y-1">
+                  <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                     {meal.items.map((item, itemIndex) => (
-                      <li key={itemIndex} className="text-muted-foreground">
+                      <li key={itemIndex}>
                         <span className="font-medium text-foreground">{item.food}:</span> {item.quantity}
                         <span className="text-sm text-gray-500 ml-2">
                           ({item.calories} kcal, P:{item.protein}g, C:{item.carbs}g, G:{item.fat}g)
@@ -214,17 +222,17 @@ const DietPlanPage = () => {
               ))}
             </div>
 
-            <Separator className="my-6" />
+            <Separator className="my-6 bg-border" />
 
             <div className="text-center text-muted-foreground text-sm">
               <p>Lembre-se: Este é um plano sugerido. Consulte um profissional de saúde para um acompanhamento personalizado.</p>
             </div>
-          </div> {/* Fim do conteúdo a ser baixado como PDF */}
+          </div>
 
-          <Button onClick={handleDownloadPdf} className="w-full bg-green-600 text-white hover:bg-green-700 mb-4">
-            Baixar Dieta em PDF 📄
+          <Button onClick={handleDownloadPdf} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold flex items-center justify-center">
+            <Download className="size-5 mr-2" /> Baixar Dieta em PDF
           </Button>
-          <Button onClick={() => navigate("/")} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button onClick={() => navigate("/")} variant="outline" className="w-full rounded-md py-2 text-lg font-semibold border-border">
             Voltar ao Início
           </Button>
         </CardContent>

@@ -23,7 +23,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
-import { AllFormData } from "@/utils/dietCalculations"; // Importar o tipo
+import { AllFormData } from "@/utils/dietCalculations";
+import { Target, TrendingDown, TrendingUp, Scale, Apple, Cut, Beef } from "lucide-react"; // Importar ícones
 
 const formSchema = z.object({
   goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "bulking", "cutting", "healthy_eating"], {
@@ -51,25 +52,27 @@ const UserGoalsForm = () => {
     });
     console.log("Objetivo do usuário:", values);
 
-    // Salvar dados no localStorage
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, goals: values }));
 
-    navigate("/daily-routine"); // Navega para a próxima tela: Rotina Diária
+    navigate("/daily-routine");
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
-      <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">Seu Objetivo Principal 🎯</CardTitle>
+    <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+      <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
+        <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+          <div className="flex items-center justify-center mb-2">
+            <Target className="size-8 text-primary mr-2" />
+            <CardTitle className="text-2xl font-bold text-primary">Seu Objetivo Principal</CardTitle>
+          </div>
           <CardDescription className="text-center text-muted-foreground">
             Qual é o seu principal objetivo com a dieta?
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="goal"
@@ -82,53 +85,53 @@ const UserGoalsForm = () => {
                         defaultValue={field.value}
                         className="flex flex-col space-y-3"
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
                           <FormControl>
-                            <RadioGroupItem value="weight_loss" />
+                            <RadioGroupItem value="weight_loss" id="goal-weight-loss" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Emagrecimento 📉
-                          </FormLabel>
+                          <Label htmlFor="goal-weight-loss" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                            <TrendingDown className="size-4 mr-2 text-primary" /> Emagrecimento
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
                           <FormControl>
-                            <RadioGroupItem value="muscle_gain" />
+                            <RadioGroupItem value="muscle_gain" id="goal-muscle-gain" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Ganho de Massa Muscular 💪
-                          </FormLabel>
+                          <Label htmlFor="goal-muscle-gain" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                            <TrendingUp className="size-4 mr-2 text-primary" /> Ganho de Massa Muscular
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
                           <FormControl>
-                            <RadioGroupItem value="maintenance" />
+                            <RadioGroupItem value="maintenance" id="goal-maintenance" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Manutenção de Peso ⚖️
-                          </FormLabel>
+                          <Label htmlFor="goal-maintenance" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                            <Scale className="size-4 mr-2 text-primary" /> Manutenção de Peso
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
                           <FormControl>
-                            <RadioGroupItem value="bulking" />
+                            <RadioGroupItem value="bulking" id="goal-bulking" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Bulking (Ganho de peso para massa) 🍔
-                          </FormLabel>
+                          <Label htmlFor="goal-bulking" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                            <Beef className="size-4 mr-2 text-primary" /> Bulking (Ganho de peso para massa)
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
                           <FormControl>
-                            <RadioGroupItem value="cutting" />
+                            <RadioGroupItem value="cutting" id="goal-cutting" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Cutting (Definição muscular) 🔪
-                          </FormLabel>
+                          <Label htmlFor="goal-cutting" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                            <Cut className="size-4 mr-2 text-primary" /> Cutting (Definição muscular)
+                          </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md">
                           <FormControl>
-                            <RadioGroupItem value="healthy_eating" />
+                            <RadioGroupItem value="healthy_eating" id="goal-healthy-eating" className="sr-only" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Apenas ter uma alimentação saudável 🍎
-                          </FormLabel>
+                          <Label htmlFor="goal-healthy-eating" className="flex items-center font-normal text-foreground cursor-pointer w-full">
+                            <Apple className="size-4 mr-2 text-primary" /> Apenas ter uma alimentação saudável
+                          </Label>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -136,11 +139,11 @@ const UserGoalsForm = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full rounded-md py-2 text-lg font-semibold border-border">
                   Voltar ⬅️
                 </Button>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
                   Próximo ➡️
                 </Button>
               </div>
