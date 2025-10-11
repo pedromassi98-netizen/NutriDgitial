@@ -5,13 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -19,56 +12,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
-import React from "react";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Dumbbell, Heart, Clock, Gauge, Check, X } from "lucide-react"; // Importar ícones
-import { Label } from "@/components/ui/label"; // Importar Label
 
 const formSchema = z.object({
-  practicesPhysicalActivity: z.enum(["yes", "no"], {
+  hasPhysicalActivity: z.enum(["yes", "no"], {
     required_error: "Por favor, selecione se você pratica atividade física.",
   }),
-  activityType: z.string().optional(),
-  doesCardio: z.enum(["yes", "no"]).optional(),
-  cardioFrequency: z.coerce.number().min(0, "Mínimo 0").max(7, "Máximo 7").optional(),
-  trainingTime: z.enum(["morning", "afternoon", "night", "any"]).optional(),
-  trainingLevel: z.enum(["sedentary", "light", "moderate", "intense", "very_intense"]).optional(),
-}).superRefine((data, ctx) => {
-  if (data.practicesPhysicalActivity === "yes") {
-    if (!data.trainingTime) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Por favor, selecione seu horário de treino preferido.",
-        path: ["trainingTime"],
-      });
-    }
-    if (!data.trainingLevel) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Por favor, selecione seu nível de treino.",
-        path: ["trainingLevel"],
-      });
-    }
-    if (data.doesCardio === "yes" && (data.cardioFrequency === undefined || data.cardioFrequency === null)) {
-        ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Por favor, insira a frequência do cardio.",
-            path: ["cardioFrequency"],
-        });
-    }
-  }
+  activityLevel: z.string().optional(),
 });
 
 const UserActivityForm = () => {
@@ -76,83 +31,79 @@ const UserActivityForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      practicesPhysicalActivity: undefined,
-      activityType: "",
-      doesCardio: undefined,
-      cardioFrequency: undefined,
-      trainingTime: undefined,
-      trainingLevel: undefined,
+      hasPhysicalActivity: undefined,
+      activityLevel: "",
     },
   });
 
-  const practicesPhysicalActivity = form.watch("practicesPhysicalActivity");
-  const doesCardio = form.watch("doesCardio");
+  const hasPhysicalActivity = form.watch("hasPhysicalActivity");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
-      title: "Informações de Atividade Física Coletadas! 🏃‍♀️",
+      title: "Dados de Atividade Física Salvos!",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
         </pre>
       ),
     });
-    console.log("Atividade física do usuário:", values);
+    console.log("Dados de atividade física do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, activity: values }));
 
-    navigate("/goals");
+    navigate("/dietary-restrictions");
   }
 
   return (
     <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
         <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
-          <div className="flex items-center justify-center mb-2">
-            <Dumbbell className="size-8 text-primary mr-2" />
-            <CardTitle className="text-2xl font-bold text-primary">Atividade Física</CardTitle>
-          </div>
+          <CardTitle className="text-3xl font-extrabold text-primary mb-2">
+            Sua Atividade Física 🏃‍♀️
+          </CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Conte sobre sua rotina de exercícios
+            Conte-nos sobre seus hábitos de atividade física para uma dieta mais precisa.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="practicesPhysicalActivity"
+                name="hasPhysicalActivity"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>Você pratica alguma atividade física?</FormLabel>
+                    <FormLabel className="text-lg font-semibold">Você pratica alguma atividade física?</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex space-x-4"
+                        className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
                       >
-                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
+                        <FormItem
+                          className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center cursor-pointer transition-all duration-200 ${
+                            field.value === "yes" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="yes" id="activity-yes" className="sr-only" />
                           </FormControl>
-                          <Label
-                            htmlFor="activity-yes"
-                            className="flex items-center font-normal text-foreground cursor-pointer"
-                          >
-                            <Check className="size-4 mr-2 text-primary" /> Sim
-                          </Label>
+                          <FormLabel htmlFor="activity-yes" className="font-normal text-lg cursor-pointer">
+                            Sim
+                          </FormLabel>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
+                        <FormItem
+                          className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center cursor-pointer transition-all duration-200 ${
+                            field.value === "no" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="no" id="activity-no" className="sr-only" />
                           </FormControl>
-                          <Label
-                            htmlFor="activity-no"
-                            className="flex items-center font-normal text-foreground cursor-pointer"
-                          >
-                            <X className="size-4 mr-2 text-destructive" /> Não
-                          </Label>
+                          <FormLabel htmlFor="activity-no" className="font-normal text-lg cursor-pointer">
+                            Não
+                          </FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -161,137 +112,90 @@ const UserActivityForm = () => {
                 )}
               />
 
-              {practicesPhysicalActivity === "yes" && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="activityType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Qual(is) tipo(s) de atividade?</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Ex: Musculação, Futebol, Yoga" {...field} className="bg-input text-foreground border-border" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="doesCardio"
-                    render={({ field }) => (
-                      <FormItem className="space-y-3">
-                        <FormLabel>Você faz cardio?</FormLabel>
-                        <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="flex space-x-4"
+              {hasPhysicalActivity === "yes" && (
+                <FormField
+                  control={form.control}
+                  name="activityLevel"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-lg font-semibold">Qual o seu nível de atividade?</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-2"
+                        >
+                          <FormItem
+                            className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                              field.value === "sedentary" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                            }`}
                           >
-                            <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
-                              <FormControl>
-                                <RadioGroupItem value="yes" id="cardio-yes" className="sr-only" />
-                              </FormControl>
-                              <Label
-                                htmlFor="cardio-yes"
-                                className="flex items-center font-normal text-foreground cursor-pointer"
-                              >
-                                <Heart className="size-4 mr-2 text-primary" /> Sim
-                              </Label>
-                            </FormItem>
-                            <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
-                              <FormControl>
-                                <RadioGroupItem value="no" id="cardio-no" className="sr-only" />
-                              </FormControl>
-                              <Label
-                                htmlFor="cardio-no"
-                                className="flex items-center font-normal text-foreground cursor-pointer"
-                              >
-                                <X className="size-4 mr-2 text-destructive" /> Não
-                              </Label>
-                            </FormItem>
-                          </RadioGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {doesCardio === "yes" && (
-                    <FormField
-                      control={form.control}
-                      name="cardioFrequency"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Quantas vezes por semana você faz cardio?</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="Ex: 3" {...field} className="bg-input text-foreground border-border" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                            <FormControl>
+                              <RadioGroupItem value="sedentary" id="level-sedentary" className="sr-only" />
+                            </FormControl>
+                            <FormLabel htmlFor="level-sedentary" className="font-normal cursor-pointer">
+                              Sedentário (pouco ou nenhum exercício)
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem
+                            className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                              field.value === "light" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                            }`}
+                          >
+                            <FormControl>
+                              <RadioGroupItem value="light" id="level-light" className="sr-only" />
+                            </FormControl>
+                            <FormLabel htmlFor="level-light" className="font-normal cursor-pointer">
+                              Levemente Ativo (exercício leve 1-3 dias/semana)
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem
+                            className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                              field.value === "moderate" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                            }`}
+                          >
+                            <FormControl>
+                              <RadioGroupItem value="moderate" id="level-moderate" className="sr-only" />
+                            </FormControl>
+                            <FormLabel htmlFor="level-moderate" className="font-normal cursor-pointer">
+                              Moderadamente Ativo (exercício moderado 3-5 dias/semana)
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem
+                            className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                              field.value === "very_active" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                            }`}
+                          >
+                            <FormControl>
+                              <RadioGroupItem value="very_active" id="level-very-active" className="sr-only" />
+                            </FormControl>
+                            <FormLabel htmlFor="level-very-active" className="font-normal cursor-pointer">
+                              Muito Ativo (exercício intenso 6-7 dias/semana)
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem
+                            className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
+                              field.value === "extra_active" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                            }`}
+                          >
+                            <FormControl>
+                              <RadioGroupItem value="extra_active" id="level-extra-active" className="sr-only" />
+                            </FormControl>
+                            <FormLabel htmlFor="level-extra-active" className="font-normal cursor-pointer">
+                              Extremamente Ativo (exercício muito intenso, 2x ao dia)
+                            </FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                  <FormField
-                    control={form.control}
-                    name="trainingTime"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center">
-                          <Clock className="size-4 mr-2 text-primary" /> Qual seu horário de treino preferido?
-                        </FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="bg-input text-foreground border-border">
-                              <SelectValue placeholder="Selecione um horário" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-popover text-popover-foreground">
-                            <SelectItem value="morning">Manhã ☀️</SelectItem>
-                            <SelectItem value="afternoon">Tarde 🌤️</SelectItem>
-                            <SelectItem value="night">Noite 🌙</SelectItem>
-                            <SelectItem value="any">Qualquer horário 🔄</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="trainingLevel"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center">
-                          <Gauge className="size-4 mr-2 text-primary" /> Qual seu nível de treino?
-                        </FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="bg-input text-foreground border-border">
-                              <SelectValue placeholder="Selecione seu nível" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-popover text-popover-foreground">
-                            <SelectItem value="sedentary">Sedentário (quase nenhuma atividade)</SelectItem>
-                            <SelectItem value="light">Leve (1-2 vezes por semana)</SelectItem>
-                            <SelectItem value="moderate">Moderado (3-4 vezes por semana)</SelectItem>
-                            <SelectItem value="intense">Intenso (5-6 vezes por semana)</SelectItem>
-                            <SelectItem value="very_intense">Muito Intenso (todos os dias ou mais de uma vez ao dia)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </>
+                />
               )}
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
-                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full rounded-md py-2 text-lg font-semibold border-border">
-                  Voltar ⬅️
-                </Button>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
-                  Próximo ➡️
-                </Button>
-              </div>
+
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
+                Continuar
+              </Button>
             </form>
           </Form>
         </CardContent>
