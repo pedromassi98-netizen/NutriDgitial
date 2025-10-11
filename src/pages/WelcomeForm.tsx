@@ -66,11 +66,11 @@ const WelcomeForm = () => {
         <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <CardTitle className="text-3xl font-extrabold text-primary">
-              NutriDigital
+              Seu Nutricionista Digital 24h 🍏
             </CardTitle>
           </div>
           <p className="text-lg font-semibold text-foreground mb-2">
-            Sua jornada para uma vida mais saudável começa aqui!
+            Sua jornada para uma vida mais saudável e feliz começa aqui! ✨
           </p>
           <CardDescription className="text-center text-muted-foreground">
             Preencha seus dados para começar a criar sua dieta personalizada.
@@ -82,9 +82,8 @@ const WelcomeForm = () => {
               <CheckCircle2 className="size-5 mr-2" /> GARANTIA TOTAL
             </h3>
             <ul className="list-none space-y-1 text-sm">
-              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Transformação comprovada em 30 dias</li>
-              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Método aprovado por nutricionistas</li>
-              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Suporte completo via WhatsApp</li>
+              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Transformação comprovada em 30 dias! 🚀</li>
+              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Método aprovado por nutricionistas! ✅</li>
             </ul>
           </div>
 
@@ -130,7 +129,7 @@ const WelcomeForm = () => {
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
-                Começar Agora!
+                Começar agora sua transformação! 💪
               </Button>
             </form>
           </Form>
