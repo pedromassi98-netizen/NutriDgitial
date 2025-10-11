@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -22,6 +22,8 @@ import {
 } from "@/utils/dietCalculations";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ const DietPlanPage = () => {
   const [waterIntake, setWaterIntake] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const dietPlanRef = useRef<HTMLDivElement>(null); // Ref para o conteúdo da dieta
 
   useEffect(() => {
     const loadDietData = () => {
@@ -79,6 +82,51 @@ const DietPlanPage = () => {
 
     loadDietData();
   }, []);
+
+  const handleDownloadPdf = async () => {
+    if (dietPlanRef.current) {
+      setLoading(true);
+      toast({
+        title: "Gerando PDF...",
+        description: "Por favor, aguarde enquanto preparamos sua dieta para download.",
+      });
+      try {
+        const canvas = await html2canvas(dietPlanRef.current, { scale: 2 });
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        pdf.save("minha_dieta_nutridigital.pdf");
+        toast({
+          title: "PDF Gerado! ✅",
+          description: "Sua dieta foi baixada com sucesso.",
+        });
+      } catch (err) {
+        console.error("Erro ao gerar PDF:", err);
+        toast({
+          title: "Erro ao Gerar PDF ⚠️",
+          description: "Não foi possível baixar a dieta. Tente novamente.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -130,41 +178,52 @@ const DietPlanPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="text-center bg-accent/20 p-4 rounded-md">
-            <h3 className="text-xl font-semibold text-foreground mb-2">Resumo da Dieta</h3>
-            <p className="text-lg">Calorias Diárias: <span className="font-bold text-primary">{totalCalories} kcal</span></p>
-            <p className="text-lg">Ingestão de Água: <span className="font-bold text-primary">{waterIntake} litros/dia</span></p>
-          </div>
+          <div ref={dietPlanRef} className="p-2"> {/* Conteúdo a ser baixado como PDF */}
+            <div className="text-center bg-accent/20 p-4 rounded-md">
+              <h3 className="text-xl font-semibold text-foreground mb-2">Resumo da Dieta</h3>
+              <p className="text-lg">Calorias Diárias: <span className="font-bold text-primary">{totalCalories} kcal</span></p>
+              <p className="text-lg">Ingestão de Água: <span className="font-bold text-primary">{waterIntake} litros/dia</span></p>
+            </div>
 
-          <Separator />
+            <Separator className="my-6" />
 
-          <h3 className="text-2xl font-bold text-center text-primary">Seu Plano de Refeições</h3>
-          <div className="space-y-8">
-            {dietPlan.map((meal, index) => (
-              <div key={index} className="bg-muted/30 p-4 rounded-lg shadow-sm">
-                <h4 className="text-xl font-semibold text-foreground mb-2">{meal.name} ({meal.time})</h4>
-                <ul className="list-disc list-inside space-y-1">
-                  {meal.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="text-muted-foreground">
-                      <span className="font-medium text-foreground">{item.food}:</span> {item.quantity}
-                      {item.substitutions && item.substitutions.length > 0 && (
-                        <span className="block text-sm text-gray-500 ml-4">
-                          (Ou: {item.substitutions.join(", ")})
+            <h3 className="text-2xl font-bold text-center text-primary mb-4">Seu Plano de Refeições</h3>
+            <div className="space-y-8">
+              {dietPlan.map((meal, index) => (
+                <div key={index} className="bg-muted/30 p-4 rounded-lg shadow-sm">
+                  <h4 className="text-xl font-semibold text-foreground mb-2">{meal.name} ({meal.time})</h4>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Total da Refeição: <span className="font-bold">{meal.totalMealCalories} kcal</span> | P: <span className="font-bold">{meal.totalMealProtein}g</span> | C: <span className="font-bold">{meal.totalMealCarbs}g</span> | G: <span className="font-bold">{meal.totalMealFat}g</span>
+                  </p>
+                  <ul className="list-disc list-inside space-y-1">
+                    {meal.items.map((item, itemIndex) => (
+                      <li key={itemIndex} className="text-muted-foreground">
+                        <span className="font-medium text-foreground">{item.food}:</span> {item.quantity}
+                        <span className="text-sm text-gray-500 ml-2">
+                          ({item.calories} kcal, P:{item.protein}g, C:{item.carbs}g, G:{item.fat}g)
                         </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+                        {item.substitutions && item.substitutions.length > 0 && (
+                          <span className="block text-sm text-gray-500 ml-4">
+                            (Ou: {item.substitutions.join(", ")})
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
 
-          <Separator />
+            <Separator className="my-6" />
 
-          <div className="text-center text-muted-foreground text-sm">
-            <p>Lembre-se: Este é um plano sugerido. Consulte um profissional de saúde para um acompanhamento personalizado.</p>
-          </div>
+            <div className="text-center text-muted-foreground text-sm">
+              <p>Lembre-se: Este é um plano sugerido. Consulte um profissional de saúde para um acompanhamento personalizado.</p>
+            </div>
+          </div> {/* Fim do conteúdo a ser baixado como PDF */}
 
+          <Button onClick={handleDownloadPdf} className="w-full bg-green-600 text-white hover:bg-green-700 mb-4">
+            Baixar Dieta em PDF 📄
+          </Button>
           <Button onClick={() => navigate("/")} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
             Voltar ao Início
           </Button>

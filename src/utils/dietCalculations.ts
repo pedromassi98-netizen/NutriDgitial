@@ -129,43 +129,60 @@ export const calculateWaterIntake = (weight: number): number => {
   return weight * 35; // 35ml per kg of body weight
 };
 
-// Definição de alimentos e substituições
+// Definição de alimentos e substituições com macronutrientes
 interface FoodItem {
   name: string;
   category: 'carb' | 'protein' | 'fat' | 'vegetable' | 'fruit';
   caloriesPerServing: number;
+  proteinPerServing: number;
+  carbPerServing: number;
+  fatPerServing: number;
   servingSize: string; // e.g., "100g", "1 unidade"
   substitutions?: string[];
 }
 
 const sampleFoods: FoodItem[] = [
   // Carbs
-  { name: "Arroz branco cozido", category: "carb", caloriesPerServing: 130, servingSize: "120g", substitutions: ["Batata cozida (120g)", "Macarrão integral cozido (120g)", "Mandioca cozida (120g)"] },
-  { name: "Batata doce cozida", category: "carb", caloriesPerServing: 86, servingSize: "150g", substitutions: ["Arroz integral cozido (120g)", "Inhame cozido (150g)", "Pão integral (2 fatias)"] },
-  { name: "Pão integral", category: "carb", caloriesPerServing: 80, servingSize: "2 fatias", substitutions: ["Tapioca (50g)", "Pão francês (1 unidade)", "Cuscuz (100g)"] },
-  { name: "Aveia", category: "carb", caloriesPerServing: 150, servingSize: "40g", substitutions: ["Granola (40g)", "Cereal integral (40g)"] },
-  { name: "Tapioca", category: "carb", caloriesPerServing: 140, servingSize: "50g", substitutions: ["Pão francês (1 unidade)", "Pão de queijo (2 unidades)"] },
+  { name: "Arroz branco cozido", category: "carb", caloriesPerServing: 130, proteinPerServing: 3, carbPerServing: 30, fatPerServing: 0.5, servingSize: "120g", substitutions: ["Batata cozida (120g)", "Macarrão integral cozido (120g)", "Mandioca cozida (120g)"] },
+  { name: "Batata doce cozida", category: "carb", caloriesPerServing: 86, proteinPerServing: 2, carbPerServing: 20, fatPerServing: 0.1, servingSize: "150g", substitutions: ["Arroz integral cozido (120g)", "Inhame cozido (150g)", "Pão integral (2 fatias)"] },
+  { name: "Pão integral", category: "carb", caloriesPerServing: 80, proteinPerServing: 5, carbPerServing: 25, fatPerServing: 2, servingSize: "2 fatias", substitutions: ["Tapioca (50g)", "Pão francês (1 unidade)", "Cuscuz (100g)"] },
+  { name: "Aveia", category: "carb", caloriesPerServing: 150, proteinPerServing: 5, carbPerServing: 25, fatPerServing: 3, servingSize: "40g", substitutions: ["Granola (40g)", "Cereal integral (40g)"] },
+  { name: "Tapioca", category: "carb", caloriesPerServing: 140, proteinPerServing: 0.5, carbPerServing: 35, fatPerServing: 0.1, servingSize: "50g", substitutions: ["Pão francês (1 unidade)", "Pão de queijo (2 unidades)"] },
   // Proteins
-  { name: "Peito de frango grelhado", category: "protein", caloriesPerServing: 165, servingSize: "150g", substitutions: ["Filé de peixe grelhado (150g)", "Carne magra grelhada (120g)", "Ovos cozidos (3 unidades)"] },
-  { name: "Ovos cozidos", category: "protein", caloriesPerServing: 78, servingSize: "2 unidades", substitutions: ["Claras de ovo (4 unidades)", "Queijo cottage (100g)", "Ricota (100g)"] },
-  { name: "Feijão cozido", category: "protein", caloriesPerServing: 132, servingSize: "150g", substitutions: ["Lentilha cozida (150g)", "Grão de bico cozido (150g)", "Ervilha (150g)"] },
-  { name: "Iogurte natural", category: "protein", caloriesPerServing: 60, servingSize: "200g", substitutions: ["Kefir (200g)", "Leite desnatado (250ml)", "Coalhada (200g)"] },
-  { name: "Carne vermelha magra", category: "protein", caloriesPerServing: 200, servingSize: "120g", substitutions: ["Salmão grelhado (100g)", "Atum em lata (120g)"] },
+  { name: "Peito de frango grelhado", category: "protein", caloriesPerServing: 165, proteinPerServing: 45, carbPerServing: 0, fatPerServing: 3, servingSize: "150g", substitutions: ["Filé de peixe grelhado (150g)", "Carne magra grelhada (120g)", "Ovos cozidos (3 unidades)"] },
+  { name: "Ovos cozidos", category: "protein", caloriesPerServing: 78, proteinPerServing: 6, carbPerServing: 0.5, fatPerServing: 5, servingSize: "1 unidade", substitutions: ["Claras de ovo (2 unidades)", "Queijo cottage (50g)", "Ricota (50g)"] }, // Changed to 1 unit for easier calculation
+  { name: "Feijão cozido", category: "protein", caloriesPerServing: 132, proteinPerServing: 9, carbPerServing: 25, fatPerServing: 0.5, servingSize: "150g", substitutions: ["Lentilha cozida (150g)", "Grão de bico cozido (150g)", "Ervilha (150g)"] },
+  { name: "Iogurte natural", category: "protein", caloriesPerServing: 60, proteinPerServing: 10, carbPerServing: 10, fatPerServing: 0.5, servingSize: "200g", substitutions: ["Kefir (200g)", "Leite desnatado (250ml)", "Coalhada (200g)"] },
+  { name: "Carne vermelha magra", category: "protein", caloriesPerServing: 200, proteinPerServing: 30, carbPerServing: 0, fatPerServing: 8, servingSize: "120g", substitutions: ["Salmão grelhado (100g)", "Atum em lata (120g)"] },
   // Fats (small amounts, often part of other foods)
-  { name: "Azeite de oliva", category: "fat", caloriesPerServing: 90, servingSize: "1 colher de sopa", substitutions: ["Óleo de coco (1 colher de sopa)", "Manteiga de amendoim (1 colher de sopa)"] },
-  { name: "Abacate", category: "fat", caloriesPerServing: 160, servingSize: "50g", substitutions: ["Castanhas (30g)", "Nozes (30g)"] },
+  { name: "Azeite de oliva", category: "fat", caloriesPerServing: 90, proteinPerServing: 0, carbPerServing: 0, fatPerServing: 10, servingSize: "1 colher de sopa", substitutions: ["Óleo de coco (1 colher de sopa)", "Manteiga de amendoim (1 colher de sopa)"] },
+  { name: "Abacate", category: "fat", caloriesPerServing: 80, proteinPerServing: 1, carbPerServing: 4, fatPerServing: 7, servingSize: "50g", substitutions: ["Castanhas (30g)", "Nozes (30g)"] },
   // Fruits
-  { name: "Banana", category: "fruit", caloriesPerServing: 105, servingSize: "1 unidade", substitutions: ["Maçã (1 unidade)", "Pera (1 unidade)", "Laranja (1 unidade)"] },
-  { name: "Maçã", category: "fruit", caloriesPerServing: 95, servingSize: "1 unidade", substitutions: ["Banana (1 unidade)", "Pera (1 unidade)", "Manga (100g)"] },
+  { name: "Banana", category: "fruit", caloriesPerServing: 105, proteinPerServing: 1, carbPerServing: 27, fatPerServing: 0.3, servingSize: "1 unidade", substitutions: ["Maçã (1 unidade)", "Pera (1 unidade)", "Laranja (1 unidade)"] },
+  { name: "Maçã", category: "fruit", caloriesPerServing: 95, proteinPerServing: 0.5, carbPerServing: 25, fatPerServing: 0.3, servingSize: "1 unidade", substitutions: ["Banana (1 unidade)", "Pera (1 unidade)", "Manga (100g)"] },
   // Vegetables (usually "à vontade" and low calorie)
-  { name: "Salada mista", category: "vegetable", caloriesPerServing: 20, servingSize: "à vontade", substitutions: ["Brócolis cozido", "Cenoura ralada", "Couve refogada"] },
-  { name: "Vegetais cozidos", category: "vegetable", caloriesPerServing: 30, servingSize: "à vontade", substitutions: ["Espinafre", "Abobrinha", "Berinjela"] },
+  { name: "Salada mista", category: "vegetable", caloriesPerServing: 20, proteinPerServing: 1, carbPerServing: 5, fatPerServing: 0.1, servingSize: "à vontade", substitutions: ["Brócolis cozido", "Cenoura ralada", "Couve refogada"] },
+  { name: "Vegetais cozidos", category: "vegetable", caloriesPerServing: 30, proteinPerServing: 2, carbPerServing: 7, fatPerServing: 0.2, servingSize: "à vontade", substitutions: ["Espinafre", "Abobrinha", "Berinjela"] },
 ];
+
+export interface MealItemDetails {
+  food: string;
+  quantity: string;
+  substitutions: string[];
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
 
 export interface Meal {
   time: string;
   name: string;
-  items: { food: string; quantity: string; substitutions: string[] }[];
+  items: MealItemDetails[];
+  totalMealCalories: number;
+  totalMealProtein: number;
+  totalMealCarbs: number;
+  totalMealFat: number;
 }
 
 export const generateMealPlan = (
@@ -176,11 +193,12 @@ export const generateMealPlan = (
 ): Meal[] => {
   const meals: Meal[] = [];
   const mealDistribution = {
-    breakfast: 0.20,
-    snack1: 0.10,
-    lunch: 0.30,
-    snack2: 0.10,
-    dinner: 0.30,
+    breakfast: 0.18,
+    snack1: 0.08,
+    lunch: 0.28,
+    snack2: 0.08,
+    dinner: 0.28,
+    supper: 0.10,
   };
 
   const parseTime = (timeStr: string): Date => {
@@ -204,17 +222,25 @@ export const generateMealPlan = (
   const breakfast = parseTime(routine.breakfastTime);
   const lunch = parseTime(routine.lunchTime);
   const dinner = parseTime(routine.dinnerTime);
+  const sleep = parseTime(routine.sleepTime);
 
-  // Determine snack times based on intervals
+  // Determine snack and supper times based on intervals
   let snack1Time = addHours(breakfast, 3);
-  if (snack1Time.getTime() >= lunch.getTime()) { // If snack1 is too close to lunch, skip or adjust
+  if (snack1Time.getTime() >= lunch.getTime()) {
     snack1Time = new Date(0); // Mark as invalid/skipped
   }
 
   let snack2Time = addHours(lunch, 3);
-  if (snack2Time.getTime() >= dinner.getTime()) { // If snack2 is too close to dinner, skip or adjust
+  if (snack2Time.getTime() >= dinner.getTime()) {
     snack2Time = new Date(0); // Mark as invalid/skipped
   }
+
+  let supperTime = addHours(dinner, 3);
+  // Ensure supper is before sleep and not too close to dinner if dinner is late
+  if (supperTime.getTime() >= sleep.getTime() || (supperTime.getTime() - dinner.getTime() < 2 * 60 * 60 * 1000)) {
+    supperTime = new Date(0); // Mark as invalid/skipped
+  }
+
 
   const mealTimes = [
     { name: "Café da Manhã", time: breakfast, percentage: mealDistribution.breakfast },
@@ -222,12 +248,13 @@ export const generateMealPlan = (
     { name: "Almoço", time: lunch, percentage: mealDistribution.lunch },
     { name: "Lanche da Tarde", time: snack2Time, percentage: mealDistribution.snack2, optional: true },
     { name: "Jantar", time: dinner, percentage: mealDistribution.dinner },
-  ].filter(meal => !meal.optional || meal.time.getTime() !== new Date(0).getTime()); // Filter out skipped optional snacks
+    { name: "Ceia", time: supperTime, percentage: mealDistribution.supper, optional: true },
+  ].filter(meal => !meal.optional || meal.time.getTime() !== new Date(0).getTime());
 
-  // Adjust percentages if snacks are skipped
-  let totalPercentage = mealTimes.reduce((sum, meal) => sum + meal.percentage, 0);
-  if (totalPercentage < 1) {
-    const remainingPercentage = 1 - totalPercentage;
+  // Adjust percentages if optional meals are skipped
+  let currentTotalPercentage = mealTimes.reduce((sum, meal) => sum + meal.percentage, 0);
+  if (currentTotalPercentage < 1) {
+    const remainingPercentage = 1 - currentTotalPercentage;
     const baseMealsCount = mealTimes.filter(m => !m.optional).length;
     const additionalPerBaseMeal = remainingPercentage / baseMealsCount;
     mealTimes.forEach(meal => {
@@ -238,99 +265,114 @@ export const generateMealPlan = (
   }
 
 
-  const getPreferredFoods = (category: 'carb' | 'protein' | 'vegetable' | 'fruit', preferences: string | undefined) => {
-    if (preferences) {
-      const preferredList = preferences.split(',').map(p => p.trim().toLowerCase());
-      return sampleFoods.filter(food =>
-        food.category === category &&
-        preferredList.some(pref => food.name.toLowerCase().includes(pref)) &&
-        !dietaryRestrictions.toLowerCase().includes(food.name.toLowerCase())
-      );
-    }
-    return sampleFoods.filter(food =>
-      food.category === category &&
+  const getPreferredFoods = (category: 'carb' | 'protein' | 'vegetable' | 'fruit' | 'fat', preferences: string | undefined) => {
+    const allCategoryFoods = sampleFoods.filter(food => food.category === category);
+    let filteredFoods = allCategoryFoods.filter(food =>
       !dietaryRestrictions.toLowerCase().includes(food.name.toLowerCase())
     );
+
+    if (preferences) {
+      const preferredList = preferences.split(',').map(p => p.trim().toLowerCase());
+      const preferredAndAllowed = filteredFoods.filter(food =>
+        preferredList.some(pref => food.name.toLowerCase().includes(pref))
+      );
+      if (preferredAndAllowed.length > 0) {
+        return preferredAndAllowed;
+      }
+    }
+    return filteredFoods; // Fallback to all allowed foods of the category
   };
 
   const getRandomFood = (category: 'carb' | 'protein' | 'fat' | 'vegetable' | 'fruit', preferences: string | undefined) => {
     const availableFoods = getPreferredFoods(category, preferences);
     if (availableFoods.length === 0) {
-      // Fallback to any food of the category if preferred/non-restricted are not found
-      return sampleFoods.filter(f => f.category === category && !dietaryRestrictions.toLowerCase().includes(f.name.toLowerCase()))[0];
+      return undefined; // No suitable food found
     }
     return availableFoods[Math.floor(Math.random() * availableFoods.length)];
   };
 
   mealTimes.forEach(mealInfo => {
-    const mealCalories = Math.round(totalCalories * mealInfo.percentage);
-    const mealItems: { food: string; quantity: string; substitutions: string[] }[] = [];
+    const mealCaloriesTarget = Math.round(totalCalories * mealInfo.percentage);
+    const mealItems: MealItemDetails[] = [];
     let currentMealCalories = 0;
+    let currentMealProtein = 0;
+    let currentMealCarbs = 0;
+    let currentMealFat = 0;
+
+    const addFoodItem = (food: FoodItem, targetCalories: number, isMainComponent: boolean = false) => {
+      if (!food) return;
+
+      let servings = 1;
+      if (food.caloriesPerServing > 0) {
+        if (isMainComponent) {
+          servings = Math.max(1, Math.round(targetCalories / food.caloriesPerServing));
+        } else {
+          // For smaller components, try to fit within remaining calories or just add 1 serving
+          servings = Math.max(1, Math.round(targetCalories / food.caloriesPerServing));
+          if (servings * food.caloriesPerServing > mealCaloriesTarget - currentMealCalories && mealCaloriesTarget - currentMealCalories > 0) {
+            servings = Math.max(1, Math.floor((mealCaloriesTarget - currentMealCalories) / food.caloriesPerServing));
+          }
+        }
+      }
+      
+      if (servings === 0 && isMainComponent) servings = 1; // Ensure at least one serving for main components
+
+      if (servings > 0) {
+        const quantityValue = parseInt(food.servingSize.replace('g', '').replace('unidade', '1').replace('fatias', '1'));
+        const unit = food.servingSize.includes('g') ? 'g' : (food.servingSize.includes('unidade') || food.servingSize.includes('fatias') ? ' unidades' : '');
+        
+        mealItems.push({
+          food: food.name,
+          quantity: `${servings * quantityValue}${unit}`,
+          substitutions: food.substitutions || [],
+          calories: servings * food.caloriesPerServing,
+          protein: servings * food.proteinPerServing,
+          carbs: servings * food.carbPerServing,
+          fat: servings * food.fatPerServing,
+        });
+        currentMealCalories += servings * food.caloriesPerServing;
+        currentMealProtein += servings * food.proteinPerServing;
+        currentMealCarbs += servings * food.carbPerServing;
+        currentMealFat += servings * food.fatPerServing;
+      }
+    };
 
     // Prioritize protein and carb for main meals
-    if (mealInfo.name === "Café da Manhã" || mealInfo.name === "Almoço" || mealInfo.name === "Jantar") {
+    if (["Café da Manhã", "Almoço", "Jantar", "Ceia"].includes(mealInfo.name)) {
+      // Protein
       const protein = getRandomFood('protein', foodPreferences.preferredProteins);
       if (protein) {
-        const servings = Math.max(1, Math.round(mealCalories * 0.3 / protein.caloriesPerServing)); // ~30% from protein
-        mealItems.push({
-          food: `${protein.name}`,
-          quantity: `${servings * parseInt(protein.servingSize.replace('g', '').replace('unidade', '1'))}${protein.servingSize.includes('g') ? 'g' : ' unidades'}`,
-          substitutions: protein.substitutions || []
-        });
-        currentMealCalories += servings * protein.caloriesPerServing;
+        addFoodItem(protein, mealCaloriesTarget * 0.3, true); // ~30% from protein
       }
 
+      // Carb
       const carb = getRandomFood('carb', foodPreferences.preferredCarbs);
       if (carb) {
-        const servings = Math.max(1, Math.round(mealCalories * 0.4 / carb.caloriesPerServing)); // ~40% from carb
-        mealItems.push({
-          food: `${carb.name}`,
-          quantity: `${servings * parseInt(carb.servingSize.replace('g', '').replace('unidade', '1'))}${carb.servingSize.includes('g') ? 'g' : ' unidades'}`,
-          substitutions: carb.substitutions || []
-        });
-        currentMealCalories += servings * carb.caloriesPerServing;
+        addFoodItem(carb, mealCaloriesTarget * 0.4, true); // ~40% from carb
       }
 
-      // Add vegetables for main meals (usually "à vontade")
-      const vegetable = getRandomFood('vegetable', foodPreferences.preferredVegetables);
-      if (vegetable) {
-        mealItems.push({
-          food: `${vegetable.name}`,
-          quantity: vegetable.servingSize,
-          substitutions: vegetable.substitutions || []
-        });
+      // Vegetables for main meals (usually "à vontade")
+      if (["Almoço", "Jantar"].includes(mealInfo.name)) {
+        const vegetable = getRandomFood('vegetable', foodPreferences.preferredVegetables);
+        if (vegetable) {
+          addFoodItem(vegetable, 50); // Small fixed calories for "à vontade"
+        }
       }
 
       // Add a small amount of healthy fat
-      const fat = getRandomFood('fat', undefined); // No specific preference for fats
+      const fat = getRandomFood('fat', undefined);
       if (fat && Math.random() > 0.5) { // Randomly add fat
-        mealItems.push({
-          food: `${fat.name}`,
-          quantity: fat.servingSize,
-          substitutions: fat.substitutions || []
-        });
-        currentMealCalories += fat.caloriesPerServing;
+        addFoodItem(fat, 90); // 1 serving of fat
       }
 
     } else { // Snacks
       const snackOption = Math.random() > 0.5 ? getRandomFood('carb', foodPreferences.preferredCarbs) : getRandomFood('protein', foodPreferences.preferredProteins);
       if (snackOption) {
-        const servings = Math.max(1, Math.round(mealCalories / snackOption.caloriesPerServing));
-        mealItems.push({
-          food: `${snackOption.name}`,
-          quantity: `${servings * parseInt(snackOption.servingSize.replace('g', '').replace('unidade', '1'))}${snackOption.servingSize.includes('g') ? 'g' : ' unidades'}`,
-          substitutions: snackOption.substitutions || []
-        });
-        currentMealCalories += servings * snackOption.caloriesPerServing;
+        addFoodItem(snackOption, mealCaloriesTarget * 0.7, true);
       }
       const fruit = getRandomFood('fruit', foodPreferences.preferredFruits);
       if (fruit && Math.random() > 0.5) { // Add fruit to some snacks
-        mealItems.push({
-          food: `${fruit.name}`,
-          quantity: fruit.servingSize,
-          substitutions: fruit.substitutions || []
-        });
-        currentMealCalories += fruit.caloriesPerServing;
+        addFoodItem(fruit, mealCaloriesTarget * 0.3);
       }
     }
 
@@ -338,6 +380,10 @@ export const generateMealPlan = (
       time: formatTime(mealInfo.time),
       name: mealInfo.name,
       items: mealItems,
+      totalMealCalories: Math.round(currentMealCalories),
+      totalMealProtein: Math.round(currentMealProtein),
+      totalMealCarbs: Math.round(currentMealCarbs),
+      totalMealFat: Math.round(currentMealFat),
     });
   });
 
