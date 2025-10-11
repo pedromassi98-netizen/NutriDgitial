@@ -301,7 +301,7 @@ const UserSupplementationForm = () => {
                 </>
               )}
 
-              <div className="flex justify-between space-x-4">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                 <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full">
                   Voltar ⬅️
                 </Button>
