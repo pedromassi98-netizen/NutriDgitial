@@ -24,7 +24,7 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { CheckCircle2, Star, Zap } from "lucide-react"; // Importar ícones
+import { CheckCircle2 } from "lucide-react"; // Importar ícones
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
@@ -45,7 +45,7 @@ const WelcomeForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
-      title: "Bem-vindo(a) ao Mais Fit! 🎉",
+      title: "Bem-vindo(a) ao NutriDigital! 🎉",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -65,19 +65,15 @@ const WelcomeForm = () => {
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
         <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
-            <Zap className="size-8 text-primary mr-2" />
             <CardTitle className="text-3xl font-extrabold text-primary">
-              Mais Fit
+              NutriDigital
             </CardTitle>
           </div>
           <p className="text-lg font-semibold text-foreground mb-2">
-            Sua transformação começa AGORA!
+            Sua jornada para uma vida mais saudável começa aqui!
           </p>
-          <CardDescription className="text-center text-muted-foreground space-y-1">
-            <p className="flex items-center justify-center text-sm">
-              <Zap className="size-4 text-primary mr-1" /> +15.000 transformações
-              <Star className="size-4 text-yellow-500 ml-2 mr-1" fill="currentColor" /> 4.9/5 avaliação
-            </p>
+          <CardDescription className="text-center text-muted-foreground">
+            Preencha seus dados para começar a criar sua dieta personalizada.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -134,15 +130,10 @@ const WelcomeForm = () => {
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
-                Começar Minha Transformação! 🚀
+                Começar Agora!
               </Button>
             </form>
           </Form>
-          <div className="bg-warning p-4 rounded-md text-warning-foreground text-center">
-            <p className="font-semibold">ÚLTIMAS VAGAS!</p>
-            <p className="text-sm">Apenas <span className="font-bold">47 vagas</span> restantes hoje</p>
-            <p className="text-xs">Preço promocional válido por tempo limitado.</p>
-          </div>
         </CardContent>
       </Card>
       <MadeWithDyad />
