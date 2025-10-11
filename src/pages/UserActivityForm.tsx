@@ -52,7 +52,7 @@ const UserActivityForm = () => {
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, activity: values }));
 
-    navigate("/dietary-restrictions");
+    navigate("/goals"); // Navega para a tela de objetivos
   }
 
   return (
