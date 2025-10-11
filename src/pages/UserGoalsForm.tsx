@@ -41,7 +41,7 @@ const UserGoalsForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
-      title: "Objetivo Selecionado!",
+      title: "Objetivo Selecionado! 🎯",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -56,7 +56,7 @@ const UserGoalsForm = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">Seu Objetivo</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-primary">Seu Objetivo Principal 🎯</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
             Qual é o seu principal objetivo com a dieta?
           </CardDescription>
@@ -81,7 +81,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="weight_loss" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Emagrecimento
+                            Emagrecimento 📉
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -89,7 +89,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="muscle_gain" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Ganho de Massa Muscular
+                            Ganho de Massa Muscular 💪
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -97,7 +97,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="maintenance" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Manutenção de Peso
+                            Manutenção de Peso ⚖️
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -105,7 +105,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="bulking" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Bulking (Ganho de peso para massa)
+                            Bulking (Ganho de peso para massa) 🍔
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -113,7 +113,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="cutting" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Cutting (Definição muscular)
+                            Cutting (Definição muscular) 🔪
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -121,7 +121,7 @@ const UserGoalsForm = () => {
                             <RadioGroupItem value="healthy_eating" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Apenas ter uma alimentação saudável
+                            Apenas ter uma alimentação saudável 🍎
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
@@ -131,7 +131,7 @@ const UserGoalsForm = () => {
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Próximo
+                Próximo ➡️
               </Button>
             </form>
           </Form>

@@ -48,7 +48,7 @@ const UserFoodPreferencesForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
-      title: "Preferências Alimentares Coletadas!",
+      title: "Preferências Alimentares Coletadas! 😋",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -66,9 +66,9 @@ const UserFoodPreferencesForm = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">Preferências Alimentares</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-primary">Preferências Alimentares 🥦🍓</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Conte-nos sobre seus gostos e restrições.
+            Conte-nos sobre seus gostos e restrições para uma dieta perfeita para você.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -79,7 +79,7 @@ const UserFoodPreferencesForm = () => {
                 name="preferredCarbs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Carboidratos Preferidos (ex: arroz, batata, pão integral)</FormLabel>
+                    <FormLabel>Carboidratos Preferidos (ex: arroz, batata, pão integral) 🍚🍞</FormLabel>
                     <FormControl>
                       <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -92,7 +92,7 @@ const UserFoodPreferencesForm = () => {
                 name="preferredProteins"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Proteínas Preferidas (ex: frango, ovos, feijão, tofu)</FormLabel>
+                    <FormLabel>Proteínas Preferidas (ex: frango, ovos, feijão, tofu) 🍗🥚</FormLabel>
                     <FormControl>
                       <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -105,7 +105,7 @@ const UserFoodPreferencesForm = () => {
                 name="preferredVegetables"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Vegetais Preferidos (ex: brócolis, espinafre, cenoura)</FormLabel>
+                    <FormLabel>Vegetais Preferidos (ex: brócolis, espinafre, cenoura) 🥕🥬</FormLabel>
                     <FormControl>
                       <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -118,7 +118,7 @@ const UserFoodPreferencesForm = () => {
                 name="preferredFruits"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Frutas Preferidas (ex: maçã, banana, morango)</FormLabel>
+                    <FormLabel>Frutas Preferidas (ex: maçã, banana, morango) 🍎🍌</FormLabel>
                     <FormControl>
                       <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -131,7 +131,7 @@ const UserFoodPreferencesForm = () => {
                 name="dietaryRestrictions"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Restrições Alimentares / Alergias (ex: sem glúten, sem lactose, alergia a amendoim)</FormLabel>
+                    <FormLabel>Restrições Alimentares / Alergias (ex: sem glúten, sem lactose, alergia a amendoim) 🚫🥜</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Descreva suas restrições ou alergias"
@@ -144,7 +144,7 @@ const UserFoodPreferencesForm = () => {
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Finalizar e Gerar Dieta
+                Finalizar e Gerar Dieta 🎉
               </Button>
             </form>
           </Form>

@@ -55,7 +55,7 @@ const UserProfileForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
-      title: "Dados do Perfil Coletados!",
+      title: "Dados do Perfil Coletados! ✅",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -64,14 +64,14 @@ const UserProfileForm = () => {
     });
     console.log("Dados do usuário:", values);
     // Navega para a próxima tela após a submissão
-    navigate("/goals");
+    navigate("/activity");
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">NUTRIDIGITAL</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-primary">Suas Medidas Essenciais 📏</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
             Preencha suas informações para criar sua dieta personalizada.
           </CardDescription>
@@ -84,7 +84,7 @@ const UserProfileForm = () => {
                 name="weight"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peso (kg)</FormLabel>
+                    <FormLabel>Peso (kg) ⚖️</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="Ex: 70" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -97,7 +97,7 @@ const UserProfileForm = () => {
                 name="age"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Idade</FormLabel>
+                    <FormLabel>Idade 🎂</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="Ex: 30" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -110,7 +110,7 @@ const UserProfileForm = () => {
                 name="height"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Altura (cm)</FormLabel>
+                    <FormLabel>Altura (cm) ⬆️</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="Ex: 175" {...field} className="bg-input text-foreground" />
                     </FormControl>
@@ -123,7 +123,7 @@ const UserProfileForm = () => {
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gênero</FormLabel>
+                    <FormLabel>Gênero 🚻</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-input text-foreground">
@@ -141,7 +141,7 @@ const UserProfileForm = () => {
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Próximo
+                Próximo 💪
               </Button>
             </form>
           </Form>

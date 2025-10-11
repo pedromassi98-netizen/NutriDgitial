@@ -3,10 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import WelcomeForm from "./pages/WelcomeForm"; // Importar a nova tela de boas-vindas
+import UserProfileForm from "./pages/UserProfileForm";
+import UserActivityForm from "./pages/UserActivityForm"; // Importar a nova tela de atividade física
+import UserGoalsForm from "./pages/UserGoalsForm";
+import UserFoodPreferencesForm from "./pages/UserFoodPreferencesForm";
 import NotFound from "./pages/NotFound";
-import UserGoalsForm from "./pages/UserGoalsForm"; // Importar a nova tela
-import UserFoodPreferencesForm from "./pages/UserFoodPreferencesForm"; // Importar a nova tela
 
 const queryClient = new QueryClient();
 
@@ -17,9 +19,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/goals" element={<UserGoalsForm />} /> {/* Nova rota */}
-          <Route path="/food-preferences" element={<UserFoodPreferencesForm />} /> {/* Nova rota */}
+          <Route path="/" element={<WelcomeForm />} /> {/* Nova tela inicial */}
+          <Route path="/profile" element={<UserProfileForm />} /> {/* Antiga tela inicial */}
+          <Route path="/activity" element={<UserActivityForm />} /> {/* Nova tela de atividade física */}
+          <Route path="/goals" element={<UserGoalsForm />} />
+          <Route path="/food-preferences" element={<UserFoodPreferencesForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
