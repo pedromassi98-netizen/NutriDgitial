@@ -24,7 +24,7 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { CheckCircle2 } from "lucide-react"; // Importar ícones
+import { CheckCircle2, Users, Star } from "lucide-react"; // Importar ícones
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
@@ -66,17 +66,28 @@ const WelcomeForm = () => {
         <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <CardTitle className="text-3xl font-extrabold text-primary">
-              Seu Nutricionista Digital 24h 🍏
+              NutriDigital
             </CardTitle>
           </div>
           <p className="text-lg font-semibold text-foreground mb-2">
-            Sua jornada para uma vida mais saudável e feliz começa aqui! ✨
+            Seu Nutricionista Digital 24h 🍏
           </p>
           <CardDescription className="text-center text-muted-foreground">
-            Preencha seus dados para começar a criar sua dieta personalizada.
+            Sua jornada para uma vida mais saudável e feliz começa aqui! ✨
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex-1 bg-secondary p-4 rounded-lg flex items-center justify-center space-x-2 shadow-sm">
+              <Users className="size-6 text-primary" />
+              <p className="text-lg font-semibold text-foreground">+15 mil de transformados</p>
+            </div>
+            <div className="flex-1 bg-secondary p-4 rounded-lg flex items-center justify-center space-x-2 shadow-sm">
+              <Star className="size-6 text-primary" />
+              <p className="text-lg font-semibold text-foreground">4,95 avaliação</p>
+            </div>
+          </div>
+
           <div className="bg-info p-4 rounded-md space-y-2 text-info-foreground">
             <h3 className="font-bold text-lg flex items-center">
               <CheckCircle2 className="size-5 mr-2" /> GARANTIA TOTAL
