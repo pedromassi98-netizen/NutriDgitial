@@ -20,60 +20,55 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 
-// Esquema de validação com Zod
 const formSchema = z.object({
-  weight: z.coerce.number().min(20, "Peso deve ser no mínimo 20 kg").max(300, "Peso deve ser no máximo 300 kg"),
-  age: z.coerce.number().min(1, "Idade deve ser no mínimo 1 ano").max(120, "Idade deve ser no máximo 120 anos"),
-  height: z.coerce.number().min(50, "Altura deve ser no mínimo 50 cm").max(250, "Altura deve ser no máximo 250 cm"),
-  gender: z.enum(["male", "female", "other"], {
-    required_error: "Por favor, selecione seu gênero.",
-  }),
+  preferredCarbs: z.string().optional(),
+  preferredProteins: z.string().optional(),
+  preferredVegetables: z.string().optional(),
+  preferredFruits: z.string().optional(),
+  dietaryRestrictions: z.string().optional(),
 });
 
-const UserProfileForm = () => {
+const UserFoodPreferencesForm = () => {
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      weight: undefined,
-      age: undefined,
-      height: undefined,
-      gender: undefined,
+      preferredCarbs: "",
+      preferredProteins: "",
+      preferredVegetables: "",
+      preferredFruits: "",
+      dietaryRestrictions: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast({
-      title: "Dados do Perfil Coletados!",
+      title: "Preferências Alimentares Coletadas!",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
         </pre>
       ),
     });
-    console.log("Dados do usuário:", values);
-    // Navega para a próxima tela após a submissão
-    navigate("/goals");
+    console.log("Preferências do usuário:", values);
+    // Em uma aplicação real, você enviaria todos os dados coletados
+    // para um backend ou para uma função que calcula a dieta.
+    // Por enquanto, vamos apenas mostrar o toast e voltar para o início.
+    navigate("/");
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-primary">NUTRIDIGITAL</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-primary">Preferências Alimentares</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Preencha suas informações para criar sua dieta personalizada.
+            Conte-nos sobre seus gostos e restrições.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -81,12 +76,12 @@ const UserProfileForm = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="weight"
+                name="preferredCarbs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Peso (kg)</FormLabel>
+                    <FormLabel>Carboidratos Preferidos (ex: arroz, batata, pão integral)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Ex: 70" {...field} className="bg-input text-foreground" />
+                      <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -94,12 +89,12 @@ const UserProfileForm = () => {
               />
               <FormField
                 control={form.control}
-                name="age"
+                name="preferredProteins"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Idade</FormLabel>
+                    <FormLabel>Proteínas Preferidas (ex: frango, ovos, feijão, tofu)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Ex: 30" {...field} className="bg-input text-foreground" />
+                      <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,12 +102,12 @@ const UserProfileForm = () => {
               />
               <FormField
                 control={form.control}
-                name="height"
+                name="preferredVegetables"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Altura (cm)</FormLabel>
+                    <FormLabel>Vegetais Preferidos (ex: brócolis, espinafre, cenoura)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Ex: 175" {...field} className="bg-input text-foreground" />
+                      <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,28 +115,36 @@ const UserProfileForm = () => {
               />
               <FormField
                 control={form.control}
-                name="gender"
+                name="preferredFruits"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gênero</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-input text-foreground">
-                          <SelectValue placeholder="Selecione seu gênero" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-popover text-popover-foreground">
-                        <SelectItem value="male">Masculino</SelectItem>
-                        <SelectItem value="female">Feminino</SelectItem>
-                        <SelectItem value="other">Outro</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Frutas Preferidas (ex: maçã, banana, morango)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Separe por vírgulas" {...field} className="bg-input text-foreground" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dietaryRestrictions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Restrições Alimentares / Alergias (ex: sem glúten, sem lactose, alergia a amendoim)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Descreva suas restrições ou alergias"
+                        className="resize-none bg-input text-foreground"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Próximo
+                Finalizar e Gerar Dieta
               </Button>
             </form>
           </Form>
@@ -152,4 +155,4 @@ const UserProfileForm = () => {
   );
 };
 
-export default UserProfileForm;
+export default UserFoodPreferencesForm;
