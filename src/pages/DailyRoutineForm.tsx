@@ -55,7 +55,7 @@ const DailyRoutineForm = () => {
       ),
     });
     console.log("Rotina diária do usuário:", values);
-    navigate("/food-preferences"); // Navega para a próxima tela
+    navigate("/supplementation"); // Navega para a próxima tela: Suplementação
   }
 
   return (

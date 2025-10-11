@@ -7,7 +7,8 @@ import WelcomeForm from "./pages/WelcomeForm";
 import UserProfileForm from "./pages/UserProfileForm";
 import UserActivityForm from "./pages/UserActivityForm";
 import UserGoalsForm from "./pages/UserGoalsForm";
-import DailyRoutineForm from "./pages/DailyRoutineForm"; // Importar a nova tela de rotina diária
+import DailyRoutineForm from "./pages/DailyRoutineForm";
+import UserSupplementationForm from "./pages/UserSupplementationForm"; // Importar a nova tela de suplementação
 import UserFoodPreferencesForm from "./pages/UserFoodPreferencesForm";
 import NotFound from "./pages/NotFound";
 
@@ -24,7 +25,8 @@ const App = () => (
           <Route path="/profile" element={<UserProfileForm />} />
           <Route path="/activity" element={<UserActivityForm />} />
           <Route path="/goals" element={<UserGoalsForm />} />
-          <Route path="/daily-routine" element={<DailyRoutineForm />} /> {/* Nova rota */}
+          <Route path="/daily-routine" element={<DailyRoutineForm />} />
+          <Route path="/supplementation" element={<UserSupplementationForm />} /> {/* Nova rota */}
           <Route path="/food-preferences" element={<UserFoodPreferencesForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
