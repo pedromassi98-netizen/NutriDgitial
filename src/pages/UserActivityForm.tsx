@@ -40,12 +40,32 @@ const formSchema = z.object({
   activityType: z.string().optional(),
   doesCardio: z.enum(["yes", "no"]).optional(),
   cardioFrequency: z.coerce.number().min(0, "Mínimo 0").max(7, "Máximo 7").optional(),
-  trainingTime: z.enum(["morning", "afternoon", "night", "any"], {
-    required_error: "Por favor, selecione seu horário de treino preferido.",
-  }),
-  trainingLevel: z.enum(["sedentary", "light", "moderate", "intense", "very_intense"], {
-    required_error: "Por favor, selecione seu nível de treino.",
-  }),
+  trainingTime: z.enum(["morning", "afternoon", "night", "any"]).optional(), // Tornar opcional por padrão
+  trainingLevel: z.enum(["sedentary", "light", "moderate", "intense", "very_intense"]).optional(), // Tornar opcional por padrão
+}).superRefine((data, ctx) => {
+  if (data.practicesPhysicalActivity === "yes") {
+    if (!data.trainingTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Por favor, selecione seu horário de treino preferido.",
+        path: ["trainingTime"],
+      });
+    }
+    if (!data.trainingLevel) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Por favor, selecione seu nível de treino.",
+        path: ["trainingLevel"],
+      });
+    }
+    if (data.doesCardio === "yes" && (data.cardioFrequency === undefined || data.cardioFrequency === null)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Por favor, insira a frequência do cardio.",
+            path: ["cardioFrequency"],
+        });
+    }
+  }
 });
 
 const UserActivityForm = () => {
