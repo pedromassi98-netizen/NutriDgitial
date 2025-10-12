@@ -52,7 +52,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* Food pattern SVG for light mode (subtle black outlines) */
-    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' fill='none'/%3E%3Cpath d='M10 10 L20 15 L10 20 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M70 10 C75 5, 85 5, 90 10 C95 15, 95 25, 85 30 C80 35, 70 35, 65 30 C60 25, 60 15, 65 10 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M20 60 Q25 50, 30 60 T40 70 Q35 80, 30 70 T20 60 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M40 35 C45 30, 55 30, 60 35 C65 40, 65 50, 55 55 C50 60, 40 60, 35 55 C30 50, 30 40, 35 35 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M5 80 C7 78, 13 78, 15 80 C17 82, 17 87, 13 89 C10 91, 7 91, 5 89 C3 87, 3 82, 5 80 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M80 50 Q82 48, 84 50 T88 54 Q86 56, 84 54 T80 50 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C/svg%3E");
+    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='none'/%3E%3C!-- Banana --%3E%3Cpath d='M20 20 C30 10, 40 10, 50 20 S60 40, 50 50 C40 60, 30 60, 20 50 S10 30, 20 20 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Apple --%3E%3Cpath d='M150 30 C160 10, 180 10, 190 30 C195 50, 185 70, 170 70 C155 70, 145 50, 150 30 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Strawberry --%3E%3Cpath d='M30 120 C40 100, 60 100, 70 120 C75 140, 65 160, 50 160 C35 160, 25 140, 30 120 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Carrot --%3E%3Cpath d='M120 100 L130 110 L135 130 L125 150 L115 130 L110 110 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Broccoli --%3E%3Cpath d='M170 120 C180 110, 190 110, 190 120 C190 130, 180 140, 170 140 C160 140, 150 130, 150 120 C150 110, 160 110, 170 120 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Tomato --%3E%3Ccircle cx='100' cy='170' r='20' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Lettuce Leaf --%3E%3Cpath d='M80 70 Q90 60, 100 70 T120 90 Q110 100, 100 90 T80 70 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C/svg%3E");
   }
 
   .dark {
@@ -101,7 +101,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* Food pattern SVG for dark mode (subtle white outlines) */
-    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' fill='none'/%3E%3Cpath d='M10 10 L20 15 L10 20 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M70 10 C75 5, 85 5, 90 10 C95 15, 95 25, 85 30 C80 35, 70 35, 65 30 C60 25, 60 15, 65 10 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M20 60 Q25 50, 30 60 T40 70 Q35 80, 30 70 T20 60 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M40 35 C45 30, 55 30, 60 35 C65 40, 65 50, 55 55 C50 60, 40 60, 35 55 C30 50, 30 40, 35 35 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M5 80 C7 78, 13 78, 15 80 C17 82, 17 87, 13 89 C10 91, 7 91, 5 89 C3 87, 3 82, 5 80 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M80 50 Q82 48, 84 50 T88 54 Q86 56, 84 54 T80 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C/svg%3E");
+    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='none'/%3E%3C!-- Banana --%3E%3Cpath d='M20 20 C30 10, 40 10, 50 20 S60 40, 50 50 C40 60, 30 60, 20 50 S10 30, 20 20 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Apple --%3E%3Cpath d='M150 30 C160 10, 180 10, 190 30 C195 50, 185 70, 170 70 C155 70, 145 50, 150 30 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Strawberry --%3E%3Cpath d='M30 120 C40 100, 60 100, 70 120 C75 140, 65 160, 50 160 C35 160, 25 140, 30 120 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Carrot --%3E%3Cpath d='M120 100 L130 110 L135 130 L125 150 L115 130 L110 110 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Broccoli --%3E%3Cpath d='M170 120 C180 110, 190 110, 190 120 C190 130, 180 140, 170 140 C160 140, 150 130, 150 120 C150 110, 160 110, 170 120 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Tomato --%3E%3Ccircle cx='100' cy='170' r='20' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Lettuce Leaf --%3E%3Cpath d='M80 70 Q90 60, 100 70 T120 90 Q110 100, 100 90 T80 70 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C/svg%3E");
   }
 }
 
@@ -114,13 +114,13 @@
     @apply bg-accent text-foreground; /* Use accent for light green background */
     background-image: var(--food-pattern-svg);
     background-repeat: repeat;
-    background-size: 100px 100px; /* Match SVG dimensions */
+    background-size: 200px 200px; /* Match SVG dimensions */
   }
 
   .dark body {
     @apply bg-background text-foreground; /* Keep dark background for dark mode */
     background-image: var(--food-pattern-svg); /* Use dark mode pattern */
     background-repeat: repeat;
-    background-size: 100px 100px;
+    background-size: 200px 200px;
   }
 }
