@@ -24,7 +24,8 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { UtensilsCrossed, Droplet, Download } from "lucide-react"; // Importar ícones
+import { UtensilsCrossed, Droplet, Download, Mail } from "lucide-react"; // Importar ícones
+import { supabase } from "@/integrations/supabase/client"; // Importar o cliente Supabase
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
@@ -33,7 +34,11 @@ const DietPlanPage = () => {
   const [waterIntake, setWaterIntake] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sendingEmail, setSendingEmail] = useState(false);
   const dietPlanRef = useRef<HTMLDivElement>(null); // Ref para o conteúdo da dieta
+
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
     const loadDietData = () => {
@@ -47,13 +52,16 @@ const DietPlanPage = () => {
 
         const formData: AllFormData = JSON.parse(storedData);
 
-        const { profile, activity, goals, routine, foodPreferences } = formData;
+        const { welcome, profile, activity, goals, routine, foodPreferences } = formData;
 
-        if (!profile || !activity || !goals || !routine || !foodPreferences) {
+        if (!welcome || !profile || !activity || !goals || !routine || !foodPreferences) {
           setError("Dados incompletos para gerar a dieta. Por favor, preencha todos os formulários.");
           setLoading(false);
           return;
         }
+
+        setUserEmail(welcome.email);
+        setUserName(welcome.name);
 
         // 1. Calcular BMR
         const bmr = calculateBMR(profile.weight, profile.height, profile.age, profile.gender);
@@ -84,6 +92,31 @@ const DietPlanPage = () => {
     loadDietData();
   }, []);
 
+  const generatePdfBase64 = async () => {
+    if (!dietPlanRef.current) return null;
+
+    const canvas = await html2canvas(dietPlanRef.current, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    return pdf.output('datauristring').split(',')[1]; // Retorna apenas a parte base64
+  };
+
   const handleDownloadPdf = async () => {
     if (dietPlanRef.current) {
       setLoading(true);
@@ -92,30 +125,30 @@ const DietPlanPage = () => {
         description: "Por favor, aguarde enquanto preparamos sua dieta para download.",
       });
       try {
-        const canvas = await html2canvas(dietPlanRef.current, { scale: 2 });
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
+        const pdfBase64 = await generatePdfBase64();
+        if (pdfBase64) {
+          const pdf = new jsPDF('p', 'mm', 'a4');
+          const imgWidth = 210;
+          const pageHeight = 297;
+          const imgHeight = (await html2canvas(dietPlanRef.current, { scale: 2 })).height * imgWidth / (await html2canvas(dietPlanRef.current, { scale: 2 })).width;
+          let heightLeft = imgHeight;
+          let position = 0;
 
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          pdf.addImage(`data:image/png;base64,${pdfBase64}`, 'PNG', 0, position, imgWidth, imgHeight);
           heightLeft -= pageHeight;
-        }
 
-        pdf.save("minha_dieta_nutridigital.pdf");
-        toast({
-          title: "PDF Gerado! ✅",
-          description: "Sua dieta foi baixada com sucesso.",
-        });
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(`data:image/png;base64,${pdfBase64}`, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+          pdf.save("minha_dieta_nutridigital.pdf");
+          toast({
+            title: "PDF Gerado! ✅",
+            description: "Sua dieta foi baixada com sucesso.",
+          });
+        }
       } catch (err) {
         console.error("Erro ao gerar PDF:", err);
         toast({
@@ -126,6 +159,54 @@ const DietPlanPage = () => {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!userEmail || !userName) {
+      toast({
+        title: "Erro ao enviar e-mail",
+        description: "Não foi possível encontrar o e-mail ou nome do usuário.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSendingEmail(true);
+    toast({
+      title: "Enviando e-mail...",
+      description: "Por favor, aguarde enquanto enviamos sua dieta.",
+    });
+
+    try {
+      const pdfBase64 = await generatePdfBase64();
+
+      if (!pdfBase64) {
+        throw new Error("Não foi possível gerar o PDF para envio.");
+      }
+
+      const { data, error: edgeFunctionError } = await supabase.functions.invoke('send-diet-email', {
+        body: { userEmail, pdfBase64, userName },
+      });
+
+      if (edgeFunctionError) {
+        throw edgeFunctionError;
+      }
+
+      console.log("Email sent response:", data);
+      toast({
+        title: "E-mail Enviado! 📧",
+        description: `Sua dieta foi enviada para ${userEmail}.`,
+      });
+    } catch (err) {
+      console.error("Erro ao enviar e-mail:", err);
+      toast({
+        title: "Erro ao Enviar E-mail ⚠️",
+        description: `Não foi possível enviar a dieta para ${userEmail}. Erro: ${err.message || err}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSendingEmail(false);
     }
   };
 
@@ -232,6 +313,15 @@ const DietPlanPage = () => {
           <Button onClick={handleDownloadPdf} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold flex items-center justify-center">
             <Download className="size-5 mr-2" /> Baixar Dieta em PDF
           </Button>
+          {userEmail && (
+            <Button
+              onClick={handleSendEmail}
+              disabled={sendingEmail}
+              className="w-full bg-green-600 text-white hover:bg-green-700 rounded-md py-2 text-lg font-semibold flex items-center justify-center"
+            >
+              <Mail className="size-5 mr-2" /> {sendingEmail ? "Enviando..." : `Enviar Dieta por E-mail para ${userEmail}`}
+            </Button>
+          )}
           <Button onClick={() => navigate("/")} variant="outline" className="w-full rounded-md py-2 text-lg font-semibold border-border">
             Voltar ao Início
           </Button>
