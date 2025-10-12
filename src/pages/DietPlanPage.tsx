@@ -134,7 +134,7 @@ const DietPlanPage = () => {
       <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
         <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
           <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
-            <CardTitle className="text-2xl font-bold text-primary">Gerando Sua Dieta Personalizada...</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Gerando Sua Dieta Personalizada...</CardTitle>
             <CardDescription className="text-center text-muted-foreground">
               Estamos calculando tudo para você!
             </CardDescription>
@@ -153,7 +153,7 @@ const DietPlanPage = () => {
       <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
         <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
           <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
-            <CardTitle className="text-2xl font-bold text-primary">Erro ao Gerar Dieta ⚠️</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Erro ao Gerar Dieta ⚠️</CardTitle>
             <CardDescription className="text-center text-muted-foreground">
               {error}
             </CardDescription>
@@ -175,14 +175,14 @@ const DietPlanPage = () => {
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <UtensilsCrossed className="size-8 text-primary mr-2" />
-            <CardTitle className="text-3xl font-bold text-primary">Sua Dieta Personalizada!</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Sua Dieta Personalizada!</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground mt-2">
             Aqui está o plano alimentar que criamos para você, baseado nas suas informações.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div ref={dietPlanRef} className="p-2">
+          <div ref={dietPlanRef} className="p-4"> {/* Adicionado p-4 aqui */}
             <div className="text-center bg-info p-4 rounded-md text-info-foreground">
               <h3 className="text-xl font-semibold text-info-foreground mb-2 flex items-center justify-center">
                 <UtensilsCrossed className="size-5 mr-2" /> Resumo da Dieta
