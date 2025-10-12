@@ -56,7 +56,7 @@ const UserActivityForm = () => {
   }
 
   return (
-    <div className="min-h-svh flex flex-col items-center justify-center bg-background text-foreground p-4">
+    <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
         <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
           <CardTitle className="text-3xl font-extrabold text-primary mb-2">
