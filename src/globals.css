@@ -15,6 +15,7 @@
 
     --primary: 140 70% 40%; /* Medium green for active elements */
     --primary-foreground: 0 0% 100%; /* White */
+    --primary-subtle: 140 50% 70%; /* Um verde mais sutil para cabeçalhos */
 
     --secondary: 210 40% 96.1%; /* Light gray/off-white */
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -67,6 +68,7 @@
 
     --primary: 140 70% 40%;
     --primary-foreground: 0 0% 100%;
+    --primary-subtle: 140 50% 70%; /* Manter o mesmo tom sutil para consistência */
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;

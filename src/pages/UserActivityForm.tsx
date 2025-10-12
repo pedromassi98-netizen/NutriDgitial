@@ -58,11 +58,11 @@ const UserActivityForm = () => {
   return (
     <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
-        <CardHeader className="bg-primary rounded-t-xl p-6 text-center">
-          <CardTitle className="text-3xl font-extrabold text-primary-foreground mb-2">
+        <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
+          <CardTitle className="text-3xl font-extrabold text-primary mb-2">
             Sua Atividade Física 🏃‍♀️
           </CardTitle>
-          <CardDescription className="text-center text-primary-foreground/90">
+          <CardDescription className="text-center text-muted-foreground">
             Conte-nos sobre seus hábitos de atividade física para uma dieta mais precisa.
           </CardDescription>
         </CardHeader>

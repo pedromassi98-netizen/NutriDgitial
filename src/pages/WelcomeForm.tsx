@@ -63,16 +63,16 @@ const WelcomeForm = () => {
   return (
     <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
-        <CardHeader className="bg-primary rounded-t-xl p-6 text-center">
+        <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
-            <CardTitle className="text-3xl font-extrabold text-primary-foreground">
+            <CardTitle className="text-3xl font-extrabold text-primary">
               NutriDigital
             </CardTitle>
           </div>
-          <p className="text-lg font-semibold text-primary-foreground mb-2">
+          <p className="text-lg font-semibold text-foreground mb-2">
             Seu Nutricionista Digital 24h 🍏
           </p>
-          <CardDescription className="text-center text-primary-foreground/90">
+          <CardDescription className="text-center text-muted-foreground">
             Sua jornada para uma vida mais saudável e feliz começa aqui! ✨
           </CardDescription>
         </CardHeader>
