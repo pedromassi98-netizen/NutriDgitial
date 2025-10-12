@@ -24,7 +24,7 @@ import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Sun, Coffee, Utensils, Apple, Moon, Clock, Lightbulb } from "lucide-react"; // Importar ícones
+import { Sun, Coffee, Utensils, Apple, Moon, Clock, Lightbulb, CheckCircle2 } from "lucide-react"; // Importar ícones
 
 const formSchema = z.object({
   wakeUpTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
