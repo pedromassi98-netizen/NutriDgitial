@@ -101,13 +101,75 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     /* Food pattern SVG for dark mode (subtle white outlines) */
-    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='none'/%3E%3C!-- Cucumber Slice (top left) --%3E%3Cpath d='M20 20 C25 15, 35 15, 40 20 C45 25, 45 35, 40 40 C35 45, 25 45, 20 40 C15 35, 15 25, 20 20 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M28 28 C30 26, 32 26, 34 28 C36 30, 36 32, 34 34 C32 36, 30 36, 28 34 C26 32, 26 30, 28 28 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Ice Cream Cone (top center-left) --%3E%3Cpath d='M60 10 C70 0, 80 0, 85 10 C90 20, 80 30, 70 30 C60 30, 50 20, 60 10 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3Cpath d='M70 30 L75 50 L65 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3Cpath d='M65 50 L70 30 L75 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3C!-- Grapes (top center) --%3E%3Ccircle cx='120' cy='15' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='130' cy='25' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='110' cy='25' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='120' cy='35' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M120 5 L125 0 L115 0 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Bread Slice (top right) --%3E%3Cpath d='M150 0 Q170 5, 175 20 L175 40 Q160 45, 150 40 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='158' cy='15' r='2' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='165' cy='25' r='2' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Bell Pepper (mid-left) --%3E%3Cpath d='M20 70 C30 60, 40 60, 50 70 C55 80, 45 90, 35 90 C25 90, 15 80, 20 70 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M35 65 L30 55 L40 55 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Carrot (mid-center) --%3E%3Cpath d='M70 60 L80 70 L85 90 L75 110 L65 90 L60 70 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M75 55 L70 50 L80 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Pear (mid-center-right) --%3E%3Cpath d='M110 60 C120 50, 130 50, 135 60 C140 70, 130 80, 120 80 C110 80, 100 70, 110 60 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='118' cy='68' r='2' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='112' cy='75' r='2' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Fish (mid-right) --%3E%3Cpath d='M150 80 C165 70, 185 70, 190 85 C195 100, 180 110, 165 110 C150 110, 140 95, 150 80 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M165 90 L170 95 L160 95 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='155' cy='88' r='2' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Croissant (bottom left) --%3E%3Cpath d='M10 130 C20 120, 40 120, 50 130 C55 140, 45 150, 35 150 C25 150, 15 140, 10 130 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Broccoli (bottom center-left) --%3E%3Cpath d='M60 120 C70 110, 80 110, 85 120 C90 130, 80 140, 70 140 C60 140, 50 130, 60 120 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M70 140 L75 150 L65 150 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Strawberry (bottom center) --%3E%3Cpath d='M110 150 C120 140, 130 140, 135 150 C140 160, 130 170, 120 170 C110 170, 100 160, 110 150 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M125 145 L120 135 L130 135 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Tomato (bottom right) --%3E%3Ccircle cx='170' cy='170' r='15' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M170 155 L175 150 L165 150 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Banana (bottom right) --%3E%3Cpath d='M150 100 C165 90, 190 90, 190 115 S175 140, 160 140 C145 140, 130 125, 130 110 S135 95, 150 100 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Avocado Half (bottom left, overlapping) --%3E%3Cpath d='M30 170 C40 160, 50 160, 55 170 C60 180, 50 190, 40 190 C30 190, 20 180, 30 170 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='42' cy='178' r='5' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Pizza Slice (bottom center-right) --%3E%3Cpath d='M120 180 L140 180 L130 200 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='128' cy='188' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='132' cy='192' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Chicken Leg (mid-right, slightly lower) --%3E%3Cpath d='M180 130 C190 120, 195 130, 190 140 C185 150, 170 150, 160 140 C150 130, 155 120, 160 130 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C/svg%3E");
+    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='none'/%3E%3C!-- Cucumber Slice (top left) --%3E%3Cpath d='M20 20 C25 15, 35 15, 40 20 C45 25, 45 35, 40 40 C35 45, 25 45, 20 40 C15 35, 15 25, 20 20 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M28 28 C30 26, 32 26, 34 28 C36 30, 36 32, 34 34 C32 36, 30 36, 28 34 C26 32, 26 30, 28 28 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Ice Cream Cone (top center-left) --%3E%3Cpath d='M60 10 C70 0, 80 0, 85 10 C90 20, 80 30, 70 30 C60 30, 50 20, 60 10 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3Cpath d='M70 30 L75 50 L65 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3Cpath d='M65 50 L70 30 L75 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3C!-- Grapes (top center) --%3E%3Ccircle cx='120' cy='15' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='130' cy='25' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='110' cy='25' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='120' cy='35' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M120 5 L125 0 L115 0 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Bread Slice (top right) --%3E%3Cpath d='M150 0 Q170 5, 175 20 L175 40 Q160 45, 150 40 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='158' cy='15' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='165' cy='25' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Bell Pepper (mid-left) --%3E%3Cpath d='M20 70 C30 60, 40 60, 50 70 C55 80, 45 90, 35 90 C25 90, 15 80, 20 70 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M35 65 L30 55 L40 55 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Carrot (mid-center) --%3E%3Cpath d='M70 60 L80 70 L85 90 L75 110 L65 90 L60 70 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M75 55 L70 50 L80 50 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Pear (mid-center-right) --%3E%3Cpath d='M110 60 C120 50, 130 50, 135 60 C140 70, 130 80, 120 80 C110 80, 100 70, 110 60 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='118' cy='68' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='112' cy='75' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Fish (mid-right) --%3E%3Cpath d='M150 80 C165 70, 185 70, 190 85 C195 100, 180 110, 165 110 C150 110, 140 95, 150 80 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M165 90 L170 95 L160 95 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='155' cy='88' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Croissant (bottom left) --%3E%3Cpath d='M10 130 C20 120, 40 120, 50 130 C55 140, 45 150, 35 150 C25 150, 15 140, 10 130 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Broccoli (bottom center-left) --%3E%3Cpath d='M60 120 C70 110, 80 110, 85 120 C90 130, 80 140, 70 140 C60 140, 50 130, 60 120 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M70 140 L75 150 L65 150 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Strawberry (bottom center) --%3E%3Cpath d='M110 150 C120 140, 130 140, 135 150 C140 160, 130 170, 120 170 C110 170, 100 160, 110 150 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M125 145 L120 135 L130 135 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Tomato (bottom right) --%3E%3Ccircle cx='170' cy='170' r='15' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M170 155 L175 150 L165 150 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Banana (bottom right) --%3E%3Cpath d='M150 100 C165 90, 190 90, 190 115 S175 140, 160 140 C145 140, 130 125, 130 110 S135 95, 150 100 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Avocado Half (bottom left, overlapping) --%3E%3Cpath d='M30 170 C40 160, 50 160, 55 170 C60 180, 50 190, 40 190 C30 190, 20 180, 30 170 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='42' cy='178' r='5' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Pizza Slice (bottom center-right) --%3E%3Cpath d='M120 180 L140 180 L130 200 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='128' cy='188' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='132' cy='192' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Chicken Leg (mid-right, slightly lower) --%3E%3Cpath d='M180 130 C190 120, 195 130, 190 140 C185 150, 170 150, 160 140 C150 130, 155 120, 160 130 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  .dark {
+    /* Adjust dark mode colors if necessary, but images are light-themed */
+    --background: 222.2 47.4% 11.2%;
+    --foreground: 210 40% 98%;
+
+    --card: 217.2 32.6% 17.5%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 140 70% 40%;
+    --primary-foreground: 0 0% 100%;
+    --primary-subtle: 140 50% 70%; /* Manter o mesmo tom sutil para consistência */
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%; /* This is a dark gray, not light green */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 140 70% 40%;
+
+    --info-background: 210 80% 20%;
+    --info-foreground: 210 80% 80%;
+    --warning-background: 30 80% 20%;
+    --warning-foreground: 30 80% 80%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Food pattern SVG for dark mode (subtle white outlines) */
+    --food-pattern-svg: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='none'/%3E%3C!-- Cucumber Slice (top left) --%3E%3Cpath d='M20 20 C25 15, 35 15, 40 20 C45 25, 45 35, 40 40 C35 45, 25 45, 20 40 C15 35, 15 25, 20 20 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M28 28 C30 26, 32 26, 34 28 C36 30, 36 32, 34 34 C32 36, 30 36, 28 34 C26 32, 26 30, 28 28 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Ice Cream Cone (top center-left) --%3E%3Cpath d='M60 10 C70 0, 80 0, 85 10 C90 20, 80 30, 70 30 C60 30, 50 20, 60 10 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3Cpath d='M70 30 L75 50 L65 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3Cpath d='M65 50 L70 30 L75 50 Z' fill='none' stroke='rgba(255, 255, 255, 0.05)' stroke-width='0.5'/%3E%3C!-- Grapes (top center) --%3E%3Ccircle cx='120' cy='15' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='130' cy='25' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='110' cy='25' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Ccircle cx='120' cy='35' r='8' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3Cpath d='M120 5 L125 0 L115 0 Z' fill='none' stroke='rgba(255, 255, 255, 0.1)' stroke-width='1'/%3E%3C!-- Bread Slice (top right) --%3E%3Cpath d='M150 0 Q170 5, 175 20 L175 40 Q160 45, 150 40 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='158' cy='15' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='165' cy='25' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Bell Pepper (mid-left) --%3E%3Cpath d='M20 70 C30 60, 40 60, 50 70 C55 80, 45 90, 35 90 C25 90, 15 80, 20 70 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M35 65 L30 55 L40 55 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Carrot (mid-center) --%3E%3Cpath d='M70 60 L80 70 L85 90 L75 110 L65 90 L60 70 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M75 55 L70 50 L80 50 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Pear (mid-center-right) --%3E%3Cpath d='M110 60 C120 50, 130 50, 135 60 C140 70, 130 80, 120 80 C110 80, 100 70, 110 60 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='118' cy='68' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='112' cy='75' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Fish (mid-right) --%3E%3Cpath d='M150 80 C165 70, 185 70, 190 85 C195 100, 180 110, 165 110 C150 110, 140 95, 150 80 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M165 90 L170 95 L160 95 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='155' cy='88' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Croissant (bottom left) --%3E%3Cpath d='M10 130 C20 120, 40 120, 50 130 C55 140, 45 150, 35 150 C25 150, 15 140, 10 130 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Broccoli (bottom center-left) --%3E%3Cpath d='M60 120 C70 110, 80 110, 85 120 C90 130, 80 140, 70 140 C60 140, 50 130, 60 120 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M70 140 L75 150 L65 150 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Strawberry (bottom center) --%3E%3Cpath d='M110 150 C120 140, 130 140, 135 150 C140 160, 130 170, 120 170 C110 170, 100 160, 110 150 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M125 145 L120 135 L130 135 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Tomato (bottom right) --%3E%3Ccircle cx='170' cy='170' r='15' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Cpath d='M170 155 L175 150 L165 150 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Banana (bottom right) --%3E%3Cpath d='M150 100 C165 90, 190 90, 190 115 S175 140, 160 140 C145 140, 130 125, 130 110 S135 95, 150 100 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Avocado Half (bottom left, overlapping) --%3E%3Cpath d='M30 170 C40 160, 50 160, 55 170 C60 180, 50 190, 40 190 C30 190, 20 180, 30 170 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='42' cy='178' r='5' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Pizza Slice (bottom center-right) --%3E%3Cpath d='M120 180 L140 180 L130 200 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='128' cy='188' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3Ccircle cx='132' cy='192' r='2' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C!-- Chicken Leg (mid-right, slightly lower) --%3E%3Cpath d='M180 130 C190 120, 195 130, 190 140 C185 150, 170 150, 160 140 C150 130, 155 120, 160 130 Z' fill='none' stroke='rgba(0, 0, 0, 0.2)' stroke-width='1'/%3E%3C/svg%3E");
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html {
+    /* Using a font stack that prioritizes system UI fonts but falls back to common professional sans-serifs */
+    font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -122,5 +184,26 @@
     background-image: var(--food-pattern-svg); /* Use dark mode pattern */
     background-repeat: repeat;
     background-size: 200px 200px;
+  }
+
+  /* Explicit typographic hierarchy for standard HTML elements */
+  h1 {
+    @apply text-4xl font-extrabold tracking-tight lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  h4 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  p {
+    @apply leading-relaxed;
   }
 }

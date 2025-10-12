@@ -67,7 +67,7 @@ const UserGoalsForm = () => {
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <Target className="size-8 text-primary mr-2" />
-            <CardTitle className="text-2xl font-bold text-primary">Seu Objetivo Principal</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Seu Objetivo Principal</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
             Qual é o seu principal objetivo com a dieta?

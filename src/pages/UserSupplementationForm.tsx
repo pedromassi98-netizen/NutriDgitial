@@ -113,7 +113,7 @@ const UserSupplementationForm = () => {
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <Pill className="size-8 text-primary mr-2" />
-            <CardTitle className="text-2xl font-bold text-primary">Sua Suplementação</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Sua Suplementação</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
             Conte-nos sobre seu uso de suplementos para uma dieta ainda mais completa.

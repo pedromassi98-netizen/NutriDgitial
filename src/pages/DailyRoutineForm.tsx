@@ -28,7 +28,7 @@ import { Sun, Coffee, Utensils, Apple, Moon, Clock, Lightbulb, CheckCircle2 } fr
 
 const formSchema = z.object({
   wakeUpTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
-  breakfastTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
+  breakfastTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).."),
   lunchTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   snackTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).").optional().or(z.literal('')),
   dinnerTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
@@ -72,7 +72,7 @@ const DailyRoutineForm = () => {
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <Clock className="size-8 text-primary mr-2" />
-            <CardTitle className="text-2xl font-bold text-primary">Sua Rotina Diária</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Sua Rotina Diária</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
             Horários das suas refeições para MÁXIMOS resultados

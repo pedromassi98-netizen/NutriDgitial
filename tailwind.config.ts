@@ -77,6 +77,25 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         xl: "1rem", // For larger rounded corners on cards
       },
+      fontFamily: {
+        sans: [
+          "Inter", // A popular, modern sans-serif
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "Noto Sans",
+          "sans-serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
+        ],
+      },
       keyframes: {
         "accordion-down": {
           from: {

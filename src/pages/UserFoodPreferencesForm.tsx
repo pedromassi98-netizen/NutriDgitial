@@ -71,7 +71,7 @@ const UserFoodPreferencesForm = () => {
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <Utensils className="size-8 text-primary mr-2" />
-            <CardTitle className="text-2xl font-bold text-primary">Preferências Alimentares</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Preferências Alimentares</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
             Conte-nos sobre seus gostos e restrições para uma dieta perfeita para você.

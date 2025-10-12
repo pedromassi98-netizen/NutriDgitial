@@ -77,7 +77,7 @@ const UserProfileForm = () => {
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <User className="size-8 text-primary mr-2" />
-            <CardTitle className="text-2xl font-bold text-primary">Suas Medidas Essenciais</CardTitle>
+            <CardTitle className="text-3xl font-extrabold text-primary">Suas Medidas Essenciais</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
             Preencha suas informações para criar sua dieta personalizada.
