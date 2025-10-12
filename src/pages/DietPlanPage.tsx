@@ -133,9 +133,9 @@ const DietPlanPage = () => {
     return (
       <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
         <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
-          <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
-            <CardTitle className="text-2xl font-bold text-primary">Gerando Sua Dieta Personalizada...</CardTitle>
-            <CardDescription className="text-center text-muted-foreground">
+          <CardHeader className="bg-primary rounded-t-xl p-6 text-center">
+            <CardTitle className="text-2xl font-bold text-primary-foreground">Gerando Sua Dieta Personalizada...</CardTitle>
+            <CardDescription className="text-center text-primary-foreground/90">
               Estamos calculando tudo para você!
             </CardDescription>
           </CardHeader>
@@ -152,9 +152,9 @@ const DietPlanPage = () => {
     return (
       <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
         <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
-          <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
-            <CardTitle className="text-2xl font-bold text-destructive">Erro ao Gerar Dieta ⚠️</CardTitle>
-            <CardDescription className="text-center text-muted-foreground">
+          <CardHeader className="bg-primary rounded-t-xl p-6 text-center">
+            <CardTitle className="text-2xl font-bold text-primary-foreground">Erro ao Gerar Dieta ⚠️</CardTitle>
+            <CardDescription className="text-center text-primary-foreground/90">
               {error}
             </CardDescription>
           </CardHeader>
@@ -172,12 +172,12 @@ const DietPlanPage = () => {
   return (
     <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
       <Card className="w-full max-w-2xl bg-card text-card-foreground shadow-xl rounded-xl border-none">
-        <CardHeader className="bg-accent rounded-t-xl p-6 text-center">
+        <CardHeader className="bg-primary rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
-            <UtensilsCrossed className="size-8 text-primary mr-2" />
-            <CardTitle className="text-3xl font-bold text-primary">Sua Dieta Personalizada!</CardTitle>
+            <UtensilsCrossed className="size-8 text-primary-foreground mr-2" />
+            <CardTitle className="text-3xl font-bold text-primary-foreground">Sua Dieta Personalizada!</CardTitle>
           </div>
-          <CardDescription className="text-center text-muted-foreground mt-2">
+          <CardDescription className="text-center text-primary-foreground/90 mt-2">
             Aqui está o plano alimentar que criamos para você, baseado nas suas informações.
           </CardDescription>
         </CardHeader>
