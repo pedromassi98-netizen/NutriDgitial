@@ -13,9 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "@/components/ui/use-toast";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MadeWithDyad } from "@/components/made-with-dyad";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 
@@ -39,14 +38,7 @@ const UserActivityForm = () => {
   const hasPhysicalActivity = form.watch("hasPhysicalActivity");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast({
-      title: "Dados de Atividade Física Salvos!",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // Removido o toast de sucesso
     console.log("Dados de atividade física do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");

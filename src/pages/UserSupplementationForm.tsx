@@ -23,7 +23,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import React from "react";
@@ -91,14 +90,7 @@ const UserSupplementationForm = () => {
   const wantsToToUseSupplements = form.watch("wantsToToUseSupplements");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast({
-      title: "Informações de Suplementação Coletadas! 💊",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // Removido o toast de sucesso
     console.log("Suplementação do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");

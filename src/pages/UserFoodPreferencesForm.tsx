@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
@@ -49,14 +48,7 @@ const UserFoodPreferencesForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast({
-      title: "Preferências Alimentares Coletadas! 😋",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // Removido o toast de sucesso
     console.log("Preferências do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
