@@ -22,12 +22,7 @@ const parseFilename = (filename: string): Omit<DietPlanMetadata, 'content'> | nu
   }
 
   const parts = base.split('_');
-  // Expected format: [Goal]_[Gender]_[Age]anos_[Weight]kg_[Optional_Restriction].txt
-  if (parts.length < 4) {
-    console.log('Filename has too few parts:', base); // DEBUG
-    return null;
-  }
-
+  
   const goalMap: { [key: string]: AllFormData['goals']['goal'] } = {
     "Bulking": "bulking",
     "Emagrecimento": "weight_loss",
@@ -42,31 +37,39 @@ const parseFilename = (filename: string): Omit<DietPlanMetadata, 'content'> | nu
     "Fem": "female",
   };
 
-  const goalKey = parts[0];
-  const genderKey = parts[1];
+  let parsedGoal: AllFormData['goals']['goal'] | undefined;
+  let parsedGender: AllFormData['profile']['gender'] | undefined;
+  let parsedAge: number | undefined;
+  let parsedWeight: number | undefined;
+  const parsedRestrictions: string[] = [];
 
-  const goal = goalMap[goalKey];
-  const gender = genderMap[genderKey];
-  const age = parseInt(parts[2].replace('anos', ''));
-  const weight = parseInt(parts[3].replace('kg', ''));
-
-  const restrictions: string[] = [];
-  for (let i = 4; i < parts.length; i++) {
-    restrictions.push(parts[i]);
+  for (const part of parts) {
+    if (goalMap[part] && !parsedGoal) {
+      parsedGoal = goalMap[part];
+    } else if (genderMap[part] && !parsedGender) {
+      parsedGender = genderMap[part];
+    } else if (part.includes('anos') && !parsedAge) {
+      parsedAge = parseInt(part.replace('anos', ''));
+    } else if (part.includes('kg') && !parsedWeight) {
+      parsedWeight = parseInt(part.replace('kg', ''));
+    } else {
+      // Assume it's a restriction if it doesn't match other patterns
+      parsedRestrictions.push(part);
+    }
   }
 
-  if (!goal || !gender || isNaN(age) || isNaN(weight)) {
-    console.log('Failed to parse metadata from filename:', base, { goal, gender, age, weight }); // DEBUG
+  if (!parsedGoal || !parsedGender || isNaN(parsedAge || 0) || isNaN(parsedWeight || 0)) {
+    console.log('Failed to parse metadata from filename:', base, { parsedGoal, parsedGender, parsedAge, parsedWeight }); // DEBUG
     return null;
   }
 
   return {
     filename: base + '.txt',
-    goal,
-    gender,
-    age,
-    weight,
-    restrictions,
+    goal: parsedGoal,
+    gender: parsedGender,
+    age: parsedAge!,
+    weight: parsedWeight!,
+    restrictions: parsedRestrictions,
   };
 };
 
