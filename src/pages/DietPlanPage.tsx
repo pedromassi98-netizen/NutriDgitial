@@ -13,11 +13,7 @@ import { Button } from "@/components/ui/button";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import {
   AllFormData,
-  calculateBMR,
-  calculateTDEE,
-  adjustCaloriesForGoal,
   calculateWaterIntake,
-  generateMealPlan,
   Meal,
 } from "@/utils/dietCalculations";
 import { Separator } from "@/components/ui/separator";
@@ -26,6 +22,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { UtensilsCrossed, Droplet, Download, Mail } from "lucide-react"; // Importar ícones
 import { supabase } from "@/integrations/supabase/client"; // Importar o cliente Supabase
+import { selectBestDietPlan, parseDietPlanText } from "@/utils/dietPlanLoader"; // Importar o novo utilitário
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
@@ -41,7 +38,7 @@ const DietPlanPage = () => {
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadDietData = () => {
+    const loadDietData = async () => {
       try {
         const storedData = localStorage.getItem("nutriDigitalFormData");
         if (!storedData) {
@@ -63,23 +60,26 @@ const DietPlanPage = () => {
         setUserEmail(welcome.email);
         setUserName(welcome.name);
 
-        // 1. Calcular BMR
-        const bmr = calculateBMR(profile.weight, profile.height, profile.age, profile.gender);
+        // Seleciona o melhor plano de dieta com base nos dados do usuário
+        const selectedPlanMetadata = selectBestDietPlan(formData);
 
-        // 2. Calcular TDEE
-        const tdee = calculateTDEE(bmr, activity.trainingLevel);
+        if (!selectedPlanMetadata) {
+          setError("Não foi possível encontrar um plano de dieta adequado para o seu perfil. Por favor, revise suas informações.");
+          setLoading(false);
+          return;
+        }
 
-        // 3. Ajustar calorias para o objetivo
-        const adjustedCalories = Math.round(adjustCaloriesForGoal(tdee, goals.goal));
-        setTotalCalories(adjustedCalories);
+        // Analisa o conteúdo do plano de dieta selecionado
+        const parsedDietPlan = parseDietPlanText(selectedPlanMetadata.content);
+        setDietPlan(parsedDietPlan);
 
-        // 4. Calcular ingestão de água
+        // Calcula o total de calorias somando as calorias de todas as refeições do plano
+        const calculatedTotalCalories = parsedDietPlan.reduce((sum, meal) => sum + meal.totalMealCalories, 0);
+        setTotalCalories(calculatedTotalCalories);
+
+        // A ingestão de água ainda é calculada com base no peso do perfil
         const requiredWater = Math.round(calculateWaterIntake(profile.weight) / 1000); // em litros
         setWaterIntake(requiredWater);
-
-        // 5. Gerar plano de refeições
-        const generatedPlan = generateMealPlan(adjustedCalories, routine, foodPreferences, foodPreferences.dietaryRestrictions || "");
-        setDietPlan(generatedPlan);
 
         setLoading(false);
       } catch (e) {

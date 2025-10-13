@@ -308,7 +308,7 @@ export const generateMealPlan = (
           servings = Math.max(1, Math.round(targetCalories / food.caloriesPerServing));
         } else {
           // For smaller components, try to fit within remaining calories or just add 1 serving
-          servings = Math.max(1, Math.round(targetCalories / food.caloriesPerServing));
+          servings = Math.max(1, Math.floor((mealCaloriesTarget - currentMealCalories) / food.caloriesPerServing));
           if (servings * food.caloriesPerServing > mealCaloriesTarget - currentMealCalories && mealCaloriesTarget - currentMealCalories > 0) {
             servings = Math.max(1, Math.floor((mealCaloriesTarget - currentMealCalories) / food.caloriesPerServing));
           }
@@ -321,7 +321,7 @@ export const generateMealPlan = (
         const quantityValue = parseInt(food.servingSize.replace('g', '').replace('unidade', '1').replace('fatias', '1'));
         const unit = food.servingSize.includes('g') ? 'g' : (food.servingSize.includes('unidade') || food.servingSize.includes('fatias') ? ' unidades' : '');
         
-        mealItems.push({
+        items.push({
           food: food.name,
           quantity: `${servings * quantityValue}${unit}`,
           substitutions: food.substitutions || [],
@@ -379,7 +379,7 @@ export const generateMealPlan = (
     meals.push({
       time: formatTime(mealInfo.time),
       name: mealInfo.name,
-      items: mealItems,
+      items: items,
       totalMealCalories: Math.round(currentMealCalories),
       totalMealProtein: Math.round(currentMealProtein),
       totalMealCarbs: Math.round(currentMealCarbs),
