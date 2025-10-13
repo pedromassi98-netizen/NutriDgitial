@@ -2,6 +2,7 @@ import { AllFormData, Meal, MealItemDetails } from "./dietCalculations";
 
 // Importa todos os arquivos .txt da pasta diet-plans como texto bruto
 const dietPlanFiles = import.meta.glob('../data/diet-plans/*.txt', { as: 'raw', eager: true });
+console.log('Loaded diet plan files:', Object.keys(dietPlanFiles)); // DEBUG
 
 interface DietPlanMetadata {
   filename: string;
@@ -15,11 +16,17 @@ interface DietPlanMetadata {
 
 const parseFilename = (filename: string): Omit<DietPlanMetadata, 'content'> | null => {
   const base = filename.split('/').pop()?.replace('.txt', '');
-  if (!base) return null;
+  if (!base) {
+    console.log('Failed to get base filename for:', filename); // DEBUG
+    return null;
+  }
 
   const parts = base.split('_');
   // Expected format: [Goal]_[Gender]_[Age]anos_[Weight]kg_[Optional_Restriction].txt
-  if (parts.length < 4) return null;
+  if (parts.length < 4) {
+    console.log('Filename has too few parts:', base); // DEBUG
+    return null;
+  }
 
   const goalMap: { [key: string]: AllFormData['goals']['goal'] } = {
     "Bulking": "bulking",
@@ -35,8 +42,11 @@ const parseFilename = (filename: string): Omit<DietPlanMetadata, 'content'> | nu
     "Fem": "female",
   };
 
-  const goal = goalMap[parts[0]];
-  const gender = genderMap[parts[1]];
+  const goalKey = parts[0];
+  const genderKey = parts[1];
+
+  const goal = goalMap[goalKey];
+  const gender = genderMap[genderKey];
   const age = parseInt(parts[2].replace('anos', ''));
   const weight = parseInt(parts[3].replace('kg', ''));
 
@@ -45,7 +55,10 @@ const parseFilename = (filename: string): Omit<DietPlanMetadata, 'content'> | nu
     restrictions.push(parts[i]);
   }
 
-  if (!goal || !gender || isNaN(age) || isNaN(weight)) return null;
+  if (!goal || !gender || isNaN(age) || isNaN(weight)) {
+    console.log('Failed to parse metadata from filename:', base, { goal, gender, age, weight }); // DEBUG
+    return null;
+  }
 
   return {
     filename: base + '.txt',
@@ -65,9 +78,14 @@ const allDietPlansMetadata: DietPlanMetadata[] = Object.entries(dietPlanFiles)
   })
   .filter((m): m is DietPlanMetadata => m !== null);
 
+console.log('Parsed diet plans metadata:', allDietPlansMetadata); // DEBUG
+
 export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | null => {
   const { profile, goals, foodPreferences } = formData;
-  if (!profile || !goals || !foodPreferences) return null;
+  if (!profile || !goals || !foodPreferences) {
+    console.log('Missing formData for diet plan selection.'); // DEBUG
+    return null;
+  }
 
   let bestMatch: DietPlanMetadata | null = null;
   let minDifference = Infinity;
@@ -78,9 +96,14 @@ export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | nu
   const userWeight = profile.weight;
   const userRestrictions = foodPreferences.dietaryRestrictions?.toLowerCase().split(',').map(s => s.trim()).filter(Boolean) || [];
 
+  console.log('User data for diet selection:', { userGoal, userGender, userAge, userWeight, userRestrictions }); // DEBUG
+
   for (const plan of allDietPlansMetadata) {
+    console.log('Checking plan:', plan.filename, { planGoal: plan.goal, userGoal, planGender: plan.gender, userGender }); // DEBUG
+
     // Filtro básico por objetivo e gênero
     if (plan.goal !== userGoal || plan.gender !== userGender) {
+      console.log('Skipping plan due to goal or gender mismatch:', plan.filename); // DEBUG
       continue;
     }
 
@@ -96,6 +119,7 @@ export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | nu
     // Se o usuário tem restrições, prioriza planos com restrições correspondentes
     // Se o usuário tem restrições e o plano não tem nenhuma correspondência, pula este plano
     if (userRestrictions.length > 0 && restrictionMatchScore === 0) {
+      console.log('Skipping plan due to restriction mismatch:', plan.filename); // DEBUG
       continue;
     }
 
@@ -107,12 +131,14 @@ export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | nu
     // Multiplicar por um fator maior para restrições garante que planos com restrições correspondentes sejam preferidos
     const currentDifference = ageDiff + weightDiff - (restrictionMatchScore * 50); 
 
+    console.log('Plan:', plan.filename, 'Age Diff:', ageDiff, 'Weight Diff:', weightDiff, 'Restriction Score:', restrictionMatchScore, 'Total Diff:', currentDifference); // DEBUG
+
     if (currentDifference < minDifference) {
       minDifference = currentDifference;
       bestMatch = plan;
     }
   }
-
+  console.log('Best match found:', bestMatch?.filename); // DEBUG
   return bestMatch;
 };
 
@@ -127,7 +153,10 @@ export const parseDietPlanText = (text: string): Meal[] => {
 
     // Extrai o nome e o horário da refeição do cabeçalho
     const mealHeaderMatch = lines[0].match(/^#\s(.+)\s\((\d{2}:\d{2})\)$/);
-    if (!mealHeaderMatch) return;
+    if (!mealHeaderMatch) {
+      console.log('Failed to parse meal header:', lines[0]); // DEBUG
+      return;
+    }
 
     const mealName = mealHeaderMatch[1];
     const mealTime = mealHeaderMatch[2];
@@ -171,6 +200,8 @@ export const parseDietPlanText = (text: string): Meal[] => {
           fat,
           substitutions,
         });
+      } else {
+        console.log('Failed to parse meal item line:', line); // DEBUG
       }
     }
 
@@ -184,6 +215,6 @@ export const parseDietPlanText = (text: string): Meal[] => {
       totalMealFat,
     });
   });
-
+  console.log('Parsed meals:', meals); // DEBUG
   return meals;
 };
