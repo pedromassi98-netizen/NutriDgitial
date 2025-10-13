@@ -159,8 +159,8 @@ export const parseDietPlanText = (text: string): Meal[] => {
   let currentMeal: Meal | null = null;
 
   for (const line of lines) {
-    // Regex para identificar o cabeçalho da refeição (ex: "Café da manhã (07:00)")
-    const mealHeaderMatch = line.match(/^(.+)\s\((\d{2}:\d{2})\)$/);
+    // Regex para identificar o cabeçalho da refeição (ex: "# Café da manhã (07:00)")
+    const mealHeaderMatch = line.match(/^#\s(.+)\s\((\d{2}:\d{2})\)$/);
     if (mealHeaderMatch) {
       if (currentMeal) {
         meals.push(currentMeal);
@@ -203,12 +203,12 @@ export const parseDietPlanText = (text: string): Meal[] => {
       continue;
     }
 
-    // Se a linha não for um cabeçalho, calorias ou substituições, assume que é um item da refeição
-    // O formato do item é mais livre, então vamos capturar a linha inteira como "food" e "quantity"
+    // Regex para identificar itens da refeição (ex: "- 200g de batata doce cozida")
     // E definir macros como 0, já que não estão detalhados por item no TXT
-    if (line && !line.startsWith('Total Diário:') && !line.startsWith('Observações:') && !line.startsWith('---')) {
+    const itemMatch = line.match(/^- (.+)$/);
+    if (itemMatch) {
       const foodItem: MealItemDetails = {
-        food: line, // A linha inteira como descrição do alimento
+        food: itemMatch[1], // A linha inteira após o hífen como descrição do alimento
         quantity: "a gosto", // Quantidade padrão, pois não é especificada por item
         substitutions: [],
         calories: 0, // Não especificado por item
@@ -218,6 +218,12 @@ export const parseDietPlanText = (text: string): Meal[] => {
       };
       currentMeal.items.push(foodItem);
       console.log('Found meal item:', foodItem.food); // DEBUG
+      continue;
+    }
+    
+    // Ignora outras linhas que não são relevantes para o parsing da dieta
+    if (line && !line.startsWith('Total Diário:') && !line.startsWith('Observações:') && !line.startsWith('---') && !line.startsWith('# Perfil:')) {
+      console.log('Skipping unrecognized line:', line); // DEBUG
     }
   }
 
