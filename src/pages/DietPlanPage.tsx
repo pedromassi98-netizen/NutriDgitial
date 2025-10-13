@@ -71,6 +71,7 @@ const DietPlanPage = () => {
 
         // Analisa o conteúdo do plano de dieta selecionado
         const parsedDietPlan = parseDietPlanText(selectedPlanMetadata.content);
+        console.log("Parsed Diet Plan for rendering:", parsedDietPlan); // NEW LOG
         setDietPlan(parsedDietPlan);
 
         // Calcula o total de calorias somando as calorias de todas as refeições do plano
@@ -82,15 +83,24 @@ const DietPlanPage = () => {
         setWaterIntake(requiredWater);
 
         setLoading(false);
-      } catch (e) {
+      } catch (e: any) { // Explicitly type e as any to access .message
         console.error("Erro ao carregar dados da dieta:", e);
-        setError("Ocorreu um erro ao gerar sua dieta. Tente novamente.");
+        setError("Ocorreu um erro ao gerar sua dieta. Tente novamente. Detalhes: " + e.message); // Added error message
         setLoading(false);
       }
     };
 
     loadDietData();
   }, []);
+
+  // NEW LOGS for state changes
+  useEffect(() => {
+    console.log("DietPlanPage - current dietPlan state:", dietPlan);
+    console.log("DietPlanPage - current totalCalories state:", totalCalories);
+    console.log("DietPlanPage - current waterIntake state:", waterIntake);
+    console.log("DietPlanPage - current loading state:", loading);
+    console.log("DietPlanPage - current error state:", error);
+  }, [dietPlan, totalCalories, waterIntake, loading, error]);
 
   const generatePdf = async () => {
     if (!dietPlanRef.current) return null;

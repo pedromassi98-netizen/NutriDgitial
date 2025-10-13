@@ -86,7 +86,7 @@ console.log('Parsed diet plans metadata:', allDietPlansMetadata); // DEBUG
 export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | null => {
   const { profile, goals, foodPreferences } = formData;
   if (!profile || !goals || !foodPreferences) {
-    console.log('Missing formData for diet plan selection.'); // DEBUG
+    console.log('Missing formData for diet plan selection. Cannot select diet plan.'); // DEBUG
     return null;
   }
 
@@ -102,46 +102,52 @@ export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | nu
   console.log('User data for diet selection:', { userGoal, userGender, userAge, userWeight, userRestrictions }); // DEBUG
 
   for (const plan of allDietPlansMetadata) {
-    console.log('Checking plan:', plan.filename, { planGoal: plan.goal, userGoal, planGender: plan.gender, userGender }); // DEBUG
+    console.log('Evaluating plan:', plan.filename); // DEBUG
+    console.log('  Plan Goal:', plan.goal, 'User Goal:', userGoal); // DEBUG
+    console.log('  Plan Gender:', plan.gender, 'User Gender:', userGender); // DEBUG
 
-    // Filtro básico por objetivo e gênero
+    // Strict filter by objective and gender
     if (plan.goal !== userGoal || plan.gender !== userGender) {
-      console.log('Skipping plan due to goal or gender mismatch:', plan.filename); // DEBUG
+      console.log('  Skipping plan due to goal or gender mismatch.'); // DEBUG
       continue;
     }
 
-    // Verifica a correspondência de restrições
+    // Check restriction match
     let restrictionMatchScore = 0;
     const planRestrictionsLower = plan.restrictions.map(r => r.toLowerCase());
+    console.log('  Plan Restrictions:', planRestrictionsLower); // DEBUG
     for (const userRes of userRestrictions) {
-      if (planRestrictionsLower.includes(userRes.replace(/ /g, ''))) { // Remove espaços para correspondência
+      // Ensure user restriction is also normalized (e.g., "low carb" -> "lowcarb")
+      const normalizedUserRes = userRes.replace(/ /g, '');
+      if (planRestrictionsLower.includes(normalizedUserRes)) {
         restrictionMatchScore += 1;
       }
     }
+    console.log('  User Restrictions:', userRestrictions, 'Restriction Match Score:', restrictionMatchScore); // DEBUG
 
-    // Se o usuário tem restrições, prioriza planos com restrições correspondentes
-    // Se o usuário tem restrições e o plano não tem nenhuma correspondência, pula este plano
+    // If user has restrictions, but this plan has no matching restrictions, skip it.
+    // This ensures that if a user specifies a restriction, we only consider plans that explicitly cater to it.
     if (userRestrictions.length > 0 && restrictionMatchScore === 0) {
-      console.log('Skipping plan due to restriction mismatch:', plan.filename); // DEBUG
+      console.log('  Skipping plan: User has restrictions, but this plan has no matching restrictions.'); // DEBUG
       continue;
     }
 
-    // Calcula a diferença para idade e peso
+    // Calculate age and weight difference
     const ageDiff = Math.abs(plan.age - userAge);
     const weightDiff = Math.abs(plan.weight - userWeight);
     
-    // Pondera a diferença, dando um bônus para correspondências de restrição
-    // Multiplicar por um fator maior para restrições garante que planos com restrições correspondentes sejam preferidos
+    // Weight the difference, giving a bonus for restriction matches
     const currentDifference = ageDiff + weightDiff - (restrictionMatchScore * 50); 
 
-    console.log('Plan:', plan.filename, 'Age Diff:', ageDiff, 'Weight Diff:', weightDiff, 'Restriction Score:', restrictionMatchScore, 'Total Diff:', currentDifference); // DEBUG
+    console.log('  Age Diff:', ageDiff, 'Weight Diff:', weightDiff, 'Restriction Score:', restrictionMatchScore, 'Total Diff:', currentDifference); // DEBUG
 
     if (currentDifference < minDifference) {
       minDifference = currentDifference;
       bestMatch = plan;
+      console.log('  New best match:', bestMatch.filename, 'with difference:', minDifference); // DEBUG
     }
   }
-  console.log('Best match found:', bestMatch?.filename); // DEBUG
+  console.log('Final best match found:', bestMatch?.filename, 'with minDifference:', minDifference); // DEBUG
   return bestMatch;
 };
 
@@ -149,6 +155,7 @@ export const parseDietPlanText = (text: string): Meal[] => {
   const meals: Meal[] = [];
   // Divide o texto em seções de refeição, usando a regex para encontrar o início de cada nova refeição
   const mealSections = text.split(/(?=^#\s)/gm).filter(Boolean);
+  console.log('Meal sections found:', mealSections.length); // DEBUG
 
   mealSections.forEach(section => {
     const lines = section.split('\n').map(line => line.trim()).filter(Boolean);
