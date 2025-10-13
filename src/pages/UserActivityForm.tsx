@@ -19,10 +19,10 @@ import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 
 const formSchema = z.object({
-  hasPhysicalActivity: z.enum(["yes", "no"], {
+  practicesPhysicalActivity: z.enum(["yes", "no"], {
     required_error: "Por favor, selecione se você pratica atividade física.",
   }),
-  activityLevel: z.string().optional(),
+  trainingLevel: z.enum(["sedentary", "light", "moderate", "intense", "very_intense"]).optional(),
 });
 
 const UserActivityForm = () => {
@@ -30,12 +30,12 @@ const UserActivityForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      hasPhysicalActivity: undefined,
-      activityLevel: "",
+      practicesPhysicalActivity: undefined,
+      trainingLevel: undefined,
     },
   });
 
-  const hasPhysicalActivity = form.watch("hasPhysicalActivity");
+  const practicesPhysicalActivity = form.watch("practicesPhysicalActivity");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Dados de atividade física do usuário:", values);
@@ -62,7 +62,7 @@ const UserActivityForm = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="hasPhysicalActivity"
+                name="practicesPhysicalActivity"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-lg font-semibold">Você pratica alguma atividade física?</FormLabel>
@@ -103,10 +103,10 @@ const UserActivityForm = () => {
                 )}
               />
 
-              {hasPhysicalActivity === "yes" && (
+              {practicesPhysicalActivity === "yes" && (
                 <FormField
                   control={form.control}
-                  name="activityLevel"
+                  name="trainingLevel"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
                       <FormLabel className="text-lg font-semibold">Qual o seu nível de atividade?</FormLabel>
@@ -154,25 +154,25 @@ const UserActivityForm = () => {
                           </FormItem>
                           <FormItem
                             className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
-                              field.value === "very_active" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                              field.value === "intense" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
                             }`}
                           >
                             <FormControl>
-                              <RadioGroupItem value="very_active" id="level-very-active" className="sr-only" />
+                              <RadioGroupItem value="intense" id="level-intense" className="sr-only" />
                             </FormControl>
-                            <FormLabel htmlFor="level-very-active" className="font-normal cursor-pointer">
+                            <FormLabel htmlFor="level-intense" className="font-normal cursor-pointer">
                               Muito Ativo (exercício intenso 6-7 dias/semana)
                             </FormLabel>
                           </FormItem>
                           <FormItem
                             className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
-                              field.value === "extra_active" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                              field.value === "very_intense" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
                             }`}
                           >
                             <FormControl>
-                              <RadioGroupItem value="extra_active" id="level-extra-active" className="sr-only" />
+                              <RadioGroupItem value="very_intense" id="level-very-intense" className="sr-only" />
                             </FormControl>
-                            <FormLabel htmlFor="level-extra-active" className="font-normal cursor-pointer">
+                            <FormLabel htmlFor="level-very-intense" className="font-normal cursor-pointer">
                               Extremamente Ativo (exercício muito intenso, 2x ao dia)
                             </FormLabel>
                           </FormItem>

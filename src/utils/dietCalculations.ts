@@ -16,10 +16,10 @@ const userProfileFormSchema = z.object({
 
 const userActivityFormSchema = z.object({
   practicesPhysicalActivity: z.enum(["yes", "no"]),
-  activityType: z.string().optional(),
-  doesCardio: z.enum(["yes", "no"]).optional(),
-  cardioFrequency: z.coerce.number().optional(),
-  trainingTime: z.enum(["morning", "afternoon", "night", "any"]).optional(),
+  activityType: z.string().optional(), // This field is no longer directly used in the form, but kept for backward compatibility if needed elsewhere.
+  doesCardio: z.enum(["yes", "no"]).optional(), // Not used in current form, but kept for backward compatibility
+  cardioFrequency: z.coerce.number().optional(), // Not used in current form, but kept for backward compatibility
+  trainingTime: z.enum(["morning", "afternoon", "night", "any"]).optional(), // Not used in current form, but kept for backward compatibility
   trainingLevel: z.enum(["sedentary", "light", "moderate", "intense", "very_intense"]).optional(),
 });
 
