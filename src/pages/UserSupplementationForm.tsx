@@ -134,24 +134,32 @@ const UserSupplementationForm = () => {
                         defaultValue={field.value}
                         className="flex space-x-4"
                       >
-                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
+                        <FormItem 
+                          className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center cursor-pointer transition-all duration-200 ${
+                            field.value === "yes" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="yes" id="supplements-yes" className="sr-only" />
                           </FormControl>
                           <Label
                             htmlFor="supplements-yes"
-                            className="flex items-center font-normal text-foreground cursor-pointer"
+                            className="flex items-center font-normal text-lg cursor-pointer"
                           >
                             <Check className="size-4 mr-2 text-primary" /> Sim
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
+                        <FormItem 
+                          className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center cursor-pointer transition-all duration-200 ${
+                            field.value === "no" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="no" id="supplements-no" className="sr-only" />
                           </FormControl>
                           <Label
                             htmlFor="supplements-no"
-                            className="flex items-center font-normal text-foreground cursor-pointer"
+                            className="flex items-center font-normal text-lg cursor-pointer"
                           >
                             <X className="size-4 mr-2 text-destructive" /> Não
                           </Label>
@@ -227,24 +235,32 @@ const UserSupplementationForm = () => {
                         defaultValue={field.value}
                         className="flex space-x-4"
                       >
-                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
+                        <FormItem 
+                          className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center cursor-pointer transition-all duration-200 ${
+                            field.value === "yes" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="yes" id="wants-supplements-yes" className="sr-only" />
                           </FormControl>
                           <Label
                             htmlFor="wants-supplements-yes"
-                            className="flex items-center font-normal text-foreground cursor-pointer"
+                            className="flex items-center font-normal text-lg cursor-pointer"
                           >
                             <Check className="size-4 mr-2 text-primary" /> Sim
                           </Label>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center">
+                        <FormItem 
+                          className={`flex items-center space-x-2 space-y-0 bg-secondary p-3 rounded-md flex-1 justify-center cursor-pointer transition-all duration-200 ${
+                            field.value === "no" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
+                          }`}
+                        >
                           <FormControl>
                             <RadioGroupItem value="no" id="wants-supplements-no" className="sr-only" />
                           </FormControl>
                           <Label
                             htmlFor="wants-supplements-no"
-                            className="flex items-center font-normal text-foreground cursor-pointer"
+                            className="flex items-center font-normal text-lg cursor-pointer"
                           >
                             <X className="size-4 mr-2 text-destructive" /> Não
                           </Label>
