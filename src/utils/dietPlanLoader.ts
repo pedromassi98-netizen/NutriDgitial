@@ -153,78 +153,78 @@ export const selectBestDietPlan = (formData: AllFormData): DietPlanMetadata | nu
 
 export const parseDietPlanText = (text: string): Meal[] => {
   const meals: Meal[] = [];
-  // Divide o texto em seções de refeição, usando a regex para encontrar o início de cada nova refeição
-  const mealSections = text.split(/(?=^#\s)/gm).filter(Boolean);
-  console.log('Meal sections found:', mealSections.length); // DEBUG
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+  console.log('All lines from diet plan text:', lines); // DEBUG
 
-  mealSections.forEach(section => {
-    const lines = section.split('\n').map(line => line.trim()).filter(Boolean);
-    if (lines.length === 0) return;
+  let currentMeal: Meal | null = null;
 
-    // Extrai o nome e o horário da refeição do cabeçalho
-    const mealHeaderMatch = lines[0].match(/^#\s(.+)\s\((\d{2}:\d{2})\)$/);
-    if (!mealHeaderMatch) {
-      console.log('Failed to parse meal header:', lines[0]); // DEBUG
-      return;
+  for (const line of lines) {
+    // Regex para identificar o cabeçalho da refeição (ex: "Café da manhã (07:00)")
+    const mealHeaderMatch = line.match(/^(.+)\s\((\d{2}:\d{2})\)$/);
+    if (mealHeaderMatch) {
+      if (currentMeal) {
+        meals.push(currentMeal);
+      }
+      currentMeal = {
+        name: mealHeaderMatch[1],
+        time: mealHeaderMatch[2],
+        items: [],
+        totalMealCalories: 0,
+        totalMealProtein: 0,
+        totalMealCarbs: 0,
+        totalMealFat: 0,
+      };
+      console.log('Found meal header:', currentMeal.name, currentMeal.time); // DEBUG
+      continue;
     }
 
-    const mealName = mealHeaderMatch[1];
-    const mealTime = mealHeaderMatch[2];
-    const items: MealItemDetails[] = [];
-    let totalMealCalories = 0;
-    let totalMealProtein = 0;
-    let totalMealCarbs = 0;
-    let totalMealFat = 0;
-
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i];
-      // Verifica se é a linha de total da refeição
-      if (line.startsWith('Total da Refeição:')) {
-        const totalMatch = line.match(/Total da Refeição:\s*(\d+)\s*kcal\s*\|\s*P:(\d+)g\s*\|\s*C:(\d+)g\s*\|\s*G:(\d+)g/);
-        if (totalMatch) {
-          totalMealCalories = parseInt(totalMatch[1]);
-          totalMealProtein = parseInt(totalMatch[2]);
-          totalMealCarbs = parseInt(totalMatch[3]);
-          totalMealFat = parseInt(totalMatch[4]);
-        }
-        break; // Termina de processar os itens da refeição
-      }
-
-      // Extrai os detalhes de cada item da refeição
-      const itemMatch = line.match(/-\s*(.+?):\s*(.+?)\s*\((\d+)\s*kcal,\s*P:(\d+)g,\s*C:(\d+)g,\s*G:(\d+)g\)\s*(?:\(Ou:\s*(.+)\))?/);
-      if (itemMatch) {
-        const food = itemMatch[1];
-        const quantity = itemMatch[2];
-        const calories = parseInt(itemMatch[3]);
-        const protein = parseInt(itemMatch[4]);
-        const carbs = parseInt(itemMatch[5]);
-        const fat = parseInt(itemMatch[6]);
-        const substitutions = itemMatch[7] ? itemMatch[7].split(',').map(s => s.trim()) : [];
-
-        items.push({
-          food,
-          quantity,
-          calories,
-          protein,
-          carbs,
-          fat,
-          substitutions,
-        });
-      } else {
-        console.log('Failed to parse meal item line:', line); // DEBUG
-      }
+    if (!currentMeal) {
+      // Ignora linhas antes do primeiro cabeçalho de refeição (ex: Perfil, Peso, etc.)
+      continue;
     }
 
-    meals.push({
-      name: mealName,
-      time: mealTime,
-      items,
-      totalMealCalories,
-      totalMealProtein,
-      totalMealCarbs,
-      totalMealFat,
-    });
-  });
+    // Regex para identificar calorias da refeição (ex: "Calorias: ~430 kcal")
+    const caloriesMatch = line.match(/^Calorias:\s*~?(\d+)\s*kcal$/);
+    if (caloriesMatch) {
+      currentMeal.totalMealCalories = parseInt(caloriesMatch[1]);
+      console.log('Found meal calories:', currentMeal.totalMealCalories); // DEBUG
+      continue;
+    }
+
+    // Regex para identificar substituições (ex: "Substituições: ovos por 30g whey; pão por 50g tapioca.")
+    const substitutionsMatch = line.match(/^Substituições:\s*(.+)$/);
+    if (substitutionsMatch) {
+      // Adiciona as substituições ao último item da refeição, se houver
+      if (currentMeal.items.length > 0) {
+        const lastItem = currentMeal.items[currentMeal.items.length - 1];
+        lastItem.substitutions = substitutionsMatch[1].split(';').map(s => s.trim()).filter(Boolean);
+        console.log('Found substitutions for last item:', lastItem.substitutions); // DEBUG
+      }
+      continue;
+    }
+
+    // Se a linha não for um cabeçalho, calorias ou substituições, assume que é um item da refeição
+    // O formato do item é mais livre, então vamos capturar a linha inteira como "food" e "quantity"
+    // E definir macros como 0, já que não estão detalhados por item no TXT
+    if (line && !line.startsWith('Total Diário:') && !line.startsWith('Observações:') && !line.startsWith('---')) {
+      const foodItem: MealItemDetails = {
+        food: line, // A linha inteira como descrição do alimento
+        quantity: "a gosto", // Quantidade padrão, pois não é especificada por item
+        substitutions: [],
+        calories: 0, // Não especificado por item
+        protein: 0,  // Não especificado por item
+        carbs: 0,    // Não especificado por item
+        fat: 0,      // Não especificado por item
+      };
+      currentMeal.items.push(foodItem);
+      console.log('Found meal item:', foodItem.food); // DEBUG
+    }
+  }
+
+  if (currentMeal) {
+    meals.push(currentMeal);
+  }
+  
   console.log('Parsed meals:', meals); // DEBUG
   return meals;
 };
