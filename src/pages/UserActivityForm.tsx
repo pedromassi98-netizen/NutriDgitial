@@ -38,7 +38,6 @@ const UserActivityForm = () => {
   const hasPhysicalActivity = form.watch("hasPhysicalActivity");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Removido o toast de sucesso
     console.log("Dados de atividade física do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
@@ -185,9 +184,14 @@ const UserActivityForm = () => {
                 />
               )}
 
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
-                Continuar
-              </Button>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-6">
+                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="w-full rounded-md py-2 text-lg font-semibold border-border">
+                  Voltar ⬅️
+                </Button>
+                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
+                  Continuar
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

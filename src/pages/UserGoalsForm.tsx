@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { useNavigate } from "react-router-dom"; // Correção aqui
+import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Target, TrendingDown, TrendingUp, Scale, Apple, Scissors, Beef } from "lucide-react"; // Importar ícones
 import { Label } from "@/components/ui/label"; // Importar Label
@@ -44,7 +44,6 @@ const UserGoalsForm = () => {
   const selectedGoal = form.watch("goal"); // Observar o valor selecionado
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Removido o toast de sucesso
     console.log("Objetivo do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");

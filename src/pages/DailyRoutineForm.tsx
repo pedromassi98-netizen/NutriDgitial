@@ -49,7 +49,6 @@ const DailyRoutineForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Removido o toast de sucesso
     console.log("Rotina diária do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");

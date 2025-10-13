@@ -90,7 +90,6 @@ const UserSupplementationForm = () => {
   const wantsToToUseSupplements = form.watch("wantsToToUseSupplements");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Removido o toast de sucesso
     console.log("Suplementação do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
