@@ -1,5 +1,5 @@
-import { AllFormData, Meal, MealItemDetails, calculateBMR, calculateTDEE, adjustCaloriesForGoal, calculateMacronutrients } from "./dietCalculations";
-import { foodDatabase, FoodItem } from "../data/foodDatabase";
+import { AllFormData, Meal, MealItemDetails, calculateBMR, calculateTDEE, adjustCaloriesForGoal, calculateMacronutrients, FoodItem } from "./dietCalculations";
+import { foodDatabase } from "../data/foodDatabase";
 
 // Nova função para selecionar e gerar o plano de dieta dinamicamente
 export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalCalories: number, totalProtein: number, totalCarbs: number, totalFat: number } | null => {
@@ -31,10 +31,11 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     let filtered = foodDatabase.filter(item =>
       item.category === category &&
       item.mealTypes.includes(mealType) && // Filtrar por mealType
-      !excludeIds.includes(item.id)
+      !excludeIds.includes(item.id) &&
+      item.unit !== 'a gosto' // Excluir 'a gosto' para seleção principal de macros
     );
 
-    // Prioritize preferred foods
+    // Priorize preferred foods
     const preferredItems = filtered.filter(item => preferredIds.includes(item.id));
     const otherItems = filtered.filter(item => !preferredIds.includes(item.id));
 
@@ -88,17 +89,30 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     const addedFoodIds: string[] = [];
 
     // Função auxiliar para adicionar um item à refeição
-    const addItemToMeal = (foodItem: FoodItem, quantity: number, isMainComponent: boolean = true) => {
-      if (quantity <= 0) return;
+    const addItemToMeal = (foodItem: FoodItem, quantityValue: number) => {
+      if (quantityValue <= 0 && foodItem.unit !== 'a gosto') return;
 
-      const itemCalories = (foodItem.caloriesPer100g / 100) * quantity;
-      const itemProtein = (foodItem.proteinPer100g / 100) * quantity;
-      const itemCarbs = (foodItem.carbsPer100g / 100) * quantity;
-      const itemFat = (foodItem.fatPer100g / 100) * quantity;
+      let actualGrams = quantityValue;
+      let displayQuantity = `${quantityValue}`;
+
+      if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
+        actualGrams = quantityValue * (foodItem.servingSizeGrams || 1);
+        displayQuantity = `${quantityValue} ${foodItem.unit}`;
+      } else if (foodItem.unit === 'g' || foodItem.unit === 'ml') {
+        displayQuantity = `${quantityValue}${foodItem.unit}`;
+      } else if (foodItem.unit === 'a gosto') {
+        actualGrams = 0; // Não contribui para macros principais
+        displayQuantity = 'a gosto';
+      }
+
+      const itemCalories = (foodItem.caloriesPer100g / 100) * actualGrams;
+      const itemProtein = (foodItem.proteinPer100g / 100) * actualGrams;
+      const itemCarbs = (foodItem.carbsPer100g / 100) * actualGrams;
+      const itemFat = (foodItem.fatPer100g / 100) * actualGrams;
 
       meal.items.push({
         food: foodItem.name,
-        quantity: `${quantity}${foodItem.unit || 'g'}`,
+        quantity: displayQuantity,
         substitutions: foodItem.substitutions?.map(id => foodDatabase.find(f => f.id === id)?.name || id) || [],
         calories: Math.round(itemCalories),
         protein: Math.round(itemProtein),
@@ -128,27 +142,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       addItemToMeal(carbItem, targetCarbQuantity);
     }
 
-    // 3. Adicionar Vegetal (a gosto)
-    const vegetables = filterFoodItems('vegetable', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
-    if (vegetables.length > 0) {
-      const veggieItem = vegetables[0];
-      meal.items.push({
-        food: veggieItem.name,
-        quantity: 'a gosto',
-        substitutions: [],
-        calories: 10, // Estimativa mínima
-        protein: 1,
-        carbs: 2,
-        fat: 0,
-      });
-      addedFoodIds.push(veggieItem.id);
-      currentMealCalories += 10;
-      currentMealProtein += 1;
-      currentMealCarbs += 2;
-      currentMealFat += 0;
-    }
-
-    // 4. Adicionar Gordura Saudável (se necessário e não já coberto)
+    // 3. Adicionar Gordura Saudável (se necessário e não já coberto)
     const fats = filterFoodItems('fat', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
     if (fats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
       const fatItem = fats[0];
@@ -156,19 +150,38 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       addItemToMeal(fatItem, targetFatQuantity);
     }
 
-    // 5. Ajustar com frutas ou laticínios para lanches ou café da manhã
+    // 4. Adicionar Frutas ou Laticínios para lanches ou café da manhã
     if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
       const fruits = filterFoodItems('fruit', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
       if (fruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
         const fruitItem = fruits[0];
-        addItemToMeal(fruitItem, fruitItem.defaultQuantity || 100, false);
+        addItemToMeal(fruitItem, fruitItem.defaultQuantity);
       }
       const dairy = filterFoodItems('dairy', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
       if (dairy.length > 0 && currentMealProtein < mealTargetProtein * 0.9) {
         const dairyItem = dairy[0];
-        addItemToMeal(dairyItem, dairyItem.defaultQuantity || 100, false);
+        addItemToMeal(dairyItem, dairyItem.defaultQuantity);
       }
     }
+
+    // 5. Adicionar Vegetais "a gosto" (cenoura, alface, tomate)
+    const agostos = foodDatabase.filter(item =>
+      item.unit === 'a gosto' &&
+      item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
+      !addedFoodIds.includes(item.id)
+    );
+    agostos.forEach(veggieItem => {
+      meal.items.push({
+        food: veggieItem.name,
+        quantity: 'a gosto',
+        substitutions: [],
+        calories: 0, // Não contabilizar calorias para 'a gosto'
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+      });
+    });
+
 
     // Calcular totais da refeição
     meal.totalMealCalories = Math.round(currentMealCalories);
