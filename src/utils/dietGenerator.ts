@@ -18,12 +18,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   console.log("Target Calories:", targetCalories);
   console.log("Target Macros:", targetMacros);
 
-  const userRestrictions = foodPreferences.dietaryRestrictions?.toLowerCase().split(',').map(s => s.trim()).filter(Boolean) || [];
-  const isVegetarian = userRestrictions.includes('vegetariano');
-  const isVegan = userRestrictions.includes('vegano');
-  const isGlutenFree = userRestrictions.includes('sem gluten') || userRestrictions.includes('semglúten');
-  const isLactoseFree = userRestrictions.includes('sem lactose') || userRestrictions.includes('semlactose');
-  const isLowCarb = userRestrictions.includes('low carb') || userRestrictions.includes('lowcarb');
+  // Removida a lógica de userRestrictions, isVegetarian, isVegan, isGlutenFree, isLactoseFree, isLowCarb
 
   const parsePreferredFoods = (foodString: string | undefined) => {
     return foodString?.toLowerCase().split(',').map(s => s.trim()).filter(Boolean) || [];
@@ -37,12 +32,8 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const filterFoodItems = (category: FoodItem['category'], preferredNames: string[], excludeIds: string[] = []) => {
     let filtered = foodDatabase.filter(item =>
       item.category === category &&
-      !excludeIds.includes(item.id) &&
-      (!isVegetarian || item.isVegetarian) &&
-      (!isVegan || item.isVegan) &&
-      (!isGlutenFree || item.isGlutenFree) &&
-      (!isLactoseFree || item.isLactoseFree) &&
-      (!isLowCarb || item.category !== 'carb' || item.carbsPer100g < 10) // Simple low-carb filter
+      !excludeIds.includes(item.id)
+      // Removidos os filtros de restrições alimentares
     );
 
     // Prioritize preferred foods

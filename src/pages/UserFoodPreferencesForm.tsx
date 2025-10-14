@@ -23,14 +23,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Utensils, Coffee, Apple, Soup, Ban } from "lucide-react"; // Importar ícones relevantes
+import { Utensils, Coffee, Apple, Soup } from "lucide-react"; // Importar ícones relevantes
 
 const formSchema = z.object({
   preferredBreakfastFoods: z.string().optional(),
   preferredLunchFoods: z.string().optional(),
   preferredSnackFoods: z.string().optional(),
   preferredDinnerFoods: z.string().optional(),
-  dietaryRestrictions: z.string().optional(),
 });
 
 const UserFoodPreferencesForm = () => {
@@ -42,7 +41,6 @@ const UserFoodPreferencesForm = () => {
       preferredLunchFoods: "",
       preferredSnackFoods: "",
       preferredDinnerFoods: "",
-      dietaryRestrictions: "",
     },
   });
 
@@ -125,25 +123,6 @@ const UserFoodPreferencesForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Textarea placeholder="Ex: salmão, batata doce, espinafre" {...field} className="resize-none bg-input text-foreground border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dietaryRestrictions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center">
-                      <Ban className="size-4 mr-2 text-destructive" /> Restrições Alimentares / Alergias
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Descreva suas restrições ou alergias (Ex: sem glúten, sem lactose, vegetariano)"
-                        className="resize-none bg-input text-foreground border-border"
-                        {...field}
-                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
