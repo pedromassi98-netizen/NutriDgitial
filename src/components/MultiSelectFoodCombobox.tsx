@@ -44,25 +44,14 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   const handleSelect = (foodId: string) => {
     let newSelection: string[];
 
-    if (foodId === 'none_fruits') {
-      // Se 'Nenhuma fruta' for selecionada
-      if (selectedFoods.includes('none_fruits')) {
-        // Se já estiver selecionada, desmarcar
-        newSelection = selectedFoods.filter((id) => id !== 'none_fruits');
-      } else {
-        // Se não estiver selecionada, marcar e desmarcar todas as outras frutas
-        newSelection = ['none_fruits'];
-      }
+    // A opção 'none_fruits' não deve mais aparecer, então esta lógica é simplificada.
+    // Se o usuário selecionar uma fruta, ela é adicionada/removida normalmente.
+    if (selectedFoods.includes(foodId)) {
+      newSelection = selectedFoods.filter((id) => id !== foodId);
     } else {
-      // Se outra fruta for selecionada
-      if (selectedFoods.includes(foodId)) {
-        // Se já estiver selecionada, desmarcar
-        newSelection = selectedFoods.filter((id) => id !== foodId);
-      } else {
-        // Se não estiver selecionada, marcar e desmarcar 'Nenhuma fruta'
-        newSelection = [...selectedFoods.filter((id) => id !== 'none_fruits'), foodId];
-      }
+      newSelection = [...selectedFoods, foodId];
     }
+    
     setSelectedFoods(newSelection);
     onChange(newSelection);
   };
@@ -75,6 +64,10 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
 
   const availableFoods = foodDatabase
     .filter(food => {
+      // Excluir 'none_fruits' se o filtro de categoria for 'fruit'
+      if (categoryFilter === 'fruit' && food.id === 'none_fruits') {
+        return false;
+      }
       // Se houver um filtro de tipo de refeição, e o alimento não deve ser exibido na seleção de tipo de refeição, exclua-o.
       if (mealTypeFilter && food.displayInMealTypeSelection === false) {
         return false;

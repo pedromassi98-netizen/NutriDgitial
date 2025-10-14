@@ -31,7 +31,7 @@ const formSchema = z.object({
   preferredLunchFoods: z.array(z.string()).optional(),
   preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."),
   preferredDinnerFoods: z.array(z.string()).optional(),
-  preferredFruits: z.array(z.string()).optional(),
+  preferredFruits: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fruta."), // Tornando obrigatório
   preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."),
 }).superRefine((data, ctx) => {
   const validateMealSelection = (mealFoods: string[] | undefined, mealName: string) => {
@@ -91,7 +91,7 @@ const UserFoodPreferencesForm = () => {
       preferredLunchFoods: [],
       preferredSnackFoods: [],
       preferredDinnerFoods: [],
-      preferredFruits: [],
+      preferredFruits: [], // Removido 'none_fruits' como valor padrão
       preferredFats: [],
     },
   });
@@ -212,7 +212,7 @@ const UserFoodPreferencesForm = () => {
                       <MultiSelectFoodCombobox
                         value={field.value || []}
                         onChange={field.onChange}
-                        placeholder="Selecione suas frutas preferidas ou 'Nenhuma fruta'..."
+                        placeholder="Selecione suas frutas preferidas..."
                         categoryFilter="fruit"
                       />
                     </FormControl>

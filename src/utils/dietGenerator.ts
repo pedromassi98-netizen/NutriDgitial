@@ -285,33 +285,46 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       }
     }
 
-    // 5. Adicionar Frutas (priorizando as preferidas)
+    // 5. Adicionar Frutas (priorizando as preferidas e tentando incluir até 2)
     const eligiblePreferredFruits = foodDatabase.filter(item =>
       preferredFruitFoodIds.includes(item.id) &&
       item.category === 'fruit' &&
       item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
       !addedFoodIds.includes(item.id) &&
-      item.id !== 'none_fruits' && // Excluir a opção "Nenhuma fruta"
       item.caloriesPer100g > 0
     );
 
-    if (eligiblePreferredFruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
-      const fruitItem = eligiblePreferredFruits[0]; // Pega a primeira fruta preferida elegível
-      addItemToMeal(fruitItem, fruitItem.defaultQuantity);
-    } else if (preferredFruitFoodIds.includes('none_fruits')) {
-      // Se o usuário explicitamente não quer frutas, não adiciona
-    } else {
-      // Fallback para frutas se nenhuma preferida for selecionada ou se as preferidas não forem elegíveis
+    let fruitsAddedCount = 0;
+    for (const fruitItem of eligiblePreferredFruits) {
+      if (fruitsAddedCount >= 2) break; // Limitar a 2 frutas
+
+      const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
+
+      if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
+          currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
+        addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+        fruitsAddedCount++;
+      }
+    }
+
+    // Fallback para frutas se menos de 2 frutas preferidas foram adicionadas ou se as preferidas não foram elegíveis
+    if (fruitsAddedCount < 2) {
       const fallbackFruits = foodDatabase.filter(item =>
         item.category === 'fruit' &&
         item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
         !addedFoodIds.includes(item.id) &&
-        item.id !== 'none_fruits' &&
         item.caloriesPer100g > 0
       );
-      if (fallbackFruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
-        const fruitItem = fallbackFruits[0];
-        addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+
+      for (const fruitItem of fallbackFruits) {
+        if (fruitsAddedCount >= 2) break;
+
+        const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
+        if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
+            currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
+          addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+          fruitsAddedCount++;
+        }
       }
     }
 
