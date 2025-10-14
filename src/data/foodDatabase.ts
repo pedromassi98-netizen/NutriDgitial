@@ -97,6 +97,7 @@ export const foodDatabase: FoodItem[] = [
   { id: 'lentils', name: 'Lentilha', category: 'legume', caloriesPer100g: 116, proteinPer100g: 9, carbsPer100g: 20, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'beans', name: 'Feijão cozido', category: 'legume', caloriesPer100g: 100, proteinPer100g: 7, carbsPer100g: 18, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'quinoa', name: 'Quinoa', category: 'legume', caloriesPer100g: 120, proteinPer100g: 4.4, carbsPer100g: 21, fatPer100g: 1.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'chickpeas', name: 'Grão de Bico', category: 'legume', caloriesPer100g: 164, proteinPer100g: 8.9, carbsPer100g: 27.4, fatPer100g: 2.6, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
 
   // Laticínios (além do iogurte grego)
   { id: 'milk_lactose_free', name: 'Leite sem lactose', category: 'dairy', caloriesPer100g: 47, proteinPer100g: 3.2, carbsPer100g: 4.7, fatPer100g: 1.5, unit: 'ml', defaultQuantity: 200, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
