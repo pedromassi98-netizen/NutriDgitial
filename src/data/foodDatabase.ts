@@ -31,6 +31,20 @@ export const foodDatabase: FoodItem[] = [
   // Carboidratos
   { id: 'sweet_potato', name: 'Batata doce', category: 'carb', caloriesPer100g: 86, proteinPer100g: 1.6, carbsPer100g: 20, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'brown_rice', name: 'Arroz integral', category: 'carb', caloriesPer100g: 111, proteinPer100g: 2.6, carbsPer100g: 23, fatPer100g: 0.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  {
+    id: 'arroz_branco',
+    name: 'Arroz Branco Cozido',
+    category: 'carb',
+    caloriesPer100g: 130,
+    proteinPer100g: 2.7,
+    carbsPer100g: 28,
+    fatPer100g: 0.3,
+    unit: 'g',
+    defaultQuantity: 150,
+    isGlutenFree: true,
+    isLactoseFree: true,
+    mealTypes: ['lunch', 'dinner']
+  },
   { id: 'oats', name: 'Aveia', category: 'carb', caloriesPer100g: 389, proteinPer100g: 16.9, carbsPer100g: 66.3, fatPer100g: 6.9, unit: 'g', defaultQuantity: 50, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'whole_wheat_bread', name: 'Pão integral', category: 'carb', caloriesPer100g: 265, proteinPer100g: 13, carbsPer100g: 49, fatPer100g: 3.6, unit: 'fatia', servingSizeGrams: 30, defaultQuantity: 2, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] }, // 2 fatias = 60g
   { id: 'quinoa', name: 'Quinoa', category: 'carb', caloriesPer100g: 120, proteinPer100g: 4.4, carbsPer100g: 21, fatPer100g: 1.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
