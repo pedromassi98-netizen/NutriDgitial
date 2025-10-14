@@ -31,6 +31,9 @@ export const foodDatabase: FoodItem[] = [
   { id: 'minas_cheese', name: 'Queijo Minas Frescal', category: 'protein', caloriesPer100g: 260, proteinPer100g: 17, carbsPer100g: 2, fatPer100g: 20, unit: 'fatia', servingSizeGrams: 30, defaultQuantity: 1, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
   { id: 'light_cream_cheese', name: 'Requeijão Light', category: 'protein', caloriesPer100g: 100, proteinPer100g: 10, carbsPer100g: 4, fatPer100g: 5, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
   { id: 'ricotta_cream', name: 'Creme de Ricota Light', category: 'protein', caloriesPer100g: 120, proteinPer100g: 8, carbsPer100g: 3, fatPer100g: 8, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
+  { id: 'canned_tuna_water', name: 'Atum em lata ao natural', category: 'protein', caloriesPer100g: 116, proteinPer100g: 25.5, carbsPer100g: 0, fatPer100g: 1.3, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'soy', name: 'Soja (cozida)', category: 'protein', caloriesPer100g: 147, proteinPer100g: 13, carbsPer100g: 9.9, fatPer100g: 6.8, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'cottage_cheese', name: 'Queijo Cottage', category: 'protein', caloriesPer100g: 98, proteinPer100g: 11, carbsPer100g: 3.4, fatPer100g: 4.3, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
 
   // Carboidratos
   { id: 'sweet_potato', name: 'Batata doce', category: 'carb', caloriesPer100g: 86, proteinPer100g: 1.6, carbsPer100g: 20, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
