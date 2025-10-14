@@ -22,6 +22,7 @@ interface MultiSelectFoodComboboxProps {
   onChange: (value: string[]) => void;
   placeholder?: string;
   label?: string;
+  mealTypeFilter?: FoodItem['mealTypes'][number]; // Nova prop
 }
 
 const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
@@ -29,6 +30,7 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   onChange,
   placeholder = "Selecione alimentos...",
   label,
+  mealTypeFilter, // Usar a nova prop
 }) => {
   const [open, setOpen] = React.useState(false);
   const [selectedFoods, setSelectedFoods] = React.useState<string[]>(value);
@@ -56,10 +58,12 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
     onChange(newSelection);
   };
 
-  const availableFoods = foodDatabase.map((food) => ({
-    value: food.id,
-    label: food.name,
-  }));
+  const availableFoods = foodDatabase
+    .filter(food => mealTypeFilter ? food.mealTypes.includes(mealTypeFilter) : true) // Filtrar por mealType
+    .map((food) => ({
+      value: food.id,
+      label: food.name,
+    }));
 
   return (
     <div className="space-y-2">

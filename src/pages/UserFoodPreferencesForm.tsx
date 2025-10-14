@@ -81,6 +81,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o café da manhã..."
+                        mealTypeFilter="breakfast" // Passando o filtro
                       />
                     </FormControl>
                     <FormMessage />
@@ -100,6 +101,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o almoço..."
+                        mealTypeFilter="lunch" // Passando o filtro
                       />
                     </FormControl>
                     <FormMessage />
@@ -119,6 +121,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o lanche..."
+                        mealTypeFilter="snack" // Passando o filtro
                       />
                     </FormControl>
                     <FormMessage />
@@ -138,6 +141,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o jantar..."
+                        mealTypeFilter="dinner" // Passando o filtro
                       />
                     </FormControl>
                     <FormMessage />

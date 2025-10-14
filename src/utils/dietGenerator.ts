@@ -27,9 +27,10 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const preferredSnackFoodIds = getPreferredFoodIds(foodPreferences.preferredSnackFoods);
   const preferredDinnerFoodIds = getPreferredFoodIds(foodPreferences.preferredDinnerFoods);
 
-  const filterFoodItems = (category: FoodItem['category'], preferredIds: string[], excludeIds: string[] = []) => {
+  const filterFoodItems = (category: FoodItem['category'], preferredIds: string[], mealType: FoodItem['mealTypes'][number], excludeIds: string[] = []) => {
     let filtered = foodDatabase.filter(item =>
       item.category === category &&
+      item.mealTypes.includes(mealType) && // Filtrar por mealType
       !excludeIds.includes(item.id)
     );
 
@@ -112,7 +113,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     };
 
     // 1. Adicionar Proteína Principal
-    const proteins = filterFoodItems('protein', mealConfig.preferred);
+    const proteins = filterFoodItems('protein', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number]);
     if (proteins.length > 0) {
       const proteinItem = proteins[0];
       const targetProteinQuantity = Math.round((mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8); // Tentar 80% do alvo de proteína
@@ -120,7 +121,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // 2. Adicionar Carboidrato Principal
-    const carbs = filterFoodItems('carb', mealConfig.preferred, addedFoodIds);
+    const carbs = filterFoodItems('carb', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
     if (carbs.length > 0) {
       const carbItem = carbs[0];
       const targetCarbQuantity = Math.round((mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8); // Tentar 80% do alvo de carboidrato
@@ -128,7 +129,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // 3. Adicionar Vegetal (a gosto)
-    const vegetables = filterFoodItems('vegetable', mealConfig.preferred, addedFoodIds);
+    const vegetables = filterFoodItems('vegetable', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
     if (vegetables.length > 0) {
       const veggieItem = vegetables[0];
       meal.items.push({
@@ -148,7 +149,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // 4. Adicionar Gordura Saudável (se necessário e não já coberto)
-    const fats = filterFoodItems('fat', mealConfig.preferred, addedFoodIds);
+    const fats = filterFoodItems('fat', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
     if (fats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
       const fatItem = fats[0];
       const targetFatQuantity = Math.round(((mealTargetFat - currentMealFat) / (fatItem.fatPer100g / 100)) * 0.5); // Tentar cobrir 50% da gordura restante
@@ -157,12 +158,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
 
     // 5. Ajustar com frutas ou laticínios para lanches ou café da manhã
     if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
-      const fruits = filterFoodItems('fruit', mealConfig.preferred, addedFoodIds);
+      const fruits = filterFoodItems('fruit', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
       if (fruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
         const fruitItem = fruits[0];
         addItemToMeal(fruitItem, fruitItem.defaultQuantity || 100, false);
       }
-      const dairy = filterFoodItems('dairy', mealConfig.preferred, addedFoodIds);
+      const dairy = filterFoodItems('dairy', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
       if (dairy.length > 0 && currentMealProtein < mealTargetProtein * 0.9) {
         const dairyItem = dairy[0];
         addItemToMeal(dairyItem, dairyItem.defaultQuantity || 100, false);
