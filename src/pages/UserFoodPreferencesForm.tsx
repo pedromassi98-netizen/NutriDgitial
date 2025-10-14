@@ -22,16 +22,63 @@ import {
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Utensils, Coffee, Apple, Soup, Grape, Droplet } from "lucide-react"; // Importar ícones relevantes
-import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox"; // Importar o novo componente
+import { Utensils, Coffee, Apple, Soup, Grape, Droplet } from "lucide-react";
+import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox";
+import { foodDatabase } from "@/data/foodDatabase"; // Importar foodDatabase
 
 const formSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
   preferredLunchFoods: z.array(z.string()).optional(),
   preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."),
   preferredDinnerFoods: z.array(z.string()).optional(),
-  preferredFruits: z.array(z.string()).optional(), // Novo campo para frutas
-  preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."), // NOVO CAMPO
+  preferredFruits: z.array(z.string()).optional(),
+  preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."),
+}).superRefine((data, ctx) => {
+  const validateMealSelection = (mealFoods: string[] | undefined, mealName: string) => {
+    if (!mealFoods || mealFoods.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Por favor, selecione pelo menos um alimento para o ${mealName}.`,
+        path: [`preferred${mealName}Foods`],
+      });
+      return;
+    }
+
+    let hasProtein = false;
+    let hasCarb = false;
+
+    for (const foodId of mealFoods) {
+      const foodItem = foodDatabase.find(item => item.id === foodId);
+      if (foodItem) {
+        if (foodItem.category === 'protein') {
+          hasProtein = true;
+        }
+        if (foodItem.category === 'carb') {
+          hasCarb = true;
+        }
+      }
+    }
+
+    if (!hasProtein) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Por favor, selecione pelo menos uma fonte de proteína para o ${mealName}.`,
+        path: [`preferred${mealName}Foods`],
+      });
+    }
+    if (!hasCarb) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Por favor, selecione pelo menos uma fonte de carboidrato para o ${mealName}.`,
+        path: [`preferred${mealName}Foods`],
+      });
+    }
+  };
+
+  validateMealSelection(data.preferredBreakfastFoods, "Breakfast");
+  validateMealSelection(data.preferredLunchFoods, "Lunch");
+  validateMealSelection(data.preferredSnackFoods, "Snack");
+  validateMealSelection(data.preferredDinnerFoods, "Dinner");
 });
 
 const UserFoodPreferencesForm = () => {
@@ -44,7 +91,7 @@ const UserFoodPreferencesForm = () => {
       preferredSnackFoods: [],
       preferredDinnerFoods: [],
       preferredFruits: [],
-      preferredFats: [], // Valor padrão para o novo campo
+      preferredFats: [],
     },
   });
 
@@ -165,7 +212,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione suas frutas preferidas ou 'Nenhuma fruta'..."
-                        categoryFilter="fruit" // Filtrar por categoria 'fruit'
+                        categoryFilter="fruit"
                       />
                     </FormControl>
                     <FormMessage />
@@ -185,7 +232,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione suas fontes de gordura preferidas..."
-                        categoryFilter="fat" // Filtrar por categoria 'fat'
+                        categoryFilter="fat"
                       />
                     </FormControl>
                     <FormMessage />
