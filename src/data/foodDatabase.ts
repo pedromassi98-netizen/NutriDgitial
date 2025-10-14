@@ -87,6 +87,8 @@ export const foodDatabase: FoodItem[] = [
   { id: 'pineapple', name: 'Abacaxi', category: 'fruit', caloriesPer100g: 50, proteinPer100g: 0.4, carbsPer100g: 12.6, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'papaya', name: 'Mamão', category: 'fruit', caloriesPer100g: 40, proteinPer100g: 0.5, carbsPer100g: 10.4, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'strawberry', name: 'Morango', category: 'fruit', caloriesPer100g: 32, proteinPer100g: 0.7, carbsPer100g: 7.7, fatPer100g: 0.3, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
+  { id: 'watermelon', name: 'Melancia', category: 'fruit', caloriesPer100g: 30, proteinPer100g: 0.6, carbsPer100g: 7.6, fatPer100g: 0.2, unit: 'g', defaultQuantity: 150, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: [] },
+  { id: 'melon', name: 'Melão', category: 'fruit', caloriesPer100g: 34, proteinPer100g: 0.8, carbsPer100g: 8.2, fatPer100g: 0.2, unit: 'g', defaultQuantity: 150, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: [] },
   { id: 'none_fruits', name: 'Nenhuma fruta', category: 'fruit', caloriesPer100g: 0, proteinPer100g: 0, carbsPer100g: 0, fatPer100g: 0, unit: 'a gosto', defaultQuantity: 0, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: [] },
 
   // Laticínios (além do iogurte grego)
