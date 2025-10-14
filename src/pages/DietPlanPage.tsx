@@ -111,22 +111,28 @@ const DietPlanPage = () => {
   const generatePdf = async () => {
     if (!dietPlanRef.current) return null;
 
-    const canvas = await html2canvas(dietPlanRef.current, { scale: 2 });
+    const input = dietPlanRef.current;
+    const canvas = await html2canvas(input, { scale: 2 }); // Captura todo o conteúdo
     const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = 210;
-    const pageHeight = 297;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-    let heightLeft = imgHeight;
-    let position = 0;
 
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    const pdf = new jsPDF('p', 'mm', 'a4'); // Tamanho A4: 210mm x 297mm
+    const imgWidth = 210; // Largura A4 em mm
+    const pageHeight = 297; // Altura A4 em mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Altura da imagem no PDF, mantendo a proporção
+
+    let heightLeft = imgHeight;
+    let currentPage = 1;
+
+    // Adiciona a primeira página
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight); // Começa em y=0 para a primeira página
     heightLeft -= pageHeight;
 
-    while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
+    // Adiciona páginas subsequentes se o conteúdo transbordar
+    while (heightLeft > 0) {
+      currentPage++;
+      const yOffset = -(pageHeight * (currentPage - 1)); // Calcula o deslocamento Y para a imagem na nova página
       pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      pdf.addImage(imgData, 'PNG', 0, yOffset, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
 
