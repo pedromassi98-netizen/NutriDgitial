@@ -82,7 +82,8 @@ const DietPlanPage = () => {
         setTotalCarbs(generatedPlan.totalCarbs);
         setTotalFat(generatedPlan.totalFat);
 
-        const requiredWater = Math.round(calculateWaterIntake(profile.weight) / 1000);
+        // Passar o nível de treinamento para a função calculateWaterIntake
+        const requiredWater = Math.round(calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000);
         setWaterIntake(requiredWater);
 
         setLoading(false);

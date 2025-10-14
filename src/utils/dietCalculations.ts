@@ -28,12 +28,12 @@ const userGoalsFormSchema = z.object({
 });
 
 const dailyRoutineFormSchema = z.object({
-  wakeUpTime: z.string(),
-  breakfastTime: z.string(),
-  lunchTime: z.string(),
-  snackTime: z.string().optional(),
-  dinnerTime: z.string(),
-  sleepTime: z.string(),
+  wakeUpTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
+  breakfastTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).."),
+  lunchTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
+  snackTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."), // Removido .optional().or(z.literal(''))
+  dinnerTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
+  sleepTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
 });
 
 const userSupplementationFormSchema = z.object({
@@ -47,7 +47,7 @@ const userSupplementationFormSchema = z.object({
 const userFoodPreferencesFormSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
   preferredLunchFoods: z.array(z.string()).optional(),
-  preferredSnackFoods: z.array(z.string()).optional(),
+  preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."), // Tornando obrigatório
   preferredDinnerFoods: z.array(z.string()).optional(),
 });
 
@@ -122,8 +122,30 @@ export const adjustCaloriesForGoal = (tdee: number, goal: UserGoalsFormData['goa
   }
 };
 
-export const calculateWaterIntake = (weight: number): number => {
-  return weight * 35; // 35ml per kg of body weight
+export const calculateWaterIntake = (weight: number, trainingLevel: UserActivityFormData['trainingLevel']): number => {
+  let mlPerKg = 35; // Default for light activity
+
+  switch (trainingLevel) {
+    case "sedentary":
+      mlPerKg = 30;
+      break;
+    case "light":
+      mlPerKg = 35;
+      break;
+    case "moderate":
+      mlPerKg = 40;
+      break;
+    case "intense":
+      mlPerKg = 45;
+      break;
+    case "very_intense":
+      mlPerKg = 50;
+      break;
+    default:
+      mlPerKg = 35; // Fallback if trainingLevel is undefined or 'no' activity
+      break;
+  }
+  return weight * mlPerKg;
 };
 
 export const calculateMacronutrients = (
