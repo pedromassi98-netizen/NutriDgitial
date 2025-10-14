@@ -28,7 +28,7 @@ import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox"; // I
 const formSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
   preferredLunchFoods: z.array(z.string()).optional(),
-  preferredSnackFoods: z.array(z.string()).optional(),
+  preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."), // Tornando obrigatório
   preferredDinnerFoods: z.array(z.string()).optional(),
 });
 
@@ -39,7 +39,7 @@ const UserFoodPreferencesForm = () => {
     defaultValues: {
       preferredBreakfastFoods: [],
       preferredLunchFoods: [],
-      preferredSnackFoods: [],
+      preferredSnackFoods: [], // Manter como array vazio para o valor padrão
       preferredDinnerFoods: [],
     },
   });
@@ -114,7 +114,7 @@ const UserFoodPreferencesForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Apple className="size-4 mr-2 text-primary" /> Lanche (Opcional)
+                      <Apple className="size-4 mr-2 text-primary" /> Lanche
                     </FormLabel>
                     <FormControl>
                       <MultiSelectFoodCombobox
