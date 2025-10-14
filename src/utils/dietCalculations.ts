@@ -87,19 +87,19 @@ export const calculateTDEE = (bmr: number, trainingLevel: UserActivityFormData['
 
   switch (trainingLevel) {
     case "sedentary":
-      activityFactor = 1.2;
+      activityFactor = 1.2; // Sedentário (pouco ou nenhum exercício)
       break;
     case "light":
-      activityFactor = 1.375;
+      activityFactor = 1.375; // Levemente Ativo (exercício leve 1-3 dias/semana)
       break;
     case "moderate":
-      activityFactor = 1.55;
+      activityFactor = 1.55; // Moderadamente Ativo (exercício moderado 3-5 dias/semana)
       break;
     case "intense":
-      activityFactor = 1.725;
+      activityFactor = 1.725; // Muito Ativo (exercício intenso 6-7 dias/semana)
       break;
     case "very_intense":
-      activityFactor = 1.9;
+      activityFactor = 1.9; // Extremamente Ativo (exercício muito intenso, 2x ao dia)
       break;
     default:
       activityFactor = 1.2; // Fallback for undefined or 'no' activity
