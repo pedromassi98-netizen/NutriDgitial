@@ -57,7 +57,7 @@ export const foodDatabase: FoodItem[] = [
   { id: 'whole_wheat_pasta', name: 'Macarrão integral', category: 'carb', caloriesPer100g: 124, proteinPer100g: 5, carbsPer100g: 25, fatPer100g: 1, unit: 'g', defaultQuantity: 100, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'french_bread', name: 'Pão francês', category: 'carb', caloriesPer100g: 280, proteinPer100g: 8, carbsPer100g: 56, fatPer100g: 2, unit: 'unidade', servingSizeGrams: 50, defaultQuantity: 1, isGlutenFree: false, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] }, // 1 unidade = 50g
   { id: 'boiled_potato', name: 'Batata inglesa cozida', category: 'carb', caloriesPer100g: 87, proteinPer100g: 1.9, carbsPer100g: 20.1, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
-  { id: 'boiled_pasta', name: 'Macarrão cozido', category: 'carb', caloriesPer100g: 131, proteinPer100g: 5.0, carbsPer100g: 25.0, fatPer100g: 1.0, unit: 'g', defaultQuantity: 100, isGlutenFree: false, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'boiled_pasta', name: 'Macarrão cozido', category: 'carb', caloriesPer100g: 158, proteinPer100g: 5.8, carbsPer100g: 30.6, fatPer100g: 0.9, unit: 'g', defaultQuantity: 100, isGlutenFree: false, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'cassava', name: 'Mandioca cozida', category: 'carb', caloriesPer100g: 160, proteinPer100g: 1.4, carbsPer100g: 38, fatPer100g: 0.3, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
 
   // Gorduras - ATUALIZADO
