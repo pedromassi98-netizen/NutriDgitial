@@ -24,9 +24,10 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple } from "lucide-react"; // Importar ícones
+import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, Pill } from "lucide-react"; // Importar ícones
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator"; // Importar o novo utilitário de geração
+import { getSupplementRecommendations, RecommendedSupplement } from "@/utils/supplementationCalculations"; // NOVO IMPORT
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const DietPlanPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [recommendedSupplements, setRecommendedSupplements] = useState<RecommendedSupplement[]>([]); // NOVO ESTADO
   const dietPlanRef = useRef<HTMLDivElement>(null);
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -86,6 +88,10 @@ const DietPlanPage = () => {
         const requiredWater = Math.round(calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000);
         setWaterIntake(requiredWater);
 
+        // Gerar recomendações de suplementos
+        const supplements = getSupplementRecommendations(formData);
+        setRecommendedSupplements(supplements);
+
         setLoading(false);
       } catch (e: any) {
         console.error("Erro ao carregar dados da dieta:", e);
@@ -106,7 +112,8 @@ const DietPlanPage = () => {
     console.log("DietPlanPage - current waterIntake state:", waterIntake);
     console.log("DietPlanPage - current loading state:", loading);
     console.log("DietPlanPage - current error state:", error);
-  }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error]);
+    console.log("DietPlanPage - current recommendedSupplements state:", recommendedSupplements);
+  }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error, recommendedSupplements]);
 
   const generatePdf = async () => {
     if (!dietPlanRef.current) return null;
@@ -326,6 +333,33 @@ const DietPlanPage = () => {
                 </div>
               ))}
             </div>
+
+            {recommendedSupplements.length > 0 && ( // NOVA SEÇÃO DE SUPLEMENTAÇÃO
+              <>
+                <Separator className="my-4 bg-border" />
+                <h3 className="text-xl font-bold text-center text-primary mb-3 flex items-center justify-center">
+                  <Pill className="size-5 mr-2" /> Suplementação Recomendada
+                </h3>
+                <div className="space-y-4">
+                  {recommendedSupplements.map((supp, index) => (
+                    <div key={index} className="bg-secondary p-3 rounded-lg shadow-sm border border-border">
+                      <h4 className="text-lg font-semibold text-foreground mb-1">{supp.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Dosagem: <span className="font-bold">{supp.dosage}</span>
+                      </p>
+                      {supp.notes && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Notas: {supp.notes}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        Razão: {supp.reason}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
 
             <Separator className="my-4 bg-border" />
 

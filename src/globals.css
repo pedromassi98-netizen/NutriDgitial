@@ -206,8 +206,8 @@
     margin-top: 0.5rem !important; /* Reduce space within meal items */
   }
 
-  .pdf-export-mode .space-y-0\.5 > *:not([hidden]) ~ *:not([hidden]) {
-    margin-top: 0.125rem !important; /* Reduce space between list items */
+  .pdf-export-mode .space-y-4 > *:not([hidden]) ~ *:not([hidden]) { /* NEW: for supplement section */
+    margin-top: 0.4rem !important;
   }
 
   .pdf-export-mode .ml-3 {
