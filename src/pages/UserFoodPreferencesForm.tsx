@@ -50,10 +50,11 @@ const formSchema = z.object({
     for (const foodId of mealFoods) {
       const foodItem = foodDatabase.find(item => item.id === foodId);
       if (foodItem) {
-        if (foodItem.category === 'protein') {
+        // Leguminosas podem contar como proteína e carboidrato
+        if (foodItem.category === 'protein' || foodItem.category === 'legume') {
           hasProtein = true;
         }
-        if (foodItem.category === 'carb') {
+        if (foodItem.category === 'carb' || foodItem.category === 'legume') {
           hasCarb = true;
         }
       }

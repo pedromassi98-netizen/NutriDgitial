@@ -26,21 +26,21 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const preferredLunchFoodIds = getPreferredFoodIds(foodPreferences.preferredLunchFoods);
   const preferredSnackFoodIds = getPreferredFoodIds(foodPreferences.preferredSnackFoods);
   const preferredDinnerFoodIds = getPreferredFoodIds(foodPreferences.preferredDinnerFoods);
-  const preferredFatFoodIds = getPreferredFoodIds(foodPreferences.preferredFats); // NOVO: Preferências de gordura
+  const preferredFruitFoodIds = getPreferredFoodIds(foodPreferences.preferredFruits); // NOVO: Preferências de frutas
+  const preferredFatFoodIds = getPreferredFoodIds(foodPreferences.preferredFats);
 
-  const filterFoodItems = (category: FoodItem['category'], preferredIds: string[], mealType: FoodItem['mealTypes'][number], excludeIds: string[] = []) => {
+  const filterFoodItems = (categories: FoodItem['category'][], preferredIds: string[], mealType: FoodItem['mealTypes'][number], excludeIds: string[] = []) => {
     let filtered = foodDatabase.filter(item =>
-      item.category === category &&
-      item.mealTypes.includes(mealType) && // Filtrar por mealType
+      categories.includes(item.category) &&
+      item.mealTypes.includes(mealType) &&
       !excludeIds.includes(item.id) &&
-      item.unit !== 'a gosto' // Excluir 'a gosto' para seleção principal de macros
+      item.unit !== 'a gosto'
     );
 
-    // Priorize preferred foods
     const preferredItems = filtered.filter(item => preferredIds.includes(item.id));
     const otherItems = filtered.filter(item => !preferredIds.includes(item.id));
 
-    return [...preferredItems, ...otherItems]; // Preferred items come first
+    return [...preferredItems, ...otherItems];
   };
 
   const meals: Meal[] = [];
@@ -49,7 +49,6 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   let currentTotalCarbs = 0;
   let currentTotalFat = 0;
 
-  // Distribuição de macros por refeição (exemplo, pode ser ajustado)
   const mealDistribution = {
     breakfast: { calories: 0.20, protein: 0.20, carbs: 0.25, fat: 0.20 },
     lunch: { calories: 0.35, protein: 0.35, carbs: 0.35, fat: 0.35 },
@@ -89,7 +88,6 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     let currentMealFat = 0;
     const addedFoodIds: string[] = [];
 
-    // Função auxiliar para adicionar um item à refeição
     const addItemToMeal = (foodItem: FoodItem, quantityForCalculation: number) => {
       if (quantityForCalculation <= 0 && foodItem.unit !== 'a gosto') return;
 
@@ -97,17 +95,16 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       let displayQuantity = '';
 
       if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
-        // quantityForCalculation aqui é o número de unidades/fatias
         actualGrams = quantityForCalculation * (foodItem.servingSizeGrams || 1);
         displayQuantity = `${quantityForCalculation} ${foodItem.unit}`;
       } else if (foodItem.unit === 'g') {
         actualGrams = quantityForCalculation;
         displayQuantity = `${quantityForCalculation}g`;
       } else if (foodItem.unit === 'ml') {
-        actualGrams = quantityForCalculation; // Assumindo 1ml ~ 1g para cálculo de macros se caloriesPer100g for usado
+        actualGrams = quantityForCalculation;
         displayQuantity = `${quantityForCalculation}ml`;
       } else if (foodItem.unit === 'a gosto') {
-        actualGrams = 0; // Não contribui para macros principais
+        actualGrams = 0;
         displayQuantity = 'a gosto';
       }
 
@@ -132,28 +129,27 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       currentMealFat += itemFat;
     };
 
-    // 1. Adicionar Proteína Principal
-    const proteins = filterFoodItems('protein', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number]);
+    // 1. Adicionar Proteína Principal (incluindo leguminosas)
+    const proteins = filterFoodItems(['protein', 'legume'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number]);
     if (proteins.length > 0) {
       const proteinItem = proteins[0];
-      // Calcular a quantidade em gramas necessária para atingir a meta de proteína da refeição
-      const gramsNeeded = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8; // 80% da meta
+      const gramsNeeded = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8;
       let quantityForDisplay = gramsNeeded;
 
       if (proteinItem.unit === 'unidade' || proteinItem.unit === 'fatia') {
         quantityForDisplay = Math.round(gramsNeeded / (proteinItem.servingSizeGrams || 1));
-        if (quantityForDisplay === 0) quantityForDisplay = 1; // Garante pelo menos 1 unidade
+        if (quantityForDisplay === 0) quantityForDisplay = 1;
       } else if (proteinItem.unit === 'g' || proteinItem.unit === 'ml') {
         quantityForDisplay = Math.round(gramsNeeded);
       }
       addItemToMeal(proteinItem, quantityForDisplay);
     }
 
-    // 2. Adicionar Carboidrato Principal
-    const carbs = filterFoodItems('carb', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
+    // 2. Adicionar Carboidrato Principal (incluindo leguminosas)
+    const carbs = filterFoodItems(['carb', 'legume'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
     if (carbs.length > 0) {
       const carbItem = carbs[0];
-      const gramsNeeded = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8; // 80% da meta
+      const gramsNeeded = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8;
       let quantityForDisplay = gramsNeeded;
 
       if (carbItem.unit === 'unidade' || carbItem.unit === 'fatia') {
@@ -165,8 +161,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       addItemToMeal(carbItem, quantityForDisplay);
     }
 
-    // 3. Adicionar Gordura Saudável (se necessário e não já coberto)
-    // Filtra as gorduras preferidas que são elegíveis para a refeição atual
+    // 3. Adicionar Gordura Saudável (priorizando as preferidas)
     const eligiblePreferredFats = foodDatabase.filter(item =>
       preferredFatFoodIds.includes(item.id) &&
       item.category === 'fat' &&
@@ -174,10 +169,9 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       !addedFoodIds.includes(item.id)
     );
 
-    if (eligiblePreferredFats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
-      // Seleciona uma gordura preferida elegível aleatoriamente
+    if (eligiblePreferredFats.length > 0 && currentMealFat < mealTargetFat * 0.5) {
       const fatItem = eligiblePreferredFats[Math.floor(Math.random() * eligiblePreferredFats.length)];
-      const gramsNeeded = ((mealTargetFat - currentMealFat) / (fatItem.fatPer100g / 100)) * 0.5; // 50% da gordura restante
+      const gramsNeeded = ((mealTargetFat - currentMealFat) / (fatItem.fatPer100g / 100)) * 0.5;
       let quantityForDisplay = gramsNeeded;
 
       if (fatItem.unit === 'unidade' || fatItem.unit === 'fatia') {
@@ -189,23 +183,47 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       addItemToMeal(fatItem, quantityForDisplay);
     }
 
-    // 4. Adicionar Frutas ou Laticínios para lanches ou café da manhã
-    if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
-      const fruits = filterFoodItems('fruit', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
-      if (fruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
-        const fruitItem = fruits[0];
-        addItemToMeal(fruitItem, fruitItem.defaultQuantity); // defaultQuantity já está em unidades
-      }
-      const dairy = filterFoodItems('dairy', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
-      if (dairy.length > 0 && currentMealProtein < mealTargetProtein * 0.9) {
-        const dairyItem = dairy[0];
-        addItemToMeal(dairyItem, dairyItem.defaultQuantity); // defaultQuantity já está em unidades/ml
+    // 4. Adicionar Frutas (priorizando as preferidas)
+    const eligiblePreferredFruits = foodDatabase.filter(item =>
+      preferredFruitFoodIds.includes(item.id) &&
+      item.category === 'fruit' &&
+      item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
+      !addedFoodIds.includes(item.id) &&
+      item.id !== 'none_fruits' // Excluir a opção "Nenhuma fruta"
+    );
+
+    if (eligiblePreferredFruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
+      const fruitItem = eligiblePreferredFruits[0]; // Pega a primeira fruta preferida elegível
+      addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+    } else if (preferredFruitFoodIds.includes('none_fruits')) {
+      // Se o usuário explicitamente não quer frutas, não adiciona
+    } else {
+      // Fallback para frutas se nenhuma preferida for selecionada ou se as preferidas não forem elegíveis
+      const fallbackFruits = foodDatabase.filter(item =>
+        item.category === 'fruit' &&
+        item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
+        !addedFoodIds.includes(item.id) &&
+        item.id !== 'none_fruits'
+      );
+      if (fallbackFruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
+        const fruitItem = fallbackFruits[0];
+        addItemToMeal(fruitItem, fruitItem.defaultQuantity);
       }
     }
 
-    // 5. Adicionar Vegetais "a gosto" (cenoura, alface, tomate)
+    // 5. Adicionar Laticínios para lanches ou café da manhã (priorizando as preferidas)
+    if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
+      const dairy = filterFoodItems(['dairy'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
+      if (dairy.length > 0 && currentMealProtein < mealTargetProtein * 0.9) {
+        const dairyItem = dairy[0];
+        addItemToMeal(dairyItem, dairyItem.defaultQuantity);
+      }
+    }
+
+    // 6. Adicionar Vegetais "a gosto"
     const agostos = foodDatabase.filter(item =>
       item.unit === 'a gosto' &&
+      item.category === 'vegetable' && // Garante que são vegetais
       item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
       !addedFoodIds.includes(item.id)
     );
@@ -214,13 +232,13 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         food: veggieItem.name,
         quantity: 'a gosto',
         substitutions: [],
-        calories: 0, // Não contabilizar calorias para 'a gosto'
+        calories: 0,
         protein: 0,
         carbs: 0,
         fat: 0,
       });
+      addedFoodIds.push(veggieItem.id); // Adiciona para evitar duplicação
     });
-
 
     // Calcular totais da refeição
     meal.totalMealCalories = Math.round(currentMealCalories);
