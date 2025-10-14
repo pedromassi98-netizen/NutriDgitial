@@ -1,7 +1,7 @@
 export interface FoodItem {
   id: string;
   name: string;
-  category: 'protein' | 'carb' | 'fat' | 'vegetable' | 'fruit' | 'dairy' | 'other';
+  category: 'protein' | 'carb' | 'fat' | 'vegetable' | 'fruit' | 'dairy' | 'legume' | 'other'; // 'legume' adicionado
   caloriesPer100g: number;
   proteinPer100g: number;
   carbsPer100g: number;
@@ -26,11 +26,9 @@ export const foodDatabase: FoodItem[] = [
   { id: 'salmon', name: 'Salmão', category: 'protein', caloriesPer100g: 208, proteinPer100g: 20, carbsPer100g: 0, fatPer100g: 13, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'lean_beef', name: 'Carne magra', category: 'protein', caloriesPer100g: 130, proteinPer100g: 26, carbsPer100g: 0, fatPer100g: 3, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'greek_yogurt', name: 'Iogurte grego natural', category: 'protein', caloriesPer100g: 59, proteinPer100g: 10, carbsPer100g: 3.6, fatPer100g: 0.4, unit: 'unidade', servingSizeGrams: 100, defaultQuantity: 1, isGlutenFree: true, mealTypes: ['breakfast', 'snack'] }, // 1 unidade = 100g
-  { id: 'lentils', name: 'Lentilha', category: 'protein', caloriesPer100g: 116, proteinPer100g: 9, carbsPer100g: 20, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'whey_protein_powder', name: 'Whey Protein em pó', category: 'protein', caloriesPer100g: 370, proteinPer100g: 80, carbsPer100g: 5, fatPer100g: 4, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'mozzarella_cheese', name: 'Queijo Mussarela', category: 'protein', caloriesPer100g: 300, proteinPer100g: 22, carbsPer100g: 1, fatPer100g: 22, unit: 'fatia', servingSizeGrams: 20, defaultQuantity: 1, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
   { id: 'minas_cheese', name: 'Queijo Minas Frescal', category: 'protein', caloriesPer100g: 260, proteinPer100g: 17, carbsPer100g: 2, fatPer100g: 20, unit: 'fatia', servingSizeGrams: 30, defaultQuantity: 1, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
-  { id: 'beans', name: 'Feijão cozido', category: 'protein', caloriesPer100g: 100, proteinPer100g: 7, carbsPer100g: 18, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'light_cream_cheese', name: 'Requeijão Light', category: 'protein', caloriesPer100g: 100, proteinPer100g: 10, carbsPer100g: 4, fatPer100g: 5, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
   { id: 'ricotta_cream', name: 'Creme de Ricota Light', category: 'protein', caloriesPer100g: 120, proteinPer100g: 8, carbsPer100g: 3, fatPer100g: 8, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
 
@@ -54,7 +52,6 @@ export const foodDatabase: FoodItem[] = [
   { id: 'oats', name: 'Aveia', category: 'carb', caloriesPer100g: 389, proteinPer100g: 16.9, carbsPer100g: 66.3, fatPer100g: 6.9, unit: 'g', defaultQuantity: 50, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'whole_wheat_bread', name: 'Pão integral', category: 'carb', caloriesPer100g: 265, proteinPer100g: 13, carbsPer100g: 49, fatPer100g: 3.6, unit: 'fatia', servingSizeGrams: 30, defaultQuantity: 2, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] }, // 2 fatias = 60g
   { id: 'tapioca', name: 'Tapioca', category: 'carb', caloriesPer100g: 240, proteinPer100g: 0.6, carbsPer100g: 59, fatPer100g: 0, unit: 'g', defaultQuantity: 50, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
-  { id: 'quinoa', name: 'Quinoa', category: 'carb', caloriesPer100g: 120, proteinPer100g: 4.4, carbsPer100g: 21, fatPer100g: 1.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'whole_wheat_pasta', name: 'Macarrão integral', category: 'carb', caloriesPer100g: 124, proteinPer100g: 5, carbsPer100g: 25, fatPer100g: 1, unit: 'g', defaultQuantity: 100, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'french_bread', name: 'Pão francês', category: 'carb', caloriesPer100g: 280, proteinPer100g: 8, carbsPer100g: 56, fatPer100g: 2, unit: 'unidade', servingSizeGrams: 50, defaultQuantity: 1, isGlutenFree: false, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] }, // 1 unidade = 50g
   { id: 'boiled_potato', name: 'Batata inglesa cozida', category: 'carb', caloriesPer100g: 87, proteinPer100g: 1.9, carbsPer100g: 20.1, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
@@ -90,6 +87,11 @@ export const foodDatabase: FoodItem[] = [
   { id: 'watermelon', name: 'Melancia', category: 'fruit', caloriesPer100g: 30, proteinPer100g: 0.6, carbsPer100g: 7.6, fatPer100g: 0.2, unit: 'g', defaultQuantity: 150, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: [] },
   { id: 'melon', name: 'Melão', category: 'fruit', caloriesPer100g: 34, proteinPer100g: 0.8, carbsPer100g: 8.2, fatPer100g: 0.2, unit: 'g', defaultQuantity: 150, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: [] },
   { id: 'none_fruits', name: 'Nenhuma fruta', category: 'fruit', caloriesPer100g: 0, proteinPer100g: 0, carbsPer100g: 0, fatPer100g: 0, unit: 'a gosto', defaultQuantity: 0, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: [] },
+
+  // Leguminosas - NOVA CATEGORIA
+  { id: 'lentils', name: 'Lentilha', category: 'legume', caloriesPer100g: 116, proteinPer100g: 9, carbsPer100g: 20, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'beans', name: 'Feijão cozido', category: 'legume', caloriesPer100g: 100, proteinPer100g: 7, carbsPer100g: 18, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'quinoa', name: 'Quinoa', category: 'legume', caloriesPer100g: 120, proteinPer100g: 4.4, carbsPer100g: 21, fatPer100g: 1.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
 
   // Laticínios (além do iogurte grego)
   { id: 'milk_lactose_free', name: 'Leite sem lactose', category: 'dairy', caloriesPer100g: 47, proteinPer100g: 3.2, carbsPer100g: 4.7, fatPer100g: 1.5, unit: 'ml', defaultQuantity: 200, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
