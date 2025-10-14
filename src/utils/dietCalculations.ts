@@ -45,10 +45,10 @@ const userSupplementationFormSchema = z.object({
 });
 
 const userFoodPreferencesFormSchema = z.object({
-  preferredBreakfastFoods: z.string().optional(),
-  preferredLunchFoods: z.string().optional(),
-  preferredSnackFoods: z.string().optional(),
-  preferredDinnerFoods: z.string().optional(),
+  preferredBreakfastFoods: z.array(z.string()).optional(),
+  preferredLunchFoods: z.array(z.string()).optional(),
+  preferredSnackFoods: z.array(z.string()).optional(),
+  preferredDinnerFoods: z.array(z.string()).optional(),
 });
 
 export type WelcomeFormData = z.infer<typeof welcomeFormSchema>;
@@ -157,7 +157,7 @@ export const calculateMacronutrients = (
 
   const proteinCalories = targetCalories * proteinPercentage;
   const carbCalories = targetCalories * carbPercentage;
-  const fatCalories = targetCalories / 9;
+  const fatCalories = targetCalories * fatPercentage;
 
   // 1g Protein = 4 kcal, 1g Carbs = 4 kcal, 1g Fat = 9 kcal
   const proteinGrams = Math.round(proteinCalories / 4);

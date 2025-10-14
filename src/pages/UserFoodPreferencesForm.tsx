@@ -19,17 +19,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Utensils, Coffee, Apple, Soup } from "lucide-react"; // Importar ícones relevantes
+import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox"; // Importar o novo componente
 
 const formSchema = z.object({
-  preferredBreakfastFoods: z.string().optional(),
-  preferredLunchFoods: z.string().optional(),
-  preferredSnackFoods: z.string().optional(),
-  preferredDinnerFoods: z.string().optional(),
+  preferredBreakfastFoods: z.array(z.string()).optional(),
+  preferredLunchFoods: z.array(z.string()).optional(),
+  preferredSnackFoods: z.array(z.string()).optional(),
+  preferredDinnerFoods: z.array(z.string()).optional(),
 });
 
 const UserFoodPreferencesForm = () => {
@@ -37,10 +37,10 @@ const UserFoodPreferencesForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      preferredBreakfastFoods: "",
-      preferredLunchFoods: "",
-      preferredSnackFoods: "",
-      preferredDinnerFoods: "",
+      preferredBreakfastFoods: [],
+      preferredLunchFoods: [],
+      preferredSnackFoods: [],
+      preferredDinnerFoods: [],
     },
   });
 
@@ -62,7 +62,7 @@ const UserFoodPreferencesForm = () => {
             <CardTitle className="text-3xl font-extrabold text-primary">Preferências Alimentares</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
-            Liste os alimentos que você gostaria de incluir em cada refeição.
+            Selecione os alimentos que você gostaria de incluir em cada refeição.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -77,7 +77,11 @@ const UserFoodPreferencesForm = () => {
                       <Coffee className="size-4 mr-2 text-primary" /> Café da Manhã
                     </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex: ovos, aveia, frutas, pão integral" {...field} className="resize-none bg-input text-foreground border-border" />
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Selecione alimentos para o café da manhã..."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -92,7 +96,11 @@ const UserFoodPreferencesForm = () => {
                       <Soup className="size-4 mr-2 text-primary" /> Almoço
                     </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex: frango, arroz integral, brócolis, salada" {...field} className="resize-none bg-input text-foreground border-border" />
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Selecione alimentos para o almoço..."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,7 +115,11 @@ const UserFoodPreferencesForm = () => {
                       <Apple className="size-4 mr-2 text-primary" /> Lanche (Opcional)
                     </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex: iogurte grego, castanhas, banana" {...field} className="resize-none bg-input text-foreground border-border" />
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Selecione alimentos para o lanche..."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -122,7 +134,11 @@ const UserFoodPreferencesForm = () => {
                       <Utensils className="size-4 mr-2 text-primary" /> Jantar
                     </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Ex: salmão, batata doce, espinafre" {...field} className="resize-none bg-input text-foreground border-border" />
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Selecione alimentos para o jantar..."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

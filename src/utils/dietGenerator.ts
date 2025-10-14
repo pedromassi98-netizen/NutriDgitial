@@ -18,27 +18,24 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   console.log("Target Calories:", targetCalories);
   console.log("Target Macros:", targetMacros);
 
-  // Removida a lógica de userRestrictions, isVegetarian, isVegan, isGlutenFree, isLactoseFree, isLowCarb
-
-  const parsePreferredFoods = (foodString: string | undefined) => {
-    return foodString?.toLowerCase().split(',').map(s => s.trim()).filter(Boolean) || [];
+  const getPreferredFoodIds = (foodIdArray: string[] | undefined) => {
+    return foodIdArray || [];
   };
 
-  const preferredBreakfastFoods = parsePreferredFoods(foodPreferences.preferredBreakfastFoods);
-  const preferredLunchFoods = parsePreferredFoods(foodPreferences.preferredLunchFoods);
-  const preferredSnackFoods = parsePreferredFoods(foodPreferences.preferredSnackFoods);
-  const preferredDinnerFoods = parsePreferredFoods(foodPreferences.preferredDinnerFoods);
+  const preferredBreakfastFoodIds = getPreferredFoodIds(foodPreferences.preferredBreakfastFoods);
+  const preferredLunchFoodIds = getPreferredFoodIds(foodPreferences.preferredLunchFoods);
+  const preferredSnackFoodIds = getPreferredFoodIds(foodPreferences.preferredSnackFoods);
+  const preferredDinnerFoodIds = getPreferredFoodIds(foodPreferences.preferredDinnerFoods);
 
-  const filterFoodItems = (category: FoodItem['category'], preferredNames: string[], excludeIds: string[] = []) => {
+  const filterFoodItems = (category: FoodItem['category'], preferredIds: string[], excludeIds: string[] = []) => {
     let filtered = foodDatabase.filter(item =>
       item.category === category &&
       !excludeIds.includes(item.id)
-      // Removidos os filtros de restrições alimentares
     );
 
     // Prioritize preferred foods
-    const preferredItems = filtered.filter(item => preferredNames.includes(item.name.toLowerCase()));
-    const otherItems = filtered.filter(item => !preferredNames.includes(item.name.toLowerCase()));
+    const preferredItems = filtered.filter(item => preferredIds.includes(item.id));
+    const otherItems = filtered.filter(item => !preferredIds.includes(item.id));
 
     return [...preferredItems, ...otherItems]; // Preferred items come first
   };
@@ -58,13 +55,13 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   };
 
   const mealTimes = [
-    { name: 'Café da manhã', time: routine.breakfastTime, key: 'breakfast', preferred: preferredBreakfastFoods },
-    { name: 'Almoço', time: routine.lunchTime, key: 'lunch', preferred: preferredLunchFoods },
-    { name: 'Jantar', time: routine.dinnerTime, key: 'dinner', preferred: preferredDinnerFoods },
+    { name: 'Café da manhã', time: routine.breakfastTime, key: 'breakfast', preferred: preferredBreakfastFoodIds },
+    { name: 'Almoço', time: routine.lunchTime, key: 'lunch', preferred: preferredLunchFoodIds },
+    { name: 'Jantar', time: routine.dinnerTime, key: 'dinner', preferred: preferredDinnerFoodIds },
   ];
 
   if (routine.snackTime) {
-    mealTimes.splice(2, 0, { name: 'Lanche', time: routine.snackTime, key: 'snack', preferred: preferredSnackFoods });
+    mealTimes.splice(2, 0, { name: 'Lanche', time: routine.snackTime, key: 'snack', preferred: preferredSnackFoodIds });
   }
 
   for (const mealConfig of mealTimes) {
