@@ -41,7 +41,7 @@ const DietPlanPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [recommendedSupplements, setRecommendedSupplements] = useState<RecommendedSupplement[]>([]); // NOVO ESTADO
-  const dietPlanRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null); // Ref para o Card completo
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
@@ -116,48 +116,66 @@ const DietPlanPage = () => {
   }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error, recommendedSupplements]);
 
   const generatePdf = async () => {
-    if (!dietPlanRef.current) return null;
+    if (!cardRef.current) return null;
 
-    const input = dietPlanRef.current;
+    const input = cardRef.current;
     
-    // Removido: input.classList.add('pdf-export-mode');
-    // Removido: await new Promise(resolve => setTimeout(resolve, 50)); 
+    // Armazenar estilos originais para restaurar depois
+    const originalOverflow = document.body.style.overflow;
+    const originalCardWidth = input.style.width;
+    const originalCardMaxWidth = input.style.maxWidth;
+    const originalCardPadding = input.style.padding;
+    const originalCardMargin = input.style.margin;
 
-    const canvas = await html2canvas(input, { scale: 2 });
+    // Aplicar estilos temporários para garantir a captura completa
+    document.body.style.overflow = 'visible'; // Garante que o body não corte o conteúdo
+    input.style.width = '210mm'; // Define a largura para o tamanho A4
+    input.style.maxWidth = 'none'; // Remove a restrição de largura máxima
+    input.style.padding = '10mm'; // Adiciona margens para impressão
+    input.style.margin = '0'; // Remove margens externas
+
+    // Esperar um pouco para os estilos serem aplicados
+    await new Promise(resolve => setTimeout(resolve, 100)); 
+
+    const canvas = await html2canvas(input, { 
+      scale: 3, // Aumenta a escala para melhor resolução no PDF
+      useCORS: true, // Importante se houver imagens de outras origens
+    });
+
+    // Restaurar estilos originais
+    document.body.style.overflow = originalOverflow;
+    input.style.width = originalCardWidth;
+    input.style.maxWidth = originalCardMaxWidth;
+    input.style.padding = originalCardPadding;
+    input.style.margin = originalCardMargin;
+
     const imgData = canvas.toDataURL('image/png');
 
-    // Removido: input.classList.remove('pdf-export-mode');
-
     const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = 210;
-    const pageHeight = 297;
+    const imgWidth = 210; // Largura A4 em mm
+    const pageHeight = 297; // Altura A4 em mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    // Se o conteúdo couber em uma página, adiciona diretamente.
-    // Caso contrário, a lógica de paginação existente irá lidar com isso.
-    if (imgHeight <= pageHeight) {
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-    } else {
-      // Lógica de paginação para conteúdo que transborda
-      let heightLeft = imgHeight;
-      let position = 0;
+    let heightLeft = imgHeight;
+    let position = 0;
 
+    // Adiciona a primeira página
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    // Adiciona páginas subsequentes se o conteúdo transbordar
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight; // Calcula a posição para a próxima "fatia" da imagem
+      pdf.addPage();
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
     }
 
     return pdf;
   };
 
   const handleDownloadPdf = async () => {
-    if (dietPlanRef.current) {
+    if (cardRef.current) {
       setLoading(true);
       toast({
         title: "Gerando PDF...",
@@ -283,7 +301,7 @@ const DietPlanPage = () => {
 
   return (
     <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
-      <Card className="w-full max-w-2xl bg-card text-card-foreground shadow-xl rounded-xl border-none">
+      <Card ref={cardRef} className="w-full max-w-2xl bg-card text-card-foreground shadow-xl rounded-xl border-none">
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
             <UtensilsCrossed className="size-8 text-primary mr-2" />
@@ -294,7 +312,7 @@ const DietPlanPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div ref={dietPlanRef} className="p-4">
+          <div className="p-4">
             <div className="text-center bg-info p-4 rounded-md text-info-foreground">
               <h3 className="text-xl font-semibold text-info-foreground mb-2 flex items-center justify-center">
                 <UtensilsCrossed className="size-5 mr-2" /> Resumo da Dieta
