@@ -92,7 +92,8 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
     .map((food) => ({
       value: food.id,
       label: food.name,
-    }));
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label)); // Adiciona ordenação alfabética aqui
 
   return (
     <div className="space-y-2">
