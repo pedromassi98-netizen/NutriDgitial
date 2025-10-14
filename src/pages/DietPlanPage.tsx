@@ -289,15 +289,12 @@ const DietPlanPage = () => {
                 <div key={index} className="bg-secondary p-4 rounded-lg shadow-sm border border-border">
                   <h4 className="text-xl font-semibold text-foreground mb-2">{meal.name} ({meal.time})</h4>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Total da Refeição: <span className="font-bold">{meal.totalMealCalories} kcal</span> | P: <span className="font-bold">{meal.totalMealProtein}g</span> | C: <span className="font-bold">{meal.totalMealCarbs}g</span> | G: <span className="font-bold">{meal.totalMealFat}g</span>
+                    Total da Refeição: <span className="font-bold">{meal.totalMealCalories} kcal</span>
                   </p>
                   <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                     {meal.items.map((item, itemIndex) => (
                       <li key={itemIndex}>
                         <span className="font-medium text-foreground">{item.food}:</span> {item.quantity}
-                        <span className="text-sm text-gray-500 ml-2">
-                          ({item.calories} kcal, P:{item.protein}g, C:{item.carbs}g, G:{item.fat}g)
-                        </span>
                         {item.substitutions && item.substitutions.length > 0 && (
                           <span className="block text-sm text-gray-500 ml-4">
                             (Ou: {item.substitutions.join(", ")})
