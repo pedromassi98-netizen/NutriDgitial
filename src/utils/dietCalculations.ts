@@ -24,7 +24,7 @@ const userActivityFormSchema = z.object({
 });
 
 const userGoalsFormSchema = z.object({
-  goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "bulking", "cutting", "healthy_eating"]),
+  goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "healthy_eating"]),
 });
 
 const dailyRoutineFormSchema = z.object({
@@ -113,10 +113,8 @@ export const calculateTDEE = (bmr: number, trainingLevel: UserActivityFormData['
 export const adjustCaloriesForGoal = (tdee: number, goal: UserGoalsFormData['goal']): number => {
   switch (goal) {
     case "weight_loss":
-    case "cutting":
       return tdee - 500; // Aim for ~0.5kg/week loss
     case "muscle_gain":
-    case "bulking":
       return tdee + 300; // Aim for muscle gain
     case "maintenance":
     case "healthy_eating":
@@ -140,13 +138,11 @@ export const calculateMacronutrients = (
 
   switch (goal) {
     case "muscle_gain":
-    case "bulking":
       proteinPercentage = 0.30; // 30% protein
       carbPercentage = 0.50;    // 50% carbs
       fatPercentage = 0.20;     // 20% fat
       break;
     case "weight_loss":
-    case "cutting":
       proteinPercentage = 0.35; // 35% protein
       carbPercentage = 0.35;    // 35% carbs
       fatPercentage = 0.30;     // 30% fat

@@ -23,11 +23,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Target, TrendingDown, TrendingUp, Scale, Apple, Scissors, Beef } from "lucide-react"; // Importar ícones
+import { Target, TrendingDown, TrendingUp, Scale, Apple } from "lucide-react"; // Ícones atualizados
 import { Label } from "@/components/ui/label"; // Importar Label
 
 const formSchema = z.object({
-  goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "bulking", "cutting", "healthy_eating"], {
+  goal: z.enum(["weight_loss", "muscle_gain", "maintenance", "healthy_eating"], {
     required_error: "Por favor, selecione um objetivo.",
   }),
 });
@@ -77,7 +77,7 @@ const UserGoalsForm = () => {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex flex-col space-y-2" // Ajustado para space-y-2 para consistência
+                        className="flex flex-col space-y-2"
                       >
                         <FormItem
                           className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
@@ -113,30 +113,6 @@ const UserGoalsForm = () => {
                           </FormControl>
                           <Label htmlFor="goal-maintenance" className="flex items-center font-normal text-lg cursor-pointer w-full">
                             <Scale className="size-4 mr-2 text-primary" /> Manutenção de Peso
-                          </Label>
-                        </FormItem>
-                        <FormItem
-                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
-                            selectedGoal === "bulking" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
-                          }`}
-                        >
-                          <FormControl>
-                            <RadioGroupItem value="bulking" id="goal-bulking" className="sr-only" />
-                          </FormControl>
-                          <Label htmlFor="goal-bulking" className="flex items-center font-normal text-lg cursor-pointer w-full">
-                            <Beef className="size-4 mr-2 text-primary" /> Bulking (Ganho de peso para massa)
-                          </Label>
-                        </FormItem>
-                        <FormItem
-                          className={`flex items-center space-x-3 space-y-0 bg-secondary p-3 rounded-md cursor-pointer transition-all duration-200 ${
-                            selectedGoal === "cutting" ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-secondary/80"
-                          }`}
-                        >
-                          <FormControl>
-                            <RadioGroupItem value="cutting" id="goal-cutting" className="sr-only" />
-                          </FormControl>
-                          <Label htmlFor="goal-cutting" className="flex items-center font-normal text-lg cursor-pointer w-full">
-                            <Scissors className="size-4 mr-2 text-primary" /> Cutting (Definição muscular)
                           </Label>
                         </FormItem>
                         <FormItem
