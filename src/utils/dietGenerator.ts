@@ -41,7 +41,8 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       (!isVegetarian || item.isVegetarian) &&
       (!isVegan || item.isVegan) &&
       (!isGlutenFree || item.isGlutenFree) &&
-      (!isLactoseFree || item.isLactoseFree)
+      (!isLactoseFree || item.isLactoseFree) &&
+      (!isLowCarb || item.category !== 'carb' || item.carbsPer100g < 10) // Simple low-carb filter
     );
 
     // Prioritize preferred foods
@@ -91,72 +92,57 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       totalMealFat: 0,
     };
 
-    let remainingCalories = mealTargetCalories;
-    let remainingProtein = mealTargetProtein;
-    let remainingCarbs = mealTargetCarbs;
-    let remainingFat = mealTargetFat;
+    let currentMealCalories = 0;
+    let currentMealProtein = 0;
+    let currentMealCarbs = 0;
+    let currentMealFat = 0;
     const addedFoodIds: string[] = [];
 
-    // Tentar adicionar proteína
+    // Função auxiliar para adicionar um item à refeição
+    const addItemToMeal = (foodItem: FoodItem, quantity: number, isMainComponent: boolean = true) => {
+      if (quantity <= 0) return;
+
+      const itemCalories = (foodItem.caloriesPer100g / 100) * quantity;
+      const itemProtein = (foodItem.proteinPer100g / 100) * quantity;
+      const itemCarbs = (foodItem.carbsPer100g / 100) * quantity;
+      const itemFat = (foodItem.fatPer100g / 100) * quantity;
+
+      meal.items.push({
+        food: foodItem.name,
+        quantity: `${quantity}${foodItem.unit || 'g'}`,
+        substitutions: foodItem.substitutions?.map(id => foodDatabase.find(f => f.id === id)?.name || id) || [],
+        calories: Math.round(itemCalories),
+        protein: Math.round(itemProtein),
+        carbs: Math.round(itemCarbs),
+        fat: Math.round(itemFat),
+      });
+      addedFoodIds.push(foodItem.id);
+      currentMealCalories += itemCalories;
+      currentMealProtein += itemProtein;
+      currentMealCarbs += itemCarbs;
+      currentMealFat += itemFat;
+    };
+
+    // 1. Adicionar Proteína Principal
     const proteins = filterFoodItems('protein', mealConfig.preferred);
     if (proteins.length > 0) {
-      const proteinItem = proteins[0]; // Pick the first (preferred) protein
-      const quantity = Math.min(proteinItem.defaultQuantity || 100, Math.round(remainingProtein / (proteinItem.proteinPer100g / 100)));
-      if (quantity > 0) {
-        const itemCalories = (proteinItem.caloriesPer100g / 100) * quantity;
-        const itemProtein = (proteinItem.proteinPer100g / 100) * quantity;
-        const itemCarbs = (proteinItem.carbsPer100g / 100) * quantity;
-        const itemFat = (proteinItem.fatPer100g / 100) * quantity;
-
-        meal.items.push({
-          food: proteinItem.name,
-          quantity: `${quantity}${proteinItem.unit || 'g'}`,
-          substitutions: proteinItem.substitutions?.map(id => foodDatabase.find(f => f.id === id)?.name || id) || [],
-          calories: Math.round(itemCalories),
-          protein: Math.round(itemProtein),
-          carbs: Math.round(itemCarbs),
-          fat: Math.round(itemFat),
-        });
-        addedFoodIds.push(proteinItem.id);
-        remainingCalories -= itemCalories;
-        remainingProtein -= itemProtein;
-        remainingCarbs -= itemCarbs;
-        remainingFat -= itemFat;
-      }
+      const proteinItem = proteins[0];
+      const targetProteinQuantity = Math.round((mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8); // Tentar 80% do alvo de proteína
+      addItemToMeal(proteinItem, targetProteinQuantity);
     }
 
-    // Tentar adicionar carboidrato
+    // 2. Adicionar Carboidrato Principal
     const carbs = filterFoodItems('carb', mealConfig.preferred, addedFoodIds);
-    if (carbs.length > 0 && remainingCarbs > 0) {
-      const carbItem = carbs[0]; // Pick the first (preferred) carb
-      const quantity = Math.min(carbItem.defaultQuantity || 100, Math.round(remainingCarbs / (carbItem.carbsPer100g / 100)));
-      if (quantity > 0) {
-        const itemCalories = (carbItem.caloriesPer100g / 100) * quantity;
-        const itemProtein = (carbItem.proteinPer100g / 100) * quantity;
-        const itemCarbs = (carbItem.carbsPer100g / 100) * quantity;
-        const itemFat = (carbItem.fatPer100g / 100) * quantity;
-
-        meal.items.push({
-          food: carbItem.name,
-          quantity: `${quantity}${carbItem.unit || 'g'}`,
-          substitutions: carbItem.substitutions?.map(id => foodDatabase.find(f => f.id === id)?.name || id) || [],
-          calories: Math.round(itemCalories),
-          protein: Math.round(itemProtein),
-          carbs: Math.round(itemCarbs),
-          fat: Math.round(itemFat),
-        });
-        addedFoodIds.push(carbItem.id);
-        remainingCalories -= itemCalories;
-        remainingProtein -= itemProtein;
-        remainingCarbs -= itemCarbs;
-        remainingFat -= itemFat;
-      }
+    if (carbs.length > 0) {
+      const carbItem = carbs[0];
+      const targetCarbQuantity = Math.round((mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8); // Tentar 80% do alvo de carboidrato
+      addItemToMeal(carbItem, targetCarbQuantity);
     }
 
-    // Adicionar vegetal (sempre 'a gosto' e com macros mínimos)
+    // 3. Adicionar Vegetal (a gosto)
     const vegetables = filterFoodItems('vegetable', mealConfig.preferred, addedFoodIds);
     if (vegetables.length > 0) {
-      const veggieItem = vegetables[0]; // Pick the first (preferred) vegetable
+      const veggieItem = vegetables[0];
       meal.items.push({
         food: veggieItem.name,
         quantity: 'a gosto',
@@ -167,13 +153,39 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         fat: 0,
       });
       addedFoodIds.push(veggieItem.id);
+      currentMealCalories += 10;
+      currentMealProtein += 1;
+      currentMealCarbs += 2;
+      currentMealFat += 0;
+    }
+
+    // 4. Adicionar Gordura Saudável (se necessário e não já coberto)
+    const fats = filterFoodItems('fat', mealConfig.preferred, addedFoodIds);
+    if (fats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
+      const fatItem = fats[0];
+      const targetFatQuantity = Math.round(((mealTargetFat - currentMealFat) / (fatItem.fatPer100g / 100)) * 0.5); // Tentar cobrir 50% da gordura restante
+      addItemToMeal(fatItem, targetFatQuantity);
+    }
+
+    // 5. Ajustar com frutas ou laticínios para lanches ou café da manhã
+    if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
+      const fruits = filterFoodItems('fruit', mealConfig.preferred, addedFoodIds);
+      if (fruits.length > 0 && currentMealCarbs < mealTargetCarbs * 0.9) {
+        const fruitItem = fruits[0];
+        addItemToMeal(fruitItem, fruitItem.defaultQuantity || 100, false);
+      }
+      const dairy = filterFoodItems('dairy', mealConfig.preferred, addedFoodIds);
+      if (dairy.length > 0 && currentMealProtein < mealTargetProtein * 0.9) {
+        const dairyItem = dairy[0];
+        addItemToMeal(dairyItem, dairyItem.defaultQuantity || 100, false);
+      }
     }
 
     // Calcular totais da refeição
-    meal.totalMealCalories = Math.round(meal.items.reduce((sum, item) => sum + item.calories, 0));
-    meal.totalMealProtein = Math.round(meal.items.reduce((sum, item) => sum + item.protein, 0));
-    meal.totalMealCarbs = Math.round(meal.items.reduce((sum, item) => sum + item.carbs, 0));
-    meal.totalMealFat = Math.round(meal.items.reduce((sum, item) => sum + item.fat, 0));
+    meal.totalMealCalories = Math.round(currentMealCalories);
+    meal.totalMealProtein = Math.round(currentMealProtein);
+    meal.totalMealCarbs = Math.round(currentMealCarbs);
+    meal.totalMealFat = Math.round(currentMealFat);
 
     meals.push(meal);
 
