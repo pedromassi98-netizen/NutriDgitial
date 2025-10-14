@@ -166,17 +166,17 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // 3. Adicionar Gordura Saudável (se necessário e não já coberto)
-    // Prioriza as gorduras preferidas pelo usuário
-    const availableFats = foodDatabase.filter(item =>
+    // Filtra as gorduras preferidas que são elegíveis para a refeição atual
+    const eligiblePreferredFats = foodDatabase.filter(item =>
       preferredFatFoodIds.includes(item.id) &&
       item.category === 'fat' &&
       item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
       !addedFoodIds.includes(item.id)
     );
 
-    if (availableFats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
-      // Seleciona uma gordura preferida aleatoriamente
-      const fatItem = availableFats[Math.floor(Math.random() * availableFats.length)];
+    if (eligiblePreferredFats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
+      // Seleciona uma gordura preferida elegível aleatoriamente
+      const fatItem = eligiblePreferredFats[Math.floor(Math.random() * eligiblePreferredFats.length)];
       const gramsNeeded = ((mealTargetFat - currentMealFat) / (fatItem.fatPer100g / 100)) * 0.5; // 50% da gordura restante
       let quantityForDisplay = gramsNeeded;
 

@@ -54,11 +54,11 @@ export const foodDatabase: FoodItem[] = [
   { id: 'whole_wheat_pasta', name: 'Macarrão integral', category: 'carb', caloriesPer100g: 124, proteinPer100g: 5, carbsPer100g: 25, fatPer100g: 1, unit: 'g', defaultQuantity: 100, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'french_bread', name: 'Pão francês', category: 'carb', caloriesPer100g: 280, proteinPer100g: 8, carbsPer100g: 56, fatPer100g: 2, unit: 'unidade', servingSizeGrams: 50, defaultQuantity: 1, isGlutenFree: false, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] }, // 1 unidade = 50g
 
-  // Gorduras
-  { id: 'avocado', name: 'Abacate', category: 'fat', caloriesPer100g: 160, proteinPer100g: 2, carbsPer100g: 9, fatPer100g: 15, unit: 'g', defaultQuantity: 50, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack', 'lunch', 'dinner'] },
+  // Gorduras - ATUALIZADO
+  { id: 'avocado', name: 'Abacate', category: 'fat', caloriesPer100g: 160, proteinPer100g: 2, carbsPer100g: 9, fatPer100g: 15, unit: 'g', defaultQuantity: 50, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'olive_oil', name: 'Azeite de oliva extra virgem', category: 'fat', caloriesPer100g: 884, proteinPer100g: 0, carbsPer100g: 0, fatPer100g: 100, unit: 'ml', defaultQuantity: 10, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'nuts', name: 'Castanhas (mix)', category: 'fat', caloriesPer100g: 607, proteinPer100g: 15, carbsPer100g: 18, fatPer100g: 54, unit: 'g', defaultQuantity: 30, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['snack'] },
-  { id: 'chia_seeds', name: 'Sementes de chia', category: 'fat', caloriesPer100g: 486, proteinPer100g: 17, carbsPer100g: 42, fatPer100g: 31, unit: 'g', defaultQuantity: 15, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['snack'] },
+  { id: 'chia_seeds', name: 'Sementes de chia', category: 'fat', caloriesPer100g: 486, proteinPer100g: 17, carbsPer100g: 42, fatPer100g: 31, unit: 'g', defaultQuantity: 15, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast'] },
 
   // Vegetais (A GOSTO)
   { id: 'broccoli', name: 'Brócolis', category: 'vegetable', caloriesPer100g: 34, proteinPer100g: 2.8, carbsPer100g: 6.6, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
