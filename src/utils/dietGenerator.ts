@@ -26,6 +26,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const preferredLunchFoodIds = getPreferredFoodIds(foodPreferences.preferredLunchFoods);
   const preferredSnackFoodIds = getPreferredFoodIds(foodPreferences.preferredSnackFoods);
   const preferredDinnerFoodIds = getPreferredFoodIds(foodPreferences.preferredDinnerFoods);
+  const preferredFatFoodIds = getPreferredFoodIds(foodPreferences.preferredFats); // NOVO: Preferências de gordura
 
   const filterFoodItems = (category: FoodItem['category'], preferredIds: string[], mealType: FoodItem['mealTypes'][number], excludeIds: string[] = []) => {
     let filtered = foodDatabase.filter(item =>
@@ -165,9 +166,17 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // 3. Adicionar Gordura Saudável (se necessário e não já coberto)
-    const fats = filterFoodItems('fat', mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
-    if (fats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
-      const fatItem = fats[0];
+    // Prioriza as gorduras preferidas pelo usuário
+    const availableFats = foodDatabase.filter(item =>
+      preferredFatFoodIds.includes(item.id) &&
+      item.category === 'fat' &&
+      item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
+      !addedFoodIds.includes(item.id)
+    );
+
+    if (availableFats.length > 0 && currentMealFat < mealTargetFat * 0.5) { // Se a gordura ainda estiver baixa
+      // Seleciona uma gordura preferida aleatoriamente
+      const fatItem = availableFats[Math.floor(Math.random() * availableFats.length)];
       const gramsNeeded = ((mealTargetFat - currentMealFat) / (fatItem.fatPer100g / 100)) * 0.5; // 50% da gordura restante
       let quantityForDisplay = gramsNeeded;
 
@@ -261,10 +270,6 @@ export const parseDietPlanText = (text: string): Meal[] => {
         totalMealFat: 0,
       };
       console.log('Found meal header:', currentMeal.name, currentMeal.time); // DEBUG
-      continue;
-    }
-
-    if (!currentMeal) {
       continue;
     }
 

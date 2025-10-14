@@ -22,7 +22,7 @@ import {
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Utensils, Coffee, Apple, Soup, Grape } from "lucide-react"; // Importar ícones relevantes
+import { Utensils, Coffee, Apple, Soup, Grape, Droplet } from "lucide-react"; // Importar ícones relevantes
 import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox"; // Importar o novo componente
 
 const formSchema = z.object({
@@ -31,6 +31,7 @@ const formSchema = z.object({
   preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."),
   preferredDinnerFoods: z.array(z.string()).optional(),
   preferredFruits: z.array(z.string()).optional(), // Novo campo para frutas
+  preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."), // NOVO CAMPO
 });
 
 const UserFoodPreferencesForm = () => {
@@ -42,7 +43,8 @@ const UserFoodPreferencesForm = () => {
       preferredLunchFoods: [],
       preferredSnackFoods: [],
       preferredDinnerFoods: [],
-      preferredFruits: [], // Valor padrão
+      preferredFruits: [],
+      preferredFats: [], // Valor padrão para o novo campo
     },
   });
 
@@ -164,6 +166,26 @@ const UserFoodPreferencesForm = () => {
                         onChange={field.onChange}
                         placeholder="Selecione suas frutas preferidas ou 'Nenhuma fruta'..."
                         categoryFilter="fruit" // Filtrar por categoria 'fruit'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="preferredFats"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center">
+                      <Droplet className="size-4 mr-2 text-primary" /> Fontes de Gordura Saudável
+                    </FormLabel>
+                    <FormControl>
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Selecione suas fontes de gordura preferidas..."
+                        categoryFilter="fat" // Filtrar por categoria 'fat'
                       />
                     </FormControl>
                     <FormMessage />

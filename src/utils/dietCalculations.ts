@@ -49,6 +49,8 @@ const userFoodPreferencesFormSchema = z.object({
   preferredLunchFoods: z.array(z.string()).optional(),
   preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."), // Tornando obrigatório
   preferredDinnerFoods: z.array(z.string()).optional(),
+  preferredFruits: z.array(z.string()).optional(), // Valor padrão
+  preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."), // NOVO CAMPO OBRIGATÓRIO
 });
 
 export type WelcomeFormData = z.infer<typeof welcomeFormSchema>;
