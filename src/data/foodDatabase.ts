@@ -29,6 +29,7 @@ export const foodDatabase: FoodItem[] = [
   { id: 'whey_protein_powder', name: 'Whey Protein em pó', category: 'protein', caloriesPer100g: 370, proteinPer100g: 80, carbsPer100g: 5, fatPer100g: 4, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'mozzarella_cheese', name: 'Queijo Mussarela', category: 'protein', caloriesPer100g: 300, proteinPer100g: 22, carbsPer100g: 1, fatPer100g: 22, unit: 'fatia', servingSizeGrams: 20, defaultQuantity: 1, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
   { id: 'minas_cheese', name: 'Queijo Minas Frescal', category: 'protein', caloriesPer100g: 260, proteinPer100g: 17, carbsPer100g: 2, fatPer100g: 20, unit: 'fatia', servingSizeGrams: 30, defaultQuantity: 1, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
+  { id: 'beans', name: 'Feijão cozido', category: 'protein', caloriesPer100g: 100, proteinPer100g: 7, carbsPer100g: 18, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
 
   // Carboidratos
   { id: 'sweet_potato', name: 'Batata doce', category: 'carb', caloriesPer100g: 86, proteinPer100g: 1.6, carbsPer100g: 20, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
