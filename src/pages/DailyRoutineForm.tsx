@@ -29,7 +29,7 @@ const formSchema = z.object({
   wakeUpTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   breakfastTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).."),
   lunchTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
-  snackTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM).").optional().or(z.literal('')),
+  snackTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."), // Removido .optional().or(z.literal(''))
   dinnerTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
   sleepTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
 });
@@ -42,7 +42,7 @@ const DailyRoutineForm = () => {
       wakeUpTime: "",
       breakfastTime: "",
       lunchTime: "",
-      snackTime: "",
+      snackTime: "", // Manter como string vazia para o valor padrão
       dinnerTime: "",
       sleepTime: "",
     },
@@ -123,7 +123,7 @@ const DailyRoutineForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Apple className="size-4 mr-2 text-primary" /> Lanche (Opcional)
+                      <Apple className="size-4 mr-2 text-primary" /> Lanche
                     </FormLabel>
                     <FormControl>
                       <Input type="time" {...field} className="bg-input text-foreground border-border" />
