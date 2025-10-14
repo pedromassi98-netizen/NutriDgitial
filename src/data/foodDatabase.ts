@@ -20,6 +20,7 @@ export interface FoodItem {
 export const foodDatabase: FoodItem[] = [
   // Proteínas
   { id: 'chicken_breast', name: 'Peito de frango', category: 'protein', caloriesPer100g: 165, proteinPer100g: 31, carbsPer100g: 0, fatPer100g: 3.6, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'tilapia_fillet', name: 'Filé de tilápia', category: 'protein', caloriesPer100g: 128, proteinPer100g: 26, carbsPer100g: 0, fatPer100g: 2.7, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'eggs', name: 'Ovos', category: 'protein', caloriesPer100g: 155, proteinPer100g: 13, carbsPer100g: 1.1, fatPer100g: 11, unit: 'unidade', servingSizeGrams: 50, defaultQuantity: 2, substitutions: ['tofu', 'lentils'], isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] }, // 2 unidades = 100g
   { id: 'tofu', name: 'Tofu', category: 'protein', caloriesPer100g: 76, proteinPer100g: 8, carbsPer100g: 1.9, fatPer100g: 4.8, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'salmon', name: 'Salmão', category: 'protein', caloriesPer100g: 208, proteinPer100g: 20, carbsPer100g: 0, fatPer100g: 13, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
