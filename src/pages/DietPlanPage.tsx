@@ -80,9 +80,9 @@ const DietPlanPage = () => {
 
         setDietPlan(generatedPlan.meals);
         setTotalCalories(generatedPlan.totalCalories);
-        setTotalProtein(generatedPlan.totalProtein);
-        setTotalCarbs(generatedPlan.totalCarbs);
-        setTotalFat(generatedPlan.totalFat);
+        setTotalProtein(generatedPlan.protein);
+        setTotalCarbs(generatedPlan.carbs);
+        setTotalFat(generatedPlan.fat);
 
         // Passar o nível de treinamento para a função calculateWaterIntake
         const requiredWater = Math.round(calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000);
@@ -120,29 +120,25 @@ const DietPlanPage = () => {
 
     const input = dietPlanRef.current;
     
-    // Add a temporary class for PDF-specific styling
-    input.classList.add('pdf-export-mode');
-
-    // Wait for styles to apply (optional, but good practice)
-    await new Promise(resolve => setTimeout(resolve, 50)); 
+    // Removido: input.classList.add('pdf-export-mode');
+    // Removido: await new Promise(resolve => setTimeout(resolve, 50)); 
 
     const canvas = await html2canvas(input, { scale: 2 });
     const imgData = canvas.toDataURL('image/png');
 
-    // Remove the temporary class immediately after canvas capture
-    input.classList.remove('pdf-export-mode');
+    // Removido: input.classList.remove('pdf-export-mode');
 
     const pdf = new jsPDF('p', 'mm', 'a4');
     const imgWidth = 210;
     const pageHeight = 297;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    // If the content fits on one page, add it directly.
-    // Otherwise, the existing pagination logic will handle it.
+    // Se o conteúdo couber em uma página, adiciona diretamente.
+    // Caso contrário, a lógica de paginação existente irá lidar com isso.
     if (imgHeight <= pageHeight) {
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
     } else {
-      // Existing pagination logic for content that still overflows
+      // Lógica de paginação para conteúdo que transborda
       let heightLeft = imgHeight;
       let position = 0;
 
@@ -175,12 +171,18 @@ const DietPlanPage = () => {
             title: "PDF Gerado! ✅",
             description: "Sua dieta foi baixada com sucesso.",
           });
+        } else {
+          toast({
+            title: "Erro ao Gerar PDF ⚠️",
+            description: "Não foi possível criar o arquivo PDF. Tente novamente.",
+            variant: "destructive",
+          });
         }
       } catch (err) {
-        console.error("Erro ao gerar PDF:", err);
+        console.error("Erro ao baixar PDF:", err);
         toast({
-          title: "Erro ao Gerar PDF ⚠️",
-          description: "Não foi possível baixar a dieta. Tente novamente.",
+          title: "Erro ao Baixar PDF ⚠️",
+          description: "Ocorreu um erro inesperado ao tentar baixar a dieta. Tente novamente.",
           variant: "destructive",
         });
       } finally {
@@ -292,39 +294,39 @@ const DietPlanPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div ref={dietPlanRef} className="p-3"> {/* Base padding for display */}
-            <div className="text-center bg-info p-3 rounded-md text-info-foreground">
+          <div ref={dietPlanRef} className="p-4">
+            <div className="text-center bg-info p-4 rounded-md text-info-foreground">
               <h3 className="text-xl font-semibold text-info-foreground mb-2 flex items-center justify-center">
                 <UtensilsCrossed className="size-5 mr-2" /> Resumo da Dieta
               </h3>
-              <p className="text-base flex items-center justify-center">Calorias Diárias: <span className="font-bold text-primary ml-1">{totalCalories} kcal</span></p>
-              <div className="flex justify-center items-center space-x-2 text-base mt-1">
-                <p className="flex items-center"><Beef className="size-4 mr-1 text-red-500" /> P: <span className="font-bold text-primary ml-0.5">{totalProtein}g</span></p>
-                <p className="flex items-center"><Carrot className="size-4 mr-1 text-orange-500" /> C: <span className="font-bold text-primary ml-0.5">{totalCarbs}g</span></p>
-                <p className="flex items-center"><Apple className="size-4 mr-1 text-yellow-500" /> G: <span className="font-bold text-primary ml-0.5">{totalFat}g</span></p>
+              <p className="text-lg flex items-center justify-center">Calorias Diárias: <span className="font-bold text-primary ml-2">{totalCalories} kcal</span></p>
+              <div className="flex justify-center items-center space-x-4 text-lg mt-2">
+                <p className="flex items-center"><Beef className="size-5 mr-1 text-red-500" /> P: <span className="font-bold text-primary ml-1">{totalProtein}g</span></p>
+                <p className="flex items-center"><Carrot className="size-5 mr-1 text-orange-500" /> C: <span className="font-bold text-primary ml-1">{totalCarbs}g</span></p>
+                <p className="flex items-center"><Apple className="size-5 mr-1 text-yellow-500" /> G: <span className="font-bold text-primary ml-1">{totalFat}g</span></p>
               </div>
-              <p className="text-base flex items-center justify-center mt-1">
-                <Droplet className="size-4 mr-1 text-blue-500" /> Ingestão de Água: <span className="font-bold text-primary ml-1">{waterIntake} litros/dia</span>
+              <p className="text-lg flex items-center justify-center mt-2">
+                <Droplet className="size-5 mr-2 text-blue-500" /> Ingestão de Água: <span className="font-bold text-primary ml-2">{waterIntake} litros/dia</span>
               </p>
             </div>
 
-            <Separator className="my-4 bg-border" />
+            <Separator className="my-6 bg-border" />
 
-            <h3 className="text-xl font-bold text-center text-primary mb-3">Seu Plano de Refeições</h3>
-            <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-center text-primary mb-4">Seu Plano de Refeições</h3>
+            <div className="space-y-8">
               {dietPlan.map((meal, index) => (
-                <div key={index} className="bg-secondary p-3 rounded-lg shadow-sm border border-border">
-                  <h4 className="text-lg font-semibold text-foreground mb-1">{meal.name} ({meal.time})</h4>
-                  <p className="text-xs text-muted-foreground mb-1">
+                <div key={index} className="bg-secondary p-4 rounded-lg shadow-sm border border-border">
+                  <h4 className="text-xl font-semibold text-foreground mb-2">{meal.name} ({meal.time})</h4>
+                  <p className="text-sm text-muted-foreground mb-2">
                     Total da Refeição: <span className="font-bold">{meal.totalMealCalories} kcal</span>
                   </p>
-                  <ul className="list-disc list-inside space-y-0.5 text-muted-foreground text-sm">
+                  <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                     {meal.items.map((item, itemIndex) => (
                       <li key={itemIndex}>
                         <span className="font-medium text-foreground">{item.food}:</span> {item.quantity}
                         {item.substitutions && item.substitutions.length > 0 && (
-                          <span className="block text-xs text-gray-500 ml-3">
-                            (Ou: {item.substitutions.slice(0, 2).join(", ")}) {/* Limit to 2 substitutions */}
+                          <span className="block text-sm text-gray-500 ml-4">
+                            (Ou: {item.substitutions.join(", ")})
                           </span>
                         )}
                       </li>
@@ -336,23 +338,23 @@ const DietPlanPage = () => {
 
             {recommendedSupplements.length > 0 && ( // NOVA SEÇÃO DE SUPLEMENTAÇÃO
               <>
-                <Separator className="my-4 bg-border" />
-                <h3 className="text-xl font-bold text-center text-primary mb-3 flex items-center justify-center">
-                  <Pill className="size-5 mr-2" /> Suplementação Recomendada
+                <Separator className="my-6 bg-border" />
+                <h3 className="text-2xl font-bold text-center text-primary mb-4 flex items-center justify-center">
+                  <Pill className="size-6 mr-2" /> Suplementação Recomendada
                 </h3>
                 <div className="space-y-4">
                   {recommendedSupplements.map((supp, index) => (
-                    <div key={index} className="bg-secondary p-3 rounded-lg shadow-sm border border-border">
-                      <h4 className="text-lg font-semibold text-foreground mb-1">{supp.name}</h4>
-                      <p className="text-sm text-muted-foreground">
+                    <div key={index} className="bg-secondary p-4 rounded-lg shadow-sm border border-border">
+                      <h4 className="text-xl font-semibold text-foreground mb-2">{supp.name}</h4>
+                      <p className="text-base text-muted-foreground">
                         Dosagem: <span className="font-bold">{supp.dosage}</span>
                       </p>
                       {supp.notes && (
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1">
                           Notas: {supp.notes}
                         </p>
                       )}
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-sm text-gray-500 mt-1">
                         Razão: {supp.reason}
                       </p>
                     </div>
@@ -361,9 +363,9 @@ const DietPlanPage = () => {
               </>
             )}
 
-            <Separator className="my-4 bg-border" />
+            <Separator className="my-6 bg-border" />
 
-            <div className="text-center text-muted-foreground text-xs">
+            <div className="text-center text-muted-foreground text-sm">
               <p>Lembre-se: Este é um plano sugerido. Consulte um profissional de saúde para um acompanhamento personalizado.</p>
             </div>
           </div>
