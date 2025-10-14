@@ -45,10 +45,10 @@ const userSupplementationFormSchema = z.object({
 });
 
 const userFoodPreferencesFormSchema = z.object({
-  preferredCarbs: z.string().optional(),
-  preferredProteins: z.string().optional(),
-  preferredVegetables: z.string().optional(),
-  preferredFruits: z.string().optional(),
+  preferredBreakfastFoods: z.string().optional(),
+  preferredLunchFoods: z.string().optional(),
+  preferredSnackFoods: z.string().optional(),
+  preferredDinnerFoods: z.string().optional(),
   dietaryRestrictions: z.string().optional(),
 });
 

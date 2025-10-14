@@ -1,22 +1,6 @@
 import { AllFormData, Meal, MealItemDetails, calculateBMR, calculateTDEE, adjustCaloriesForGoal, calculateMacronutrients } from "./dietCalculations";
 import { foodDatabase, FoodItem } from "../data/foodDatabase";
 
-// Remove a importação de arquivos .txt, pois a geração será dinâmica
-// const dietPlanFiles = import.meta.glob('../data/diet-plans/*.txt', { as: 'raw', eager: true });
-
-// Remove a interface DietPlanMetadata e a função parseFilename, pois não serão mais usadas
-// interface DietPlanMetadata {
-//   filename: string;
-//   goal: string;
-//   gender: string;
-//   age: number;
-//   weight: number;
-//   restrictions: string[];
-//   content: string;
-// }
-// const parseFilename = (filename: string): Omit<DietPlanMetadata, 'content'> | null => { /* ... */ };
-// const allDietPlansMetadata: DietPlanMetadata[] = Object.entries(dietPlanFiles) /* ... */ ;
-
 // Nova função para selecionar e gerar o plano de dieta dinamicamente
 export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalCalories: number, totalProtein: number, totalCarbs: number, totalFat: number } | null => {
   const { profile, activity, goals, routine, foodPreferences } = formData;
@@ -41,8 +25,17 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const isLactoseFree = userRestrictions.includes('sem lactose') || userRestrictions.includes('semlactose');
   const isLowCarb = userRestrictions.includes('low carb') || userRestrictions.includes('lowcarb');
 
-  const filterFoodItems = (category: FoodItem['category'], excludeIds: string[] = []) => {
-    return foodDatabase.filter(item =>
+  const parsePreferredFoods = (foodString: string | undefined) => {
+    return foodString?.toLowerCase().split(',').map(s => s.trim()).filter(Boolean) || [];
+  };
+
+  const preferredBreakfastFoods = parsePreferredFoods(foodPreferences.preferredBreakfastFoods);
+  const preferredLunchFoods = parsePreferredFoods(foodPreferences.preferredLunchFoods);
+  const preferredSnackFoods = parsePreferredFoods(foodPreferences.preferredSnackFoods);
+  const preferredDinnerFoods = parsePreferredFoods(foodPreferences.preferredDinnerFoods);
+
+  const filterFoodItems = (category: FoodItem['category'], preferredNames: string[], excludeIds: string[] = []) => {
+    let filtered = foodDatabase.filter(item =>
       item.category === category &&
       !excludeIds.includes(item.id) &&
       (!isVegetarian || item.isVegetarian) &&
@@ -50,6 +43,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       (!isGlutenFree || item.isGlutenFree) &&
       (!isLactoseFree || item.isLactoseFree)
     );
+
+    // Prioritize preferred foods
+    const preferredItems = filtered.filter(item => preferredNames.includes(item.name.toLowerCase()));
+    const otherItems = filtered.filter(item => !preferredNames.includes(item.name.toLowerCase()));
+
+    return [...preferredItems, ...otherItems]; // Preferred items come first
   };
 
   const meals: Meal[] = [];
@@ -64,17 +63,16 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     lunch: { calories: 0.35, protein: 0.35, carbs: 0.35, fat: 0.35 },
     snack: { calories: 0.10, protein: 0.10, carbs: 0.10, fat: 0.10 },
     dinner: { calories: 0.30, protein: 0.30, carbs: 0.25, fat: 0.30 },
-    // Adicione outras refeições se necessário
   };
 
   const mealTimes = [
-    { name: 'Café da manhã', time: routine.breakfastTime, key: 'breakfast' },
-    { name: 'Almoço', time: routine.lunchTime, key: 'lunch' },
-    { name: 'Jantar', time: routine.dinnerTime, key: 'dinner' },
+    { name: 'Café da manhã', time: routine.breakfastTime, key: 'breakfast', preferred: preferredBreakfastFoods },
+    { name: 'Almoço', time: routine.lunchTime, key: 'lunch', preferred: preferredLunchFoods },
+    { name: 'Jantar', time: routine.dinnerTime, key: 'dinner', preferred: preferredDinnerFoods },
   ];
 
   if (routine.snackTime) {
-    mealTimes.splice(2, 0, { name: 'Lanche', time: routine.snackTime, key: 'snack' });
+    mealTimes.splice(2, 0, { name: 'Lanche', time: routine.snackTime, key: 'snack', preferred: preferredSnackFoods });
   }
 
   for (const mealConfig of mealTimes) {
@@ -97,16 +95,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     let remainingProtein = mealTargetProtein;
     let remainingCarbs = mealTargetCarbs;
     let remainingFat = mealTargetFat;
+    const addedFoodIds: string[] = [];
 
-    // Lógica de geração de refeições (simplificada para o exemplo)
-    // Esta parte precisaria ser mais robusta para gerar dietas realmente realistas
-    // e considerar a combinação de alimentos para atingir os macros.
-    // Por enquanto, vamos adicionar alguns itens básicos.
-
-    // Adicionar proteína
-    const proteins = filterFoodItems('protein');
+    // Tentar adicionar proteína
+    const proteins = filterFoodItems('protein', mealConfig.preferred);
     if (proteins.length > 0) {
-      const proteinItem = proteins[Math.floor(Math.random() * proteins.length)];
+      const proteinItem = proteins[0]; // Pick the first (preferred) protein
       const quantity = Math.min(proteinItem.defaultQuantity || 100, Math.round(remainingProtein / (proteinItem.proteinPer100g / 100)));
       if (quantity > 0) {
         const itemCalories = (proteinItem.caloriesPer100g / 100) * quantity;
@@ -123,6 +117,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
           carbs: Math.round(itemCarbs),
           fat: Math.round(itemFat),
         });
+        addedFoodIds.push(proteinItem.id);
         remainingCalories -= itemCalories;
         remainingProtein -= itemProtein;
         remainingCarbs -= itemCarbs;
@@ -130,10 +125,10 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       }
     }
 
-    // Adicionar carboidrato
-    const carbs = filterFoodItems('carb');
+    // Tentar adicionar carboidrato
+    const carbs = filterFoodItems('carb', mealConfig.preferred, addedFoodIds);
     if (carbs.length > 0 && remainingCarbs > 0) {
-      const carbItem = carbs[Math.floor(Math.random() * carbs.length)];
+      const carbItem = carbs[0]; // Pick the first (preferred) carb
       const quantity = Math.min(carbItem.defaultQuantity || 100, Math.round(remainingCarbs / (carbItem.carbsPer100g / 100)));
       if (quantity > 0) {
         const itemCalories = (carbItem.caloriesPer100g / 100) * quantity;
@@ -150,6 +145,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
           carbs: Math.round(itemCarbs),
           fat: Math.round(itemFat),
         });
+        addedFoodIds.push(carbItem.id);
         remainingCalories -= itemCalories;
         remainingProtein -= itemProtein;
         remainingCarbs -= itemCarbs;
@@ -158,9 +154,9 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // Adicionar vegetal (sempre 'a gosto' e com macros mínimos)
-    const vegetables = filterFoodItems('vegetable');
+    const vegetables = filterFoodItems('vegetable', mealConfig.preferred, addedFoodIds);
     if (vegetables.length > 0) {
-      const veggieItem = vegetables[Math.floor(Math.random() * vegetables.length)];
+      const veggieItem = vegetables[0]; // Pick the first (preferred) vegetable
       meal.items.push({
         food: veggieItem.name,
         quantity: 'a gosto',
@@ -170,6 +166,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         carbs: 2,
         fat: 0,
       });
+      addedFoodIds.push(veggieItem.id);
     }
 
     // Calcular totais da refeição

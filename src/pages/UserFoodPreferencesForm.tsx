@@ -19,18 +19,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Carrot, Drumstick, Leaf, Cherry, Ban, Utensils } from "lucide-react"; // Importar ícones
+import { Utensils, Coffee, Apple, Soup, Ban } from "lucide-react"; // Importar ícones relevantes
 
 const formSchema = z.object({
-  preferredCarbs: z.string().optional(),
-  preferredProteins: z.string().optional(),
-  preferredVegetables: z.string().optional(),
-  preferredFruits: z.string().optional(),
+  preferredBreakfastFoods: z.string().optional(),
+  preferredLunchFoods: z.string().optional(),
+  preferredSnackFoods: z.string().optional(),
+  preferredDinnerFoods: z.string().optional(),
   dietaryRestrictions: z.string().optional(),
 });
 
@@ -39,16 +38,16 @@ const UserFoodPreferencesForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      preferredCarbs: "",
-      preferredProteins: "",
-      preferredVegetables: "",
-      preferredFruits: "",
+      preferredBreakfastFoods: "",
+      preferredLunchFoods: "",
+      preferredSnackFoods: "",
+      preferredDinnerFoods: "",
       dietaryRestrictions: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Preferências do usuário:", values);
+    console.log("Preferências de alimentos por refeição do usuário:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, foodPreferences: values }));
@@ -65,7 +64,7 @@ const UserFoodPreferencesForm = () => {
             <CardTitle className="text-3xl font-extrabold text-primary">Preferências Alimentares</CardTitle>
           </div>
           <CardDescription className="text-center text-muted-foreground">
-            Conte-nos sobre seus gostos e restrições para uma dieta perfeita para você.
+            Liste os alimentos que você gostaria de incluir em cada refeição.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -73,14 +72,14 @@ const UserFoodPreferencesForm = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="preferredCarbs"
+                name="preferredBreakfastFoods"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Carrot className="size-4 mr-2 text-primary" /> Carboidratos Preferidos
+                      <Coffee className="size-4 mr-2 text-primary" /> Café da Manhã
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: arroz, batata, pão integral" {...field} className="bg-input text-foreground border-border" />
+                      <Textarea placeholder="Ex: ovos, aveia, frutas, pão integral" {...field} className="resize-none bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -88,14 +87,14 @@ const UserFoodPreferencesForm = () => {
               />
               <FormField
                 control={form.control}
-                name="preferredProteins"
+                name="preferredLunchFoods"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Drumstick className="size-4 mr-2 text-primary" /> Proteínas Preferidas
+                      <Soup className="size-4 mr-2 text-primary" /> Almoço
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: frango, ovos, feijão, tofu" {...field} className="bg-input text-foreground border-border" />
+                      <Textarea placeholder="Ex: frango, arroz integral, brócolis, salada" {...field} className="resize-none bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -103,14 +102,14 @@ const UserFoodPreferencesForm = () => {
               />
               <FormField
                 control={form.control}
-                name="preferredVegetables"
+                name="preferredSnackFoods"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Leaf className="size-4 mr-2 text-primary" /> Vegetais Preferidos
+                      <Apple className="size-4 mr-2 text-primary" /> Lanche (Opcional)
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: brócolis, espinafre, cenoura" {...field} className="bg-input text-foreground border-border" />
+                      <Textarea placeholder="Ex: iogurte grego, castanhas, banana" {...field} className="resize-none bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,14 +117,14 @@ const UserFoodPreferencesForm = () => {
               />
               <FormField
                 control={form.control}
-                name="preferredFruits"
+                name="preferredDinnerFoods"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      <Cherry className="size-4 mr-2 text-primary" /> Frutas Preferidas
+                      <Utensils className="size-4 mr-2 text-primary" /> Jantar
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: maçã, banana, morango" {...field} className="bg-input text-foreground border-border" />
+                      <Textarea placeholder="Ex: salmão, batata doce, espinafre" {...field} className="resize-none bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,7 +140,7 @@ const UserFoodPreferencesForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Descreva suas restrições ou alergias"
+                        placeholder="Descreva suas restrições ou alergias (Ex: sem glúten, sem lactose, vegetariano)"
                         className="resize-none bg-input text-foreground border-border"
                         {...field}
                       />
