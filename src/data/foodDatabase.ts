@@ -15,6 +15,7 @@ export interface FoodItem {
   isGlutenFree?: boolean;
   isLactoseFree?: boolean;
   mealTypes: ('breakfast' | 'lunch' | 'snack' | 'dinner')[]; // Nova propriedade
+  displayInMealTypeSelection?: boolean; // Nova propriedade para controlar a visibilidade
 }
 
 export const foodDatabase: FoodItem[] = [
@@ -69,6 +70,8 @@ export const foodDatabase: FoodItem[] = [
   { id: 'olive_oil', name: 'Azeite de oliva extra virgem', category: 'fat', caloriesPer100g: 884, proteinPer100g: 0, carbsPer100g: 0, fatPer100g: 100, unit: 'ml', defaultQuantity: 10, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'nuts', name: 'Castanhas (mix)', category: 'fat', caloriesPer100g: 607, proteinPer100g: 15, carbsPer100g: 18, fatPer100g: 54, unit: 'g', defaultQuantity: 30, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['snack'] },
   { id: 'chia_seeds', name: 'Sementes de chia', category: 'fat', caloriesPer100g: 486, proteinPer100g: 17, carbsPer100g: 42, fatPer100g: 31, unit: 'g', defaultQuantity: 15, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast'] },
+  { id: 'sunflower_seeds', name: 'Sementes de girassol', category: 'fat', caloriesPer100g: 584, proteinPer100g: 20.7, carbsPer100g: 20, fatPer100g: 51.5, unit: 'g', defaultQuantity: 15, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'], displayInMealTypeSelection: false },
+  { id: 'flax_seeds', name: 'Sementes de linhaça', category: 'fat', caloriesPer100g: 534, proteinPer100g: 18.3, carbsPer100g: 28.9, fatPer100g: 42.2, unit: 'g', defaultQuantity: 15, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'], displayInMealTypeSelection: false },
 
   // Vegetais (A GOSTO)
   { id: 'broccoli', name: 'Brócolis', category: 'vegetable', caloriesPer100g: 34, proteinPer100g: 2.8, carbsPer100g: 6.6, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
@@ -97,7 +100,7 @@ export const foodDatabase: FoodItem[] = [
 
   // Leguminosas - NOVA CATEGORIA
   { id: 'lentils', name: 'Lentilha', category: 'legume', caloriesPer100g: 116, proteinPer100g: 9, carbsPer100g: 20, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
-  { id: 'beans', name: 'Feijão cozido', category: 'legume', caloriesPer100g: 100, proteinPer100g: 7, carbsPer100g: 18, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'beans', name: 'Feijão cozido', category: 'legume', 'caloriesPer100g': 100, proteinPer100g: 7, carbsPer100g: 18, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'quinoa', name: 'Quinoa', category: 'legume', caloriesPer100g: 120, proteinPer100g: 4.4, carbsPer100g: 21, fatPer100g: 1.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'chickpeas', name: 'Grão de Bico', category: 'legume', caloriesPer100g: 164, proteinPer100g: 8.9, carbsPer100g: 27.4, fatPer100g: 2.6, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
 

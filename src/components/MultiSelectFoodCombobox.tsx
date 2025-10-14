@@ -74,8 +74,21 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   };
 
   const availableFoods = foodDatabase
-    .filter(food => mealTypeFilter ? food.mealTypes.includes(mealTypeFilter) : true)
-    .filter(food => categoryFilter ? food.category === categoryFilter : true) // Filtrar por categoria
+    .filter(food => {
+      // Se houver um filtro de tipo de refeição, e o alimento não deve ser exibido na seleção de tipo de refeição, exclua-o.
+      if (mealTypeFilter && food.displayInMealTypeSelection === false) {
+        return false;
+      }
+      // Filtra por tipo de refeição se especificado
+      if (mealTypeFilter && !food.mealTypes.includes(mealTypeFilter)) {
+        return false;
+      }
+      // Filtra por categoria se especificado
+      if (categoryFilter && food.category !== categoryFilter) {
+        return false;
+      }
+      return true;
+    })
     .map((food) => ({
       value: food.id,
       label: food.name,
