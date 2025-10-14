@@ -59,6 +59,7 @@ export const foodDatabase: FoodItem[] = [
   { id: 'boiled_potato', name: 'Batata inglesa cozida', category: 'carb', caloriesPer100g: 87, proteinPer100g: 1.9, carbsPer100g: 20.1, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'boiled_pasta', name: 'Macarrão cozido', category: 'carb', caloriesPer100g: 158, proteinPer100g: 5.8, carbsPer100g: 30.6, fatPer100g: 0.9, unit: 'g', defaultQuantity: 100, isGlutenFree: false, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
   { id: 'cassava', name: 'Mandioca cozida', category: 'carb', caloriesPer100g: 160, proteinPer100g: 1.4, carbsPer100g: 38, fatPer100g: 0.3, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
+  { id: 'sandwich_bread', name: 'Pão de forma', category: 'carb', caloriesPer100g: 260, proteinPer100g: 8, carbsPer100g: 49, fatPer100g: 3, unit: 'fatia', servingSizeGrams: 25, defaultQuantity: 2, isGlutenFree: false, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
 
   // Gorduras - ATUALIZADO
   { id: 'avocado', name: 'Abacate', category: 'fat', caloriesPer100g: 160, proteinPer100g: 2, carbsPer100g: 9, fatPer100g: 15, unit: 'g', defaultQuantity: 50, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['lunch', 'dinner'] },
