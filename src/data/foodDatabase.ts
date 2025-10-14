@@ -79,4 +79,5 @@ export const foodDatabase: FoodItem[] = [
   // Laticínios (além do iogurte grego)
   { id: 'milk_lactose_free', name: 'Leite sem lactose', category: 'dairy', caloriesPer100g: 47, proteinPer100g: 3.2, carbsPer100g: 4.7, fatPer100g: 1.5, unit: 'ml', defaultQuantity: 200, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
   { id: 'almond_milk', name: 'Leite de amêndoas', category: 'dairy', caloriesPer100g: 15, proteinPer100g: 0.6, carbsPer100g: 1.6, fatPer100g: 1.1, unit: 'ml', defaultQuantity: 200, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true, mealTypes: ['breakfast', 'snack'] },
+  { id: 'whole_milk', name: 'Leite Integral', category: 'dairy', caloriesPer100g: 60, proteinPer100g: 3.2, carbsPer100g: 4.7, fatPer100g: 3.3, unit: 'ml', defaultQuantity: 200, isGlutenFree: true, isLactoseFree: false, mealTypes: ['breakfast', 'snack'] },
 ];
