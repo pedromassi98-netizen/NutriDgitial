@@ -22,14 +22,15 @@ import {
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Utensils, Coffee, Apple, Soup } from "lucide-react"; // Importar ícones relevantes
+import { Utensils, Coffee, Apple, Soup, Grape } from "lucide-react"; // Importar ícones relevantes
 import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox"; // Importar o novo componente
 
 const formSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
   preferredLunchFoods: z.array(z.string()).optional(),
-  preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."), // Tornando obrigatório
+  preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."),
   preferredDinnerFoods: z.array(z.string()).optional(),
+  preferredFruits: z.array(z.string()).optional(), // Novo campo para frutas
 });
 
 const UserFoodPreferencesForm = () => {
@@ -39,8 +40,9 @@ const UserFoodPreferencesForm = () => {
     defaultValues: {
       preferredBreakfastFoods: [],
       preferredLunchFoods: [],
-      preferredSnackFoods: [], // Manter como array vazio para o valor padrão
+      preferredSnackFoods: [],
       preferredDinnerFoods: [],
+      preferredFruits: [], // Valor padrão
     },
   });
 
@@ -81,7 +83,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o café da manhã..."
-                        mealTypeFilter="breakfast" // Passando o filtro
+                        mealTypeFilter="breakfast"
                       />
                     </FormControl>
                     <FormMessage />
@@ -101,7 +103,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o almoço..."
-                        mealTypeFilter="lunch" // Passando o filtro
+                        mealTypeFilter="lunch"
                       />
                     </FormControl>
                     <FormMessage />
@@ -121,7 +123,7 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o lanche..."
-                        mealTypeFilter="snack" // Passando o filtro
+                        mealTypeFilter="snack"
                       />
                     </FormControl>
                     <FormMessage />
@@ -141,7 +143,27 @@ const UserFoodPreferencesForm = () => {
                         value={field.value || []}
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o jantar..."
-                        mealTypeFilter="dinner" // Passando o filtro
+                        mealTypeFilter="dinner"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="preferredFruits"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center">
+                      <Grape className="size-4 mr-2 text-primary" /> Frutas Preferidas
+                    </FormLabel>
+                    <FormControl>
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Selecione suas frutas preferidas ou 'Nenhuma fruta'..."
+                        categoryFilter="fruit" // Filtrar por categoria 'fruit'
                       />
                     </FormControl>
                     <FormMessage />

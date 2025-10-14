@@ -22,7 +22,8 @@ interface MultiSelectFoodComboboxProps {
   onChange: (value: string[]) => void;
   placeholder?: string;
   label?: string;
-  mealTypeFilter?: FoodItem['mealTypes'][number]; // Nova prop
+  mealTypeFilter?: FoodItem['mealTypes'][number];
+  categoryFilter?: FoodItem['category']; // Nova prop para filtrar por categoria
 }
 
 const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
@@ -30,7 +31,8 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   onChange,
   placeholder = "Selecione alimentos...",
   label,
-  mealTypeFilter, // Usar a nova prop
+  mealTypeFilter,
+  categoryFilter, // Usar a nova prop
 }) => {
   const [open, setOpen] = React.useState(false);
   const [selectedFoods, setSelectedFoods] = React.useState<string[]>(value);
@@ -40,13 +42,26 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   }, [value]);
 
   const handleSelect = (foodId: string) => {
-    const isSelected = selectedFoods.includes(foodId);
     let newSelection: string[];
 
-    if (isSelected) {
-      newSelection = selectedFoods.filter((id) => id !== foodId);
+    if (foodId === 'none_fruits') {
+      // Se 'Nenhuma fruta' for selecionada
+      if (selectedFoods.includes('none_fruits')) {
+        // Se já estiver selecionada, desmarcar
+        newSelection = selectedFoods.filter((id) => id !== 'none_fruits');
+      } else {
+        // Se não estiver selecionada, marcar e desmarcar todas as outras frutas
+        newSelection = ['none_fruits'];
+      }
     } else {
-      newSelection = [...selectedFoods, foodId];
+      // Se outra fruta for selecionada
+      if (selectedFoods.includes(foodId)) {
+        // Se já estiver selecionada, desmarcar
+        newSelection = selectedFoods.filter((id) => id !== foodId);
+      } else {
+        // Se não estiver selecionada, marcar e desmarcar 'Nenhuma fruta'
+        newSelection = [...selectedFoods.filter((id) => id !== 'none_fruits'), foodId];
+      }
     }
     setSelectedFoods(newSelection);
     onChange(newSelection);
@@ -59,7 +74,8 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   };
 
   const availableFoods = foodDatabase
-    .filter(food => mealTypeFilter ? food.mealTypes.includes(mealTypeFilter) : true) // Filtrar por mealType
+    .filter(food => mealTypeFilter ? food.mealTypes.includes(mealTypeFilter) : true)
+    .filter(food => categoryFilter ? food.category === categoryFilter : true) // Filtrar por categoria
     .map((food) => ({
       value: food.id,
       label: food.name,
