@@ -1,0 +1,60 @@
+export interface FoodItem {
+  id: string;
+  name: string;
+  category: 'protein' | 'carb' | 'fat' | 'vegetable' | 'fruit' | 'dairy' | 'other';
+  caloriesPer100g: number;
+  proteinPer100g: number;
+  carbsPer100g: number;
+  fatPer100g: number;
+  unit?: string; // e.g., 'g', 'ml', 'unidade'
+  defaultQuantity?: number; // e.g., 100 for 100g
+  substitutions?: string[]; // IDs of other food items that can substitute this one
+  isVegetarian?: boolean;
+  isVegan?: boolean;
+  isGlutenFree?: boolean;
+  isLactoseFree?: boolean;
+}
+
+export const foodDatabase: FoodItem[] = [
+  // Proteínas
+  { id: 'chicken_breast', name: 'Peito de frango', category: 'protein', caloriesPer100g: 165, proteinPer100g: 31, carbsPer100g: 0, fatPer100g: 3.6, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true },
+  { id: 'eggs', name: 'Ovos', category: 'protein', caloriesPer100g: 155, proteinPer100g: 13, carbsPer100g: 1.1, fatPer100g: 11, unit: 'unidade', defaultQuantity: 50, substitutions: ['tofu', 'lentils'], isGlutenFree: true, isLactoseFree: true },
+  { id: 'tofu', name: 'Tofu', category: 'protein', caloriesPer100g: 76, proteinPer100g: 8, carbsPer100g: 1.9, fatPer100g: 4.8, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'salmon', name: 'Salmão', category: 'protein', caloriesPer100g: 208, proteinPer100g: 20, carbsPer100g: 0, fatPer100g: 13, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true },
+  { id: 'lean_beef', name: 'Carne magra', category: 'protein', caloriesPer100g: 130, proteinPer100g: 26, carbsPer100g: 0, fatPer100g: 3, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true },
+  { id: 'greek_yogurt', name: 'Iogurte grego natural', category: 'protein', caloriesPer100g: 59, proteinPer100g: 10, carbsPer100g: 3.6, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isGlutenFree: true },
+  { id: 'lentils', name: 'Lentilha', category: 'protein', caloriesPer100g: 116, proteinPer100g: 9, carbsPer100g: 20, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'whey_protein_powder', name: 'Whey Protein em pó', category: 'protein', caloriesPer100g: 370, proteinPer100g: 80, carbsPer100g: 5, fatPer100g: 4, unit: 'g', defaultQuantity: 30, isGlutenFree: true, isLactoseFree: true }, // Assuming 80% protein content
+
+  // Carboidratos
+  { id: 'sweet_potato', name: 'Batata doce', category: 'carb', caloriesPer100g: 86, proteinPer100g: 1.6, carbsPer100g: 20, fatPer100g: 0.1, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true },
+  { id: 'brown_rice', name: 'Arroz integral', category: 'carb', caloriesPer100g: 111, proteinPer100g: 2.6, carbsPer100g: 23, fatPer100g: 0.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true },
+  { id: 'oats', name: 'Aveia', category: 'carb', caloriesPer100g: 389, proteinPer100g: 16.9, carbsPer100g: 66.3, fatPer100g: 6.9, unit: 'g', defaultQuantity: 50, isLactoseFree: true },
+  { id: 'whole_wheat_bread', name: 'Pão integral', category: 'carb', caloriesPer100g: 265, proteinPer100g: 13, carbsPer100g: 49, fatPer100g: 3.6, unit: 'fatia', defaultQuantity: 30, isLactoseFree: true },
+  { id: 'quinoa', name: 'Quinoa', category: 'carb', caloriesPer100g: 120, proteinPer100g: 4.4, carbsPer100g: 21, fatPer100g: 1.9, unit: 'g', defaultQuantity: 100, isGlutenFree: true, isLactoseFree: true },
+  { id: 'tapioca', name: 'Tapioca', category: 'carb', caloriesPer100g: 240, proteinPer100g: 0.6, carbsPer100g: 59, fatPer100g: 0, unit: 'g', defaultQuantity: 50, isGlutenFree: true, isLactoseFree: true },
+  { id: 'whole_wheat_pasta', name: 'Macarrão integral', category: 'carb', caloriesPer100g: 124, proteinPer100g: 5, carbsPer100g: 25, fatPer100g: 1, unit: 'g', defaultQuantity: 100, isLactoseFree: true },
+
+  // Gorduras
+  { id: 'avocado', name: 'Abacate', category: 'fat', caloriesPer100g: 160, proteinPer100g: 2, carbsPer100g: 9, fatPer100g: 15, unit: 'g', defaultQuantity: 50, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'olive_oil', name: 'Azeite de oliva extra virgem', category: 'fat', caloriesPer100g: 884, proteinPer100g: 0, carbsPer100g: 0, fatPer100g: 100, unit: 'ml', defaultQuantity: 10, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'nuts', name: 'Castanhas (mix)', category: 'fat', caloriesPer100g: 607, proteinPer100g: 15, carbsPer100g: 18, fatPer100g: 54, unit: 'g', defaultQuantity: 30, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'chia_seeds', name: 'Sementes de chia', category: 'fat', caloriesPer100g: 486, proteinPer100g: 17, carbsPer100g: 42, fatPer100g: 31, unit: 'g', defaultQuantity: 15, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+
+  // Vegetais
+  { id: 'broccoli', name: 'Brócolis', category: 'vegetable', caloriesPer100g: 34, proteinPer100g: 2.8, carbsPer100g: 6.6, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'spinach', name: 'Espinafre', category: 'vegetable', caloriesPer100g: 23, proteinPer100g: 2.9, carbsPer100g: 3.6, fatPer100g: 0.4, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'carrots', name: 'Cenoura', category: 'vegetable', caloriesPer100g: 41, proteinPer100g: 0.9, carbsPer100g: 9.6, fatPer100g: 0.2, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'lettuce', name: 'Alface', category: 'vegetable', caloriesPer100g: 15, proteinPer100g: 1.4, carbsPer100g: 2.9, fatPer100g: 0.2, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'tomato', name: 'Tomate', category: 'vegetable', caloriesPer100g: 18, proteinPer100g: 0.9, carbsPer100g: 3.9, fatPer100g: 0.2, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+
+  // Frutas
+  { id: 'apple', name: 'Maçã', category: 'fruit', caloriesPer100g: 52, proteinPer100g: 0.3, carbsPer100g: 14, fatPer100g: 0.2, unit: 'unidade', defaultQuantity: 180, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'banana', name: 'Banana', category: 'fruit', caloriesPer100g: 89, proteinPer100g: 1.1, carbsPer100g: 23, fatPer100g: 0.3, unit: 'unidade', defaultQuantity: 120, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'berries', name: 'Frutas vermelhas (mix)', category: 'fruit', caloriesPer100g: 57, proteinPer100g: 0.7, carbsPer100g: 14, fatPer100g: 0.5, unit: 'g', defaultQuantity: 100, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+  { id: 'orange', name: 'Laranja', category: 'fruit', caloriesPer100g: 47, proteinPer100g: 0.9, carbsPer100g: 12, fatPer100g: 0.1, unit: 'unidade', defaultQuantity: 130, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+
+  // Laticínios (além do iogurte grego)
+  { id: 'milk_lactose_free', name: 'Leite sem lactose', category: 'dairy', caloriesPer100g: 47, proteinPer100g: 3.2, carbsPer100g: 4.7, fatPer100g: 1.5, unit: 'ml', defaultQuantity: 200, isGlutenFree: true, isLactoseFree: true },
+  { id: 'almond_milk', name: 'Leite de amêndoas', category: 'dairy', caloriesPer100g: 15, proteinPer100g: 0.6, carbsPer100g: 1.6, fatPer100g: 1.1, unit: 'ml', defaultQuantity: 200, isVegetarian: true, isVegan: true, isGlutenFree: true, isLactoseFree: true },
+];

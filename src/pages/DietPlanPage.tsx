@@ -15,24 +15,31 @@ import {
   AllFormData,
   calculateWaterIntake,
   Meal,
+  calculateBMR,
+  calculateTDEE,
+  adjustCaloriesForGoal,
+  calculateMacronutrients,
 } from "@/utils/dietCalculations";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { UtensilsCrossed, Droplet, Download, Mail } from "lucide-react"; // Importar ícones
-import { supabase } from "@/integrations/supabase/client"; // Importar o cliente Supabase
-import { selectBestDietPlan, parseDietPlanText } from "@/utils/dietPlanLoader"; // Importar o novo utilitário
+import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple } from "lucide-react"; // Importar ícones
+import { supabase } from "@/integrations/supabase/client";
+import { generateDietPlan } from "@/utils/dietGenerator"; // Importar o novo utilitário de geração
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
   const [dietPlan, setDietPlan] = useState<Meal[]>([]);
   const [totalCalories, setTotalCalories] = useState<number | null>(null);
+  const [totalProtein, setTotalProtein] = useState<number | null>(null);
+  const [totalCarbs, setTotalCarbs] = useState<number | null>(null);
+  const [totalFat, setTotalFat] = useState<number | null>(null);
   const [waterIntake, setWaterIntake] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sendingEmail, setSendingEmail] = useState(false);
-  const dietPlanRef = useRef<HTMLDivElement>(null); // Ref para o conteúdo da dieta
+  const dietPlanRef = useRef<HTMLDivElement>(null);
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
@@ -60,32 +67,28 @@ const DietPlanPage = () => {
         setUserEmail(welcome.email);
         setUserName(welcome.name);
 
-        // Seleciona o melhor plano de dieta com base nos dados do usuário
-        const selectedPlanMetadata = selectBestDietPlan(formData);
+        // Gerar o plano de dieta dinamicamente
+        const generatedPlan = generateDietPlan(formData);
 
-        if (!selectedPlanMetadata) {
-          setError("Não foi possível encontrar um plano de dieta adequado para o seu perfil. Por favor, revise suas informações.");
+        if (!generatedPlan) {
+          setError("Não foi possível gerar um plano de dieta adequado para o seu perfil. Por favor, revise suas informações.");
           setLoading(false);
           return;
         }
 
-        // Analisa o conteúdo do plano de dieta selecionado
-        const parsedDietPlan = parseDietPlanText(selectedPlanMetadata.content);
-        console.log("Parsed Diet Plan for rendering:", parsedDietPlan); // NEW LOG
-        setDietPlan(parsedDietPlan);
+        setDietPlan(generatedPlan.meals);
+        setTotalCalories(generatedPlan.totalCalories);
+        setTotalProtein(generatedPlan.totalProtein);
+        setTotalCarbs(generatedPlan.totalCarbs);
+        setTotalFat(generatedPlan.totalFat);
 
-        // Calcula o total de calorias somando as calorias de todas as refeições do plano
-        const calculatedTotalCalories = parsedDietPlan.reduce((sum, meal) => sum + meal.totalMealCalories, 0);
-        setTotalCalories(calculatedTotalCalories);
-
-        // A ingestão de água ainda é calculada com base no peso do perfil
-        const requiredWater = Math.round(calculateWaterIntake(profile.weight) / 1000); // em litros
+        const requiredWater = Math.round(calculateWaterIntake(profile.weight) / 1000);
         setWaterIntake(requiredWater);
 
         setLoading(false);
-      } catch (e: any) { // Explicitly type e as any to access .message
+      } catch (e: any) {
         console.error("Erro ao carregar dados da dieta:", e);
-        setError("Ocorreu um erro ao gerar sua dieta. Tente novamente. Detalhes: " + e.message); // Added error message
+        setError("Ocorreu um erro ao gerar sua dieta. Tente novamente. Detalhes: " + e.message);
         setLoading(false);
       }
     };
@@ -93,14 +96,16 @@ const DietPlanPage = () => {
     loadDietData();
   }, []);
 
-  // NEW LOGS for state changes
   useEffect(() => {
     console.log("DietPlanPage - current dietPlan state:", dietPlan);
     console.log("DietPlanPage - current totalCalories state:", totalCalories);
+    console.log("DietPlanPage - current totalProtein state:", totalProtein);
+    console.log("DietPlanPage - current totalCarbs state:", totalCarbs);
+    console.log("DietPlanPage - current totalFat state:", totalFat);
     console.log("DietPlanPage - current waterIntake state:", waterIntake);
     console.log("DietPlanPage - current loading state:", loading);
     console.log("DietPlanPage - current error state:", error);
-  }, [dietPlan, totalCalories, waterIntake, loading, error]);
+  }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error]);
 
   const generatePdf = async () => {
     if (!dietPlanRef.current) return null;
@@ -108,8 +113,8 @@ const DietPlanPage = () => {
     const canvas = await html2canvas(dietPlanRef.current, { scale: 2 });
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
+    const imgWidth = 210;
+    const pageHeight = 297;
     const imgHeight = canvas.height * imgWidth / canvas.width;
     let heightLeft = imgHeight;
     let position = 0;
@@ -177,9 +182,9 @@ const DietPlanPage = () => {
       if (!pdf) {
         throw new Error("Não foi possível gerar o PDF para envio.");
       }
-      const pdfBase64 = pdf.output('datauristring').split(',')[1]; // Get base64 string
+      const pdfBase64 = pdf.output('datauristring').split(',')[1];
 
-      console.log("PDF Base64 size:", pdfBase64.length / 1024 / 1024, "MB"); // Log PDF size
+      console.log("PDF Base64 size:", pdfBase64.length / 1024 / 1024, "MB");
 
       const { data, error: edgeFunctionError } = await supabase.functions.invoke('send-diet-email', {
         body: { userEmail, pdfBase64, userName },
@@ -194,7 +199,7 @@ const DietPlanPage = () => {
         title: "E-mail Enviado! 📧",
         description: `Sua dieta foi enviada para ${userEmail}.`,
       });
-    } catch (err: any) { // Explicitly type err as any to access .message
+    } catch (err: any) {
       console.error("Erro ao enviar e-mail:", err);
       toast({
         title: "Erro ao Enviar E-mail ⚠️",
@@ -259,13 +264,18 @@ const DietPlanPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div ref={dietPlanRef} className="p-4"> {/* Adicionado p-4 aqui */}
+          <div ref={dietPlanRef} className="p-4">
             <div className="text-center bg-info p-4 rounded-md text-info-foreground">
               <h3 className="text-xl font-semibold text-info-foreground mb-2 flex items-center justify-center">
                 <UtensilsCrossed className="size-5 mr-2" /> Resumo da Dieta
               </h3>
               <p className="text-lg flex items-center justify-center">Calorias Diárias: <span className="font-bold text-primary ml-2">{totalCalories} kcal</span></p>
-              <p className="text-lg flex items-center justify-center">
+              <div className="flex justify-center items-center space-x-4 text-lg mt-2">
+                <p className="flex items-center"><Beef className="size-5 mr-1 text-red-500" /> P: <span className="font-bold text-primary ml-1">{totalProtein}g</span></p>
+                <p className="flex items-center"><Carrot className="size-5 mr-1 text-orange-500" /> C: <span className="font-bold text-primary ml-1">{totalCarbs}g</span></p>
+                <p className="flex items-center"><Apple className="size-5 mr-1 text-yellow-500" /> G: <span className="font-bold text-primary ml-1">{totalFat}g</span></p>
+              </div>
+              <p className="text-lg flex items-center justify-center mt-2">
                 <Droplet className="size-5 mr-2 text-blue-500" /> Ingestão de Água: <span className="font-bold text-primary ml-2">{waterIntake} litros/dia</span>
               </p>
             </div>

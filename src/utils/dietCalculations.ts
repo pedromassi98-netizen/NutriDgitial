@@ -129,8 +129,52 @@ export const calculateWaterIntake = (weight: number): number => {
   return weight * 35; // 35ml per kg of body weight
 };
 
-// Definição de alimentos e substituições com macronutrientes
-// REMOVED: sampleFoods as it's no longer used for dynamic meal generation.
+export const calculateMacronutrients = (
+  targetCalories: number,
+  goal: UserGoalsFormData['goal'],
+  weight: number // User's weight in kg
+) => {
+  let proteinPercentage: number;
+  let carbPercentage: number;
+  let fatPercentage: number;
+
+  switch (goal) {
+    case "muscle_gain":
+    case "bulking":
+      proteinPercentage = 0.30; // 30% protein
+      carbPercentage = 0.50;    // 50% carbs
+      fatPercentage = 0.20;     // 20% fat
+      break;
+    case "weight_loss":
+    case "cutting":
+      proteinPercentage = 0.35; // 35% protein
+      carbPercentage = 0.35;    // 35% carbs
+      fatPercentage = 0.30;     // 30% fat
+      break;
+    case "maintenance":
+    case "healthy_eating":
+    default:
+      proteinPercentage = 0.25; // 25% protein
+      carbPercentage = 0.45;    // 45% carbs
+      fatPercentage = 0.30;     // 30% fat
+      break;
+  }
+
+  const proteinCalories = targetCalories * proteinPercentage;
+  const carbCalories = targetCalories * carbPercentage;
+  const fatCalories = targetCalories * fatPercentage;
+
+  // 1g Protein = 4 kcal, 1g Carbs = 4 kcal, 1g Fat = 9 kcal
+  const proteinGrams = Math.round(proteinCalories / 4);
+  const carbGrams = Math.round(carbCalories / 4);
+  const fatGrams = Math.round(fatCalories / 9);
+
+  return {
+    protein: proteinGrams,
+    carbs: carbGrams,
+    fat: fatGrams,
+  };
+};
 
 export interface MealItemDetails {
   food: string;
@@ -151,5 +195,3 @@ export interface Meal {
   totalMealCarbs: number;
   totalMealFat: number;
 }
-
-// REMOVED: generateMealPlan as it's no longer used for dynamic meal generation.
