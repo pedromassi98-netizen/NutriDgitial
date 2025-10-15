@@ -22,9 +22,10 @@ import {
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Utensils, Coffee, Apple, Soup, Grape, Droplet } from "lucide-react";
+import { Utensils, Coffee, Apple, Soup, Grape, Droplet, UtensilsCrossed } from "lucide-react"; // Importar UtensilsCrossed
 import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox";
 import { foodDatabase } from "@/data/foodDatabase"; // Importar foodDatabase
+import { Textarea } from "@/components/ui/textarea"; // Importar Textarea
 
 const formSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
@@ -33,6 +34,7 @@ const formSchema = z.object({
   preferredDinnerFoods: z.array(z.string()).optional(),
   preferredFruits: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fruta."), // Tornando obrigatório
   preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."),
+  dietaryRestrictions: z.string().optional(), // NOVO CAMPO: Restrições alimentares
 }).superRefine((data, ctx) => {
   const validateMealSelection = (mealFoods: string[] | undefined, mealName: string) => {
     if (!mealFoods || mealFoods.length === 0) {
@@ -93,6 +95,7 @@ const UserFoodPreferencesForm = () => {
       preferredDinnerFoods: [],
       preferredFruits: [], // Removido 'none_fruits' como valor padrão
       preferredFats: [],
+      dietaryRestrictions: "", // NOVO CAMPO: Valor padrão vazio
     },
   });
 
@@ -234,6 +237,26 @@ const UserFoodPreferencesForm = () => {
                         onChange={field.onChange}
                         placeholder="Selecione suas fontes de gordura preferidas..."
                         categoryFilter="fat"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* NOVA SEÇÃO: Restrições Alimentares */}
+              <FormField
+                control={form.control}
+                name="dietaryRestrictions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center">
+                      <UtensilsCrossed className="size-4 mr-2 text-primary" /> Restrições Alimentares (opcional)
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Ex: Alergia a amendoim, intolerância à lactose, não como glúten..."
+                        className="resize-none bg-input text-foreground border-border"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />

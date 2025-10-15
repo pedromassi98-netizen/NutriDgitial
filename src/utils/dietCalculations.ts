@@ -51,6 +51,7 @@ const userFoodPreferencesFormSchema = z.object({
   preferredDinnerFoods: z.array(z.string()).optional(),
   preferredFruits: z.array(z.string()).optional(), // Valor padrão
   preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."), // NOVO CAMPO OBRIGATÓRIO
+  dietaryRestrictions: z.string().optional(), // NOVO CAMPO: Restrições alimentares
 });
 
 export type WelcomeFormData = z.infer<typeof welcomeFormSchema>;
