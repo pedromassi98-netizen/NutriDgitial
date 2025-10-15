@@ -166,22 +166,35 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       const itemFat = (foodItem.fatPer100g / 100) * actualGrams;
 
       const substitutions: string[] = [];
-      if (originalItemCalories && (foodItem.category === 'protein' || foodItem.category === 'carb')) {
-        const eligibleSubstitutes = foodDatabase.filter(item =>
-          item.id !== foodItem.id &&
-          item.category === foodItem.category &&
-          mealConfig.preferred.includes(item.id) &&
-          item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
-          item.caloriesPer100g > 0
-        );
-
-        eligibleSubstitutes.forEach(substitute => {
-          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, originalItemCalories);
-          if (adjustedDetails) {
-            substitutions.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
+      if (foodItem.substitutions && foodItem.substitutions.length > 0) {
+        foodItem.substitutions.forEach(substituteId => {
+          const substitute = foodDatabase.find(item => item.id === substituteId);
+          if (substitute) {
+            let substituteDisplay = '';
+            if (foodItem.id === 'eggs' && substitute.id === 'mozzarella_cheese') {
+              // 1 ovo = 25g mussarela
+              const eggsQuantity = quantityForCalculation; // number of units
+              const equivalentMozzarellaGrams = eggsQuantity * 25;
+              substituteDisplay = `${substitute.name} (${equivalentMozzarellaGrams}g)`;
+            } else if (foodItem.id === 'french_bread' && (substitute.id === 'whole_wheat_bread' || substitute.id === 'sandwich_bread')) {
+              // 1 pão francês = 2 fatias de pão de forma/integral
+              const frenchBreadQuantity = quantityForCalculation; // number of units
+              const equivalentSlices = frenchBreadQuantity * 2;
+              substituteDisplay = `${substitute.name} (${equivalentSlices} fatias)`;
+            } else {
+              // Fallback para substituições genéricas baseadas em calorias se não houver regra específica
+              const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
+              if (adjustedDetails) {
+                substituteDisplay = `${substitute.name} (${adjustedDetails.displayQuantity})`;
+              }
+            }
+            if (substituteDisplay) {
+              substitutions.push(substituteDisplay);
+            }
           }
         });
       }
+
 
       meal.items.push({
         food: foodItem.name,
