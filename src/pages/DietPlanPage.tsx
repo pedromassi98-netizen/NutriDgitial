@@ -58,7 +58,7 @@ const DietPlanPage = () => {
 
         const formData: AllFormData = JSON.parse(storedData);
 
-        const { welcome, profile, activity, goals, routine, foodPreferences } = formData;
+        const { welcome, profile, activity, goals, routine, supplementation, foodPreferences } = formData;
 
         if (!welcome || !profile || !activity || !goals || !routine || !foodPreferences) {
           setError("Dados incompletos para gerar a dieta. Por favor, preencha todos os formulários.");
@@ -311,34 +311,34 @@ const DietPlanPage = () => {
             Aqui está o plano alimentar que criamos para você, baseado nas suas informações.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-6 space-y-6">
-          <div className="p-4">
-            <div className="text-center bg-info p-4 rounded-md text-info-foreground">
-              <h3 className="text-xl font-semibold text-info-foreground mb-2 flex items-center justify-center">
+        <CardContent className="p-4 space-y-4"> {/* Reduzido p-6 para p-4 e space-y-6 para space-y-4 */}
+          <div className="p-2"> {/* Reduzido p-4 para p-2 */}
+            <div className="text-center bg-info p-3 rounded-md text-info-foreground"> {/* Reduzido p-4 para p-3 */}
+              <h3 className="text-xl font-semibold text-info-foreground mb-1 flex items-center justify-center"> {/* Reduzido mb-2 para mb-1 */}
                 <UtensilsCrossed className="size-5 mr-2" /> Resumo da Dieta
               </h3>
               <p className="text-lg flex items-center justify-center">Calorias Diárias: <span className="font-bold text-primary ml-2">{totalCalories} kcal</span></p>
-              <div className="flex justify-center items-center space-x-4 text-lg mt-2">
+              <div className="flex justify-center items-center space-x-3 text-lg mt-1"> {/* Reduzido space-x-4 para space-x-3 e mt-2 para mt-1 */}
                 <p className="flex items-center"><Beef className="size-5 mr-1 text-red-500" /> P: <span className="font-bold text-primary ml-1">{totalProtein}g</span></p>
                 <p className="flex items-center"><Carrot className="size-5 mr-1 text-orange-500" /> C: <span className="font-bold text-primary ml-1">{totalCarbs}g</span></p>
                 <p className="flex items-center"><Apple className="size-5 mr-1 text-yellow-500" /> G: <span className="font-bold text-primary ml-1">{totalFat}g</span></p>
               </div>
-              <p className="text-lg flex items-center justify-center mt-2">
+              <p className="text-lg flex items-center justify-center mt-1"> {/* Reduzido mt-2 para mt-1 */}
                 <Droplet className="size-5 mr-2 text-blue-500" /> Ingestão de Água: <span className="font-bold text-primary ml-2">{waterIntake} litros/dia</span>
               </p>
             </div>
 
-            <Separator className="my-6 bg-border" />
+            <Separator className="my-4 bg-border" /> {/* Reduzido my-6 para my-4 */}
 
-            <h3 className="text-2xl font-bold text-center text-primary mb-4">Seu Plano de Refeições</h3>
-            <div className="space-y-8">
+            <h3 className="text-2xl font-bold text-center text-primary mb-3">Seu Plano de Refeições</h3> {/* Reduzido mb-4 para mb-3 */}
+            <div className="space-y-4"> {/* Reduzido space-y-8 para space-y-4 */}
               {dietPlan.map((meal, index) => (
-                <div key={index} className="bg-secondary p-4 rounded-lg shadow-sm border border-border">
-                  <h4 className="text-xl font-semibold text-foreground mb-2">{meal.name} ({meal.time})</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div key={index} className="bg-secondary p-3 rounded-lg shadow-sm border border-border"> {/* Reduzido p-4 para p-3 */}
+                  <h4 className="text-xl font-semibold text-foreground mb-1">{meal.name} ({meal.time})</h4> {/* Reduzido mb-2 para mb-1 */}
+                  <p className="text-sm text-muted-foreground mb-1"> {/* Reduzido mb-2 para mb-1 */}
                     Total da Refeição: <span className="font-bold">{meal.totalMealCalories} kcal</span>
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <ul className="list-disc list-inside space-y-0.5 text-muted-foreground"> {/* Reduzido space-y-1 para space-y-0.5 */}
                     {meal.items.map((item, itemIndex) => (
                       <li key={itemIndex}>
                         <span className="font-medium text-foreground">{item.food}:</span> {item.quantity}
@@ -356,23 +356,23 @@ const DietPlanPage = () => {
 
             {recommendedSupplements.length > 0 && ( // NOVA SEÇÃO DE SUPLEMENTAÇÃO
               <>
-                <Separator className="my-6 bg-border" />
-                <h3 className="text-2xl font-bold text-center text-primary mb-4 flex items-center justify-center">
+                <Separator className="my-4 bg-border" /> {/* Reduzido my-6 para my-4 */}
+                <h3 className="text-2xl font-bold text-center text-primary mb-3 flex items-center justify-center"> {/* Reduzido mb-4 para mb-3 */}
                   <Pill className="size-6 mr-2" /> Suplementação Recomendada
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-3"> {/* Reduzido space-y-4 para space-y-3 */}
                   {recommendedSupplements.map((supp, index) => (
-                    <div key={index} className="bg-secondary p-4 rounded-lg shadow-sm border border-border">
-                      <h4 className="text-xl font-semibold text-foreground mb-2">{supp.name}</h4>
+                    <div key={index} className="bg-secondary p-3 rounded-lg shadow-sm border border-border"> {/* Reduzido p-4 para p-3 */}
+                      <h4 className="text-xl font-semibold text-foreground mb-1">{supp.name}</h4> {/* Reduzido mb-2 para mb-1 */}
                       <p className="text-base text-muted-foreground">
                         Dosagem: <span className="font-bold">{supp.dosage}</span>
                       </p>
                       {supp.notes && (
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-0.5"> {/* Reduzido mt-1 para mt-0.5 */}
                           Notas: {supp.notes}
                         </p>
                       )}
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-gray-500 mt-0.5"> {/* Reduzido mt-1 para mt-0.5 */}
                         Razão: {supp.reason}
                       </p>
                     </div>
@@ -381,7 +381,7 @@ const DietPlanPage = () => {
               </>
             )}
 
-            <Separator className="my-6 bg-border" />
+            <Separator className="my-4 bg-border" /> {/* Reduzido my-6 para my-4 */}
 
             <div className="text-center text-muted-foreground text-sm">
               <p>Lembre-se: Este é um plano sugerido. Consulte um profissional de saúde para um acompanhamento personalizado.</p>
