@@ -43,6 +43,8 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          green: "hsl(var(--accent-green))", // Novo verde vibrante
+          blue: "hsl(var(--accent-blue))", // Novo azul para água
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -75,7 +77,7 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        xl: "1rem", // For larger rounded corners on cards
+        xl: "1rem", // Para larger rounded corners on cards
       },
       fontFamily: {
         sans: [
