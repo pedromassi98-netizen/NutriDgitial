@@ -80,7 +80,15 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const preferredFruitFoodIds = getPreferredFoodIds(foodPreferences.preferredFruits);
   const preferredFatFoodIds = getPreferredFoodIds(foodPreferences.preferredFats);
 
-  const filterFoodItems = (categories: FoodItem['category'][], preferredIds: string[], mealType: FoodItem['mealTypes'][number], excludeIds: string[] = []) => {
+  const filterFoodItems = (
+    categories: FoodItem['category'][],
+    preferredIds: string[],
+    mealType: FoodItem['mealTypes'][number],
+    excludeIds: string[] = [],
+    minProtein: boolean = false,
+    minCarbs: boolean = false,
+    minFat: boolean = false
+  ) => {
     let filtered = foodDatabase.filter(item =>
       categories.some(cat => item.category === cat) && // Use some() for multiple categories
       item.mealTypes.includes(mealType) &&
@@ -88,6 +96,16 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       item.unit !== 'a gosto' &&
       item.caloriesPer100g > 0 // Only include items with calories for primary selection
     );
+
+    if (minProtein) {
+      filtered = filtered.filter(item => item.proteinPer100g > 0);
+    }
+    if (minCarbs) {
+      filtered = filtered.filter(item => item.carbsPer100g > 0);
+    }
+    if (minFat) {
+      filtered = filtered.filter(item => item.fatPer100g > 0);
+    }
 
     const preferredItems = filtered.filter(item => preferredIds.includes(item.id));
     const otherItems = filtered.filter(item => !preferredIds.includes(item.id));
@@ -141,7 +159,16 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     const addedFoodIds: string[] = [];
 
     const addItemToMeal = (foodItem: FoodItem, quantityForCalculation: number, originalItemCalories?: number) => {
-      if (quantityForCalculation <= 0 && foodItem.unit !== 'a gosto') return;
+      // Ensure a minimum quantity if calculation results in 0 or less for caloric items
+      if (quantityForCalculation <= 0 && foodItem.unit !== 'a gosto') {
+          if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
+              quantityForCalculation = 1; // At least one unit
+          } else if (foodItem.unit === 'g' || foodItem.unit === 'ml') {
+              quantityForCalculation = 10; // At least 10g/ml
+          } else {
+              return; // Cannot add if quantity is zero and not 'a gosto'
+          }
+      }
 
       let actualGrams = 0;
       let displayQuantity = '';
@@ -180,7 +207,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
               // 1 pão francês = 2 fatias de pão de forma/integral
               const frenchBreadQuantity = quantityForCalculation; // number of units
               const equivalentSlices = frenchBreadQuantity * 2;
-              substituteDisplay = `${substitute.name} (${equivalentSlices} fatias)`;
+              substituteDisplay = `${substitute.name} (${equivalentSlices} fatia${equivalentSlices > 1 ? 's' : ''})`;
             } else if (foodItem.id === 'french_bread' && substitute.id === 'cuscuz_milho') {
               // 1 pão francês (50g) = 120g de cuscuz de milho cozido
               const frenchBreadQuantity = quantityForCalculation; // number of units
@@ -236,7 +263,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     };
 
     // 1. Adicionar Proteína Principal (APENAS categoria 'protein')
-    const primaryProteins = filterFoodItems(['protein'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number]);
+    const primaryProteins = filterFoodItems(['protein'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], [], true, false, false);
     if (primaryProteins.length > 0) {
       const proteinItem = primaryProteins[0];
       const gramsNeeded = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8; // Aim for 80% of target protein from primary source
@@ -256,7 +283,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // 2. Adicionar Carboidrato Principal (APENAS categoria 'carb')
-    const primaryCarbs = filterFoodItems(['carb'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
+    const primaryCarbs = filterFoodItems(['carb'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds, false, true, false);
     if (primaryCarbs.length > 0) {
       const carbItem = primaryCarbs[0];
       const gramsNeeded = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8; // Aim for 80% of target carbs from primary source
@@ -303,13 +330,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     });
 
     // 4. Adicionar Gordura Saudável (priorizando as preferidas)
-    const eligiblePreferredFats = foodDatabase.filter(item =>
-      preferredFatFoodIds.includes(item.id) &&
-      item.category === 'fat' &&
-      item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
-      !addedFoodIds.includes(item.id) &&
-      item.caloriesPer100g > 0
-    );
+    const eligiblePreferredFats = filterFoodItems(['fat'], preferredFatFoodIds, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds, false, false, true);
 
     if (eligiblePreferredFats.length > 0 && currentMealFat < mealTargetFat * 0.9) {
       const fatItem = eligiblePreferredFats[Math.floor(Math.random() * eligiblePreferredFats.length)];

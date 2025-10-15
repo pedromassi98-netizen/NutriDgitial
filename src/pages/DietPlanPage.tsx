@@ -34,9 +34,10 @@ const DietPlanPage = () => {
   const [totalCarbs, setTotalCarbs] = useState<number | null>(null);
   const [totalFat, setTotalFat] = useState<number | null>(null);
   const [waterIntake, setWaterIntake] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Initial data loading
   const [error, setError] = useState<string | null>(null);
-  const [sendingEmail, setSendingEmail] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false); // New state for PDF generation
+  const [isSendingEmail, setIsSendingEmail] = useState(false); // New state for email sending
   const [recommendedSupplements, setRecommendedSupplements] = useState<RecommendedSupplement[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -76,9 +77,9 @@ const DietPlanPage = () => {
 
         setDietPlan(generatedPlan.meals);
         setTotalCalories(generatedPlan.totalCalories);
-        setTotalProtein(generatedPlan.protein);
-        setTotalCarbs(generatedPlan.carbs);
-        setTotalFat(generatedPlan.fat);
+        setTotalProtein(generatedPlan.totalProtein);
+        setTotalCarbs(generatedPlan.totalCarbs);
+        setTotalFat(generatedPlan.totalFat);
 
         const requiredWater = Math.round(calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000);
         setWaterIntake(requiredWater);
@@ -163,37 +164,37 @@ const DietPlanPage = () => {
   };
 
   const handleDownloadPdf = async () => {
-    if (cardRef.current) {
-      setLoading(true);
-      toast({
-        title: "Gerando PDF...",
-        description: "Por favor, aguarde enquanto preparamos sua dieta para download.",
-      });
-      try {
-        const pdf = await generatePdf();
-        if (pdf) {
-          pdf.save("minha_dieta_nutridigital.pdf");
-          toast({
-            title: "PDF Gerado! ✅",
-            description: "Sua dieta foi baixada com sucesso.",
-          });
-        } else {
-          toast({
-            title: "Erro ao Gerar PDF ⚠️",
-            description: "Não foi possível criar o arquivo PDF. Tente novamente.",
-            variant: "destructive",
-          });
-        }
-      } catch (err) {
-        console.error("Erro ao baixar PDF:", err);
+    if (!cardRef.current) return;
+
+    setIsGeneratingPdf(true);
+    toast({
+      title: "Gerando PDF...",
+      description: "Por favor, aguarde enquanto preparamos sua dieta para download.",
+    });
+    try {
+      const pdf = await generatePdf();
+      if (pdf) {
+        pdf.save("minha_dieta_nutridigital.pdf");
         toast({
-          title: "Erro ao Baixar PDF ⚠️",
-          description: "Ocorreu um erro inesperado ao tentar baixar a dieta. Tente novamente.",
+          title: "PDF Gerado! ✅",
+          description: "Sua dieta foi baixada com sucesso.",
+        });
+      } else {
+        toast({
+          title: "Erro ao Gerar PDF ⚠️",
+          description: "Não foi possível criar o arquivo PDF. Tente novamente.",
           variant: "destructive",
         });
-      } finally {
-        setLoading(false);
       }
+    } catch (err) {
+      console.error("Erro ao baixar PDF:", err);
+      toast({
+        title: "Erro ao Baixar PDF ⚠️",
+        description: "Ocorreu um erro inesperado ao tentar baixar a dieta. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingPdf(false);
     }
   };
 
@@ -207,7 +208,7 @@ const DietPlanPage = () => {
       return;
     }
 
-    setSendingEmail(true);
+    setIsSendingEmail(true);
     toast({
       title: "Enviando e-mail...",
       description: "Por favor, aguarde enquanto enviamos sua dieta.",
@@ -243,7 +244,7 @@ const DietPlanPage = () => {
         variant: "destructive",
       });
     } finally {
-      setSendingEmail(false);
+      setIsSendingEmail(false);
     }
   };
 
@@ -425,16 +426,20 @@ const DietPlanPage = () => {
           </div>
         </CardContent>
         <div className="p-6 space-y-4">
-          <Button onClick={handleDownloadPdf} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-3 text-lg font-semibold flex items-center justify-center">
-            <Download className="size-5 mr-2" /> Baixar Dieta em PDF
+          <Button 
+            onClick={handleDownloadPdf} 
+            disabled={isGeneratingPdf || isSendingEmail}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-3 text-lg font-semibold flex items-center justify-center"
+          >
+            <Download className="size-5 mr-2" /> {isGeneratingPdf ? "Gerando PDF..." : "Baixar Dieta em PDF"}
           </Button>
           {userEmail && (
             <Button
               onClick={handleSendEmail}
-              disabled={sendingEmail}
+              disabled={isGeneratingPdf || isSendingEmail}
               className="w-full bg-green-600 text-white hover:bg-green-700 rounded-md py-3 text-lg font-semibold flex items-center justify-center"
             >
-              <Mail className="size-5 mr-2" /> {sendingEmail ? "Enviando..." : `Enviar Dieta por E-mail para ${userEmail}`}
+              <Mail className="size-5 mr-2" /> {isSendingEmail ? "Enviando..." : `Enviar Dieta por E-mail para ${userEmail}`}
             </Button>
           )}
           <Button onClick={() => navigate("/")} variant="outline" className="w-full rounded-md py-3 text-lg font-semibold border-border text-gray-700 dark:text-muted-foreground hover:bg-gray-100 dark:hover:bg-muted/30">
