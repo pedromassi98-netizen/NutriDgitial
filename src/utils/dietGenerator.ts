@@ -154,7 +154,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         displayQuantity = `${quantityForCalculation}g`;
       } else if (foodItem.unit === 'ml') {
         actualGrams = quantityForCalculation;
-        displayQuantity = `${quantityForCalculation}ml`;
+        displayQuantity = `${actualGrams}ml`;
       } else if (foodItem.unit === 'a gosto') {
         actualGrams = 0;
         displayQuantity = 'a gosto';
@@ -181,7 +181,13 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
               const frenchBreadQuantity = quantityForCalculation; // number of units
               const equivalentSlices = frenchBreadQuantity * 2;
               substituteDisplay = `${substitute.name} (${equivalentSlices} fatias)`;
-            } else if (foodItem.id === 'tapioca') {
+            } else if (foodItem.id === 'french_bread' && substitute.id === 'cuscuz_milho') {
+              // 1 pão francês (50g) = 120g de cuscuz de milho cozido
+              const frenchBreadQuantity = quantityForCalculation; // number of units
+              const equivalentCuscuzGrams = frenchBreadQuantity * 120;
+              substituteDisplay = `${substitute.name} (${equivalentCuscuzGrams}g)`;
+            }
+            else if (foodItem.id === 'tapioca') {
               const tapiocaQuantityInGrams = actualGrams; // This is the quantity of tapioca in grams
 
               if (substitute.id === 'french_bread') {
