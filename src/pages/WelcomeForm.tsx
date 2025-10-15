@@ -61,7 +61,7 @@ const WelcomeForm = () => {
             Comece sua jornada para uma vida mais saudável preenchendo seus dados.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-6 space-y-6 border border-black rounded-b-xl">
+        <CardContent className="p-6 space-y-6">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <div className="flex-1 bg-secondary p-4 rounded-lg flex items-center justify-center space-x-2 shadow-sm">
               <Users className="size-6 text-primary" />
