@@ -181,7 +181,24 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
               const frenchBreadQuantity = quantityForCalculation; // number of units
               const equivalentSlices = frenchBreadQuantity * 2;
               substituteDisplay = `${substitute.name} (${equivalentSlices} fatias)`;
-            } else {
+            } else if (foodItem.id === 'tapioca') {
+              const tapiocaQuantityInGrams = actualGrams; // This is the quantity of tapioca in grams
+
+              if (substitute.id === 'french_bread') {
+                // 100g tapioca = 1 unidade de pão francês
+                const equivalentFrenchBreadUnits = Math.round(tapiocaQuantityInGrams / 100);
+                if (equivalentFrenchBreadUnits > 0) {
+                  substituteDisplay = `${substitute.name} (${equivalentFrenchBreadUnits} unidade${equivalentFrenchBreadUnits > 1 ? 's' : ''})`;
+                }
+              } else if (substitute.id === 'whole_wheat_bread' || substitute.id === 'sandwich_bread') {
+                // 100g tapioca = 2 fatias de pão integral/de forma
+                const equivalentBreadSlices = Math.round((tapiocaQuantityInGrams / 100) * 2);
+                if (equivalentBreadSlices > 0) {
+                  substituteDisplay = `${substitute.name} (${equivalentBreadSlices} fatia${equivalentBreadSlices > 1 ? 's' : ''})`;
+                }
+              }
+            }
+            else {
               // Fallback para substituições genéricas baseadas em calorias se não houver regra específica
               const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
               if (adjustedDetails) {
