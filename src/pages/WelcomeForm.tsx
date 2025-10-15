@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { MultiSelect } from "@/components/MultiSelect";
+import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox"; // Caminho corrigido
 import { foodDatabase } from '../data/foodDatabase';
 import { generateDietPlan } from '../utils/dietGenerator';
 import { calculateBMR, calculateTDEE, adjustCaloriesForGoal, calculateMacronutrients } from '../utils/dietCalculations';
@@ -144,9 +144,9 @@ const WelcomeForm: React.FC = () => {
       if (generatedPlan) {
         setDietPlan(generatedPlan.meals);
         setTotalDietCalories(generatedPlan.totalCalories);
-        setTotalDietProtein(generatedPlan.totalProtein);
-        setTotalDietCarbs(generatedPlan.totalCarbs);
-        setTotalDietFat(generatedPlan.totalFat);
+        setTotalDietProtein(generatedPlan.protein);
+        setTotalDietCarbs(generatedPlan.carbs);
+        setTotalDietFat(generatedPlan.fat);
         setStep(6); // Go to diet plan display
       } else {
         toast.error("Não foi possível gerar o plano de dieta. Verifique suas preferências.");
@@ -506,10 +506,10 @@ const WelcomeForm: React.FC = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-medium text-gray-700">Alimentos Preferidos para o Café da Manhã</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      selected={field.value || []}
+                    <MultiSelectFoodCombobox
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={getFoodOptionsByCategoryAndMealType(['protein', 'carb', 'dairy'], 'breakfast')}
-                      {...field}
                       className="w-full"
                     />
                   </FormControl>
@@ -524,10 +524,10 @@ const WelcomeForm: React.FC = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-medium text-gray-700">Alimentos Preferidos para o Almoço</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      selected={field.value || []}
+                    <MultiSelectFoodCombobox
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={getFoodOptionsByCategoryAndMealType(['protein', 'carb', 'legume'], 'lunch')}
-                      {...field}
                       className="w-full"
                     />
                   </FormControl>
@@ -543,10 +543,10 @@ const WelcomeForm: React.FC = () => {
                   <FormItem>
                     <FormLabel className="text-lg font-medium text-gray-700">Alimentos Preferidos para o Lanche</FormLabel>
                     <FormControl>
-                      <MultiSelect
-                        selected={field.value || []}
+                      <MultiSelectFoodCombobox
+                        value={field.value || []}
+                        onChange={field.onChange}
                         options={getFoodOptionsByCategoryAndMealType(['protein', 'carb', 'dairy', 'fruit'], 'snack')}
-                        {...field}
                         className="w-full"
                       />
                     </FormControl>
@@ -562,10 +562,10 @@ const WelcomeForm: React.FC = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-medium text-gray-700">Alimentos Preferidos para o Jantar</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      selected={field.value || []}
+                    <MultiSelectFoodCombobox
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={getFoodOptionsByCategoryAndMealType(['protein', 'carb', 'legume'], 'dinner')}
-                      {...field}
                       className="w-full"
                     />
                   </FormControl>
@@ -580,10 +580,10 @@ const WelcomeForm: React.FC = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-medium text-gray-700">Frutas Preferidas</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      selected={field.value || []}
+                    <MultiSelectFoodCombobox
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={getFruitOptions()}
-                      {...field}
                       className="w-full"
                     />
                   </FormControl>
@@ -598,10 +598,10 @@ const WelcomeForm: React.FC = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-medium text-gray-700">Fontes de Gordura Saudável Preferidas</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      selected={field.value || []}
+                    <MultiSelectFoodCombobox
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={getFatOptions()}
-                      {...field}
                       className="w-full"
                     />
                   </FormControl>
@@ -629,10 +629,10 @@ const WelcomeForm: React.FC = () => {
                 <FormItem>
                   <FormLabel className="text-lg font-medium text-gray-700">Alimentos que Não Gosta</FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      selected={field.value || []}
+                    <MultiSelectFoodCombobox
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={foodOptions}
-                      {...field}
                       className="w-full"
                     />
                   </FormControl>
