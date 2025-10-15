@@ -23,12 +23,11 @@ import { Input } from "@/components/ui/input";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { CheckCircle2, Users, Star } from "lucide-react"; // Importar ícones
+import { User, Mail, Users } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
+  name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
   email: z.string().email("Por favor, insira um e-mail válido."),
-  phone: z.string().regex(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/, "Por favor, insira um telefone válido (ex: (XX) 9XXXX-XXXX).").optional().or(z.literal('')),
 });
 
 const WelcomeForm = () => {
@@ -38,18 +37,16 @@ const WelcomeForm = () => {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Removido o toast de sucesso
-    console.log("Dados de contato do usuário:", values);
+    console.log("Dados do formulário de boas-vindas:", values);
 
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, welcome: values }));
 
-    navigate("/profile");
+    navigate("/user-profile");
   }
 
   return (
@@ -57,40 +54,22 @@ const WelcomeForm = () => {
       <Card className="w-full max-w-md bg-card text-card-foreground shadow-xl rounded-xl border-none">
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">
-            <CardTitle className="text-3xl font-extrabold text-primary">
-              NutriDigital
-            </CardTitle>
+            <User className="size-8 text-primary mr-2" />
+            <CardTitle className="text-3xl font-extrabold text-primary">Bem-vindo(a) ao NutriDigital!</CardTitle>
           </div>
-          <p className="text-lg font-semibold text-foreground mb-2">
-            Seu Nutricionista Digital 24h 🍏
-          </p>
-          <CardDescription className="text-center text-muted-foreground">
-            Sua jornada para uma vida mais saudável e feliz começa aqui! ✨
+          <CardDescription className="text-center text-muted-foreground mt-2">
+            Comece sua jornada para uma vida mais saudável preenchendo seus dados.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-6 space-y-6">
+        <CardContent className="p-6 space-y-6 border border-black rounded-b-xl">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <div className="flex-1 bg-secondary p-4 rounded-lg flex items-center justify-center space-x-2 shadow-sm">
               <Users className="size-6 text-primary" />
-              <p className="text-lg font-semibold text-foreground">+15 mil de transformados</p>
-            </div>
-            <div className="flex-1 bg-secondary p-4 rounded-lg flex items-center justify-center space-x-2 shadow-sm">
-              <Star className="size-6 text-primary" />
-              <p className="text-lg font-semibold text-foreground">4,95 avaliação</p>
+              <p className="text-sm text-muted-foreground">
+                Seus dados são usados para personalizar sua dieta.
+              </p>
             </div>
           </div>
-
-          <div className="bg-info p-4 rounded-md space-y-2 text-info-foreground">
-            <h3 className="font-bold text-lg flex items-center">
-              <CheckCircle2 className="size-5 mr-2" /> GARANTIA TOTAL
-            </h3>
-            <ul className="list-none space-y-1 text-sm">
-              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Transformação comprovada em 30 dias! 🚀</li>
-              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Método aprovado por nutricionistas! ✅</li>
-              <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-primary" /> Aprovado por milhares de clientes! 🌟</li>
-            </ul>
-          </div>
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -98,9 +77,11 @@ const WelcomeForm = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome completo</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <User className="size-4 mr-2 text-primary" /> Nome Completo
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Seu nome completo" {...field} className="bg-input text-foreground border-border" />
+                      <Input placeholder="Seu nome" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -111,29 +92,18 @@ const WelcomeForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-mail</FormLabel>
+                    <FormLabel className="flex items-center">
+                      <Mail className="size-4 mr-2 text-primary" /> E-mail
+                    </FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="seuemail@exemplo.com" {...field} className="bg-input text-foreground border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Whatsapp</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="(XX) 9XXXX-XXXX" {...field} className="bg-input text-foreground border-border" />
+                      <Input placeholder="seu.email@exemplo.com" {...field} className="bg-input text-foreground border-border" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-md py-2 text-lg font-semibold">
-                Começar agora sua transformação! 💪
+                Continuar ➡️
               </Button>
             </form>
           </Form>
