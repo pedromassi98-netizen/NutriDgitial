@@ -46,7 +46,7 @@ const WelcomeForm = () => {
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, welcome: values }));
 
-    navigate("/user-profile");
+    navigate("/profile"); // Rota corrigida de /user-profile para /profile
   }
 
   return (
