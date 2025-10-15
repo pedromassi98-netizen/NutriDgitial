@@ -7,19 +7,20 @@ interface ProgressBarProps {
 }
 
 const routeToStepMap: { [key: string]: number } = {
-  "/": 1,
-  "/profile": 2,
-  "/activity": 3,
-  "/goals": 4,
-  "/daily-routine": 5,
-  "/supplementation": 6,
-  "/food-preferences": 7,
-  "/diet-plan": 8,
+  "/profile": 1, // Perfil agora é o passo 1
+  "/activity": 2,
+  "/goals": 3,
+  "/daily-routine": 4,
+  "/supplementation": 5,
+  "/food-preferences": 6,
+  "/diet-plan": 7,
 };
 
 const ProgressBar = ({ totalSteps }: ProgressBarProps) => {
   const location = useLocation();
-  const currentStep = routeToStepMap[location.pathname] || 1;
+  const currentStep = routeToStepMap[location.pathname] || 0; // Se não houver rota correspondente, não mostra progresso
+
+  if (currentStep === 0) return null; // Não renderiza a barra de progresso na tela inicial de boas-vindas
 
   return (
     <div className="flex items-center justify-center space-x-2 sm:space-x-4 p-4">

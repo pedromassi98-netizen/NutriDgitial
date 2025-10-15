@@ -1,9 +1,9 @@
 "use client";
 
-import UserProfileForm from "./UserProfileForm";
+import WelcomeForm from "./WelcomeForm"; // Importar o novo WelcomeForm
 
 const Index = () => {
-  return <UserProfileForm />;
+  return <WelcomeForm />;
 };
 
 export default Index;
