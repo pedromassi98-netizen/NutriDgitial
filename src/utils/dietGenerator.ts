@@ -17,9 +17,7 @@ const calculateAdjustedQuantityAndDetails = (
     actualGrams = (targetCalories / foodItem.caloriesPer100g) * 100;
   } else {
     // If food has 0 calories, or is 'a gosto', we can't calculate based on targetCalories.
-    // For substitutions, we assume we're substituting a caloric item.
-    // If this path is hit for a substitution, it means the substitute itself has 0 calories, which is unexpected for primary macros.
-    return null; // Indicate that a valid calculation isn't possible
+    return null;
   }
 
   // Ensure a minimum quantity for practical purposes, especially for 'unidade'/'fatia'
@@ -56,20 +54,10 @@ const calculateAdjustedQuantityAndDetails = (
 const addItemToMeal = (
   meal: Meal,
   foodItem: FoodItem,
-  quantityForCalculation: number,
-  substitutionsForThisItem: string[] = [], // Now directly passed
-  addedFoodIds: string[] // To track what's already in the meal
+  quantityForCalculation: number, // This is the quantity in its natural unit (e.g., 3 for eggs, 100 for chicken)
+  substitutionsForThisItem: string[] = [],
+  addedFoodIds: string[]
 ) => {
-  if (quantityForCalculation <= 0 && foodItem.unit !== 'a gosto') {
-    if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
-      quantityForCalculation = 1;
-    } else if (foodItem.unit === 'g' || foodItem.unit === 'ml') {
-      quantityForCalculation = 10;
-    } else {
-      return;
-    }
-  }
-
   let actualGrams = 0;
   let displayQuantity = '';
 
@@ -81,7 +69,7 @@ const addItemToMeal = (
     displayQuantity = `${quantityForCalculation}g`;
   } else if (foodItem.unit === 'ml') {
     actualGrams = quantityForCalculation;
-    displayQuantity = `${actualGrams}ml`;
+    displayQuantity = `${quantityForCalculation}ml`;
   } else if (foodItem.unit === 'a gosto') {
     actualGrams = 0;
     displayQuantity = 'a gosto';
@@ -95,13 +83,13 @@ const addItemToMeal = (
   meal.items.push({
     food: foodItem.name,
     quantity: displayQuantity,
-    substitutions: substitutionsForThisItem, // Use the passed substitutions
+    substitutions: substitutionsForThisItem,
     calories: Math.round(itemCalories),
     protein: Math.round(itemProtein),
     carbs: Math.round(itemCarbs),
     fat: Math.round(itemFat),
   });
-  addedFoodIds.push(foodItem.id); // Track added food
+  addedFoodIds.push(foodItem.id);
   meal.totalMealCalories += itemCalories;
   meal.totalMealProtein += itemProtein;
   meal.totalMealCarbs += itemCarbs;
@@ -226,58 +214,64 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     const preferredProteinsForMeal = getMealCategoryPreferred('protein');
     if (preferredProteinsForMeal.length > 0) {
       const proteinItem = preferredProteinsForMeal[0]; // Pick the first preferred as primary
-      const gramsNeeded = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8;
-      let quantityForCalculation = gramsNeeded;
+      const gramsNeededForProtein = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8; // Base on protein macro target
 
+      let primaryProteinQuantityForDisplay = proteinItem.defaultQuantity; // Default to item's default
+      let primaryProteinActualGrams = proteinItem.defaultQuantity;
+      
       if (proteinItem.unit === 'unidade' || proteinItem.unit === 'fatia') {
-        quantityForCalculation = Math.round(gramsNeeded / (proteinItem.servingSizeGrams || 1));
-        if (quantityForCalculation === 0) quantityForCalculation = 1;
+        primaryProteinQuantityForDisplay = Math.max(1, Math.round(gramsNeededForProtein / (proteinItem.servingSizeGrams || 1)));
+        primaryProteinActualGrams = primaryProteinQuantityForDisplay * (proteinItem.servingSizeGrams || 1);
       } else if (proteinItem.unit === 'g' || proteinItem.unit === 'ml') {
-        quantityForCalculation = Math.round(gramsNeeded);
+        primaryProteinQuantityForDisplay = Math.max(10, Math.round(gramsNeededForProtein));
+        primaryProteinActualGrams = primaryProteinQuantityForDisplay;
       }
+
+      const primaryProteinTotalCalories = (proteinItem.caloriesPer100g / 100) * primaryProteinActualGrams;
 
       const substitutionsForProtein: string[] = [];
       if (preferredProteinsForMeal.length >= 2) {
-        // Only add other preferred items as substitutions
         preferredProteinsForMeal.slice(1).forEach(substitute => {
-          const itemCalories = (proteinItem.caloriesPer100g / 100) * quantityForCalculation; // Calories of the main item
-          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
+          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, primaryProteinTotalCalories);
           if (adjustedDetails) {
             substitutionsForProtein.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
           }
         });
       }
       
-      addItemToMeal(meal, proteinItem, quantityForCalculation, substitutionsForProtein, addedFoodIds);
+      addItemToMeal(meal, proteinItem, primaryProteinQuantityForDisplay, substitutionsForProtein, addedFoodIds);
     }
 
     // --- 2. Adicionar Carboidrato Principal e suas substituições ---
     const preferredCarbsForMeal = getMealCategoryPreferred('carb');
     if (preferredCarbsForMeal.length > 0) {
       const carbItem = preferredCarbsForMeal[0]; // Pick the first preferred as primary
-      const gramsNeeded = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8;
-      let quantityForCalculation = gramsNeeded;
+      const gramsNeededForCarb = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8; // Base on carb macro target
+
+      let primaryCarbQuantityForDisplay = carbItem.defaultQuantity;
+      let primaryCarbActualGrams = carbItem.defaultQuantity;
 
       if (carbItem.unit === 'unidade' || carbItem.unit === 'fatia') {
-        quantityForCalculation = Math.round(gramsNeeded / (carbItem.servingSizeGrams || 1));
-        if (quantityForCalculation === 0) quantityForCalculation = 1;
+        primaryCarbQuantityForDisplay = Math.max(1, Math.round(gramsNeededForCarb / (carbItem.servingSizeGrams || 1)));
+        primaryCarbActualGrams = primaryCarbQuantityForDisplay * (carbItem.servingSizeGrams || 1);
       } else if (carbItem.unit === 'g' || carbItem.unit === 'ml') {
-        quantityForCalculation = Math.round(gramsNeeded);
+        primaryCarbQuantityForDisplay = Math.max(10, Math.round(gramsNeededForCarb));
+        primaryCarbActualGrams = primaryCarbQuantityForDisplay;
       }
+
+      const primaryCarbTotalCalories = (carbItem.caloriesPer100g / 100) * primaryCarbActualGrams;
 
       const substitutionsForCarb: string[] = [];
       if (preferredCarbsForMeal.length >= 2) {
-        // Only add other preferred items as substitutions
         preferredCarbsForMeal.slice(1).forEach(substitute => {
-          const itemCalories = (carbItem.caloriesPer100g / 100) * quantityForCalculation; // Calories of the main item
-          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
+          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, primaryCarbTotalCalories);
           if (adjustedDetails) {
             substitutionsForCarb.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
           }
         });
       }
       
-      addItemToMeal(meal, carbItem, quantityForCalculation, substitutionsForCarb, addedFoodIds);
+      addItemToMeal(meal, carbItem, primaryCarbQuantityForDisplay, substitutionsForCarb, addedFoodIds);
     }
 
     // --- 3. Adicionar Leguminosas e Laticínios (se preferidos e não adicionados como proteína/carb principal) ---
