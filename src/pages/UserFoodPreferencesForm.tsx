@@ -18,24 +18,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription, // Importar FormDescription
+  FormDescription,
 } from "@/components/ui/form";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
-import { Utensils, Coffee, Apple, Soup, Grape, Droplet, UtensilsCrossed } from "lucide-react"; // Importar UtensilsCrossed
+import { Utensils, Coffee, Apple, Soup, Grape, Droplet, UtensilsCrossed } from "lucide-react";
 import MultiSelectFoodCombobox from "@/components/MultiSelectFoodCombobox";
-import { foodDatabase } from "@/data/foodDatabase"; // Importar foodDatabase
-import { Textarea } from "@/components/ui/textarea"; // Importar Textarea
+import { foodDatabase } from "@/data/foodDatabase";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
   preferredLunchFoods: z.array(z.string()).optional(),
   preferredSnackFoods: z.array(z.string()).min(1, "Por favor, selecione pelo menos um alimento para o lanche."),
   preferredDinnerFoods: z.array(z.string()).optional(),
-  preferredFruits: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fruta."), // Tornando obrigatório
+  preferredFruits: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fruta."),
   preferredFats: z.array(z.string()).min(1, "Por favor, selecione pelo menos uma fonte de gordura saudável."),
-  dietaryRestrictions: z.string().optional(), // NOVO CAMPO: Restrições alimentares
+  dietaryRestrictions: z.string().optional(),
 }).superRefine((data, ctx) => {
   const validateMealSelection = (mealFoods: string[] | undefined, mealName: string) => {
     if (!mealFoods || mealFoods.length === 0) {
@@ -53,7 +53,6 @@ const formSchema = z.object({
     for (const foodId of mealFoods) {
       const foodItem = foodDatabase.find(item => item.id === foodId);
       if (foodItem) {
-        // Leguminosas NÃO contam como proteína ou carboidrato principal para a validação
         if (foodItem.category === 'protein') {
           hasProtein = true;
         }
@@ -94,9 +93,9 @@ const UserFoodPreferencesForm = () => {
       preferredLunchFoods: [],
       preferredSnackFoods: [],
       preferredDinnerFoods: [],
-      preferredFruits: [], // Removido 'none_fruits' como valor padrão
+      preferredFruits: [],
       preferredFats: [],
-      dietaryRestrictions: "", // NOVO CAMPO: Valor padrão vazio
+      dietaryRestrictions: "",
     },
   });
 
@@ -161,7 +160,7 @@ const UserFoodPreferencesForm = () => {
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o almoço..."
                         mealTypeFilter="lunch"
-                        categoryFilter={['protein', 'carb', 'legume']} {/* Removido 'vegetable' */}
+                        categoryFilter={['protein', 'carb', 'legume']}
                       />
                     </FormControl>
                     <FormMessage />
@@ -202,7 +201,7 @@ const UserFoodPreferencesForm = () => {
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o jantar..."
                         mealTypeFilter="dinner"
-                        categoryFilter={['protein', 'carb', 'legume']} {/* Removido 'vegetable' */}
+                        categoryFilter={['protein', 'carb', 'legume']}
                       />
                     </FormControl>
                     <FormMessage />
@@ -249,7 +248,6 @@ const UserFoodPreferencesForm = () => {
                   </FormItem>
                 )}
               />
-              {/* NOVA SEÇÃO: Restrições Alimentares */}
               <FormField
                 control={form.control}
                 name="dietaryRestrictions"
