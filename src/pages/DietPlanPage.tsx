@@ -20,7 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, Pill, CheckCircle2, Lightbulb, Leaf, Coffee, Water } from "lucide-react";
+import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, Pill, CheckCircle2, Lightbulb, Leaf, Coffee } from "lucide-react"; // 'Water' removido, 'Droplet' já está aqui
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator";
 import { getSupplementRecommendations, RecommendedSupplement } from "@/utils/supplementationCalculations";
@@ -445,7 +445,7 @@ const DietPlanPage = () => {
             <Card className="shadow-sm rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700">
               <CardHeader className="bg-primary-subtle dark:bg-muted/50 p-4 rounded-t-xl">
                 <CardTitle className="text-xl font-semibold text-gray-800 dark:text-foreground flex items-center">
-                  <Water className="size-5 mr-2 text-accent-blue" /> Dicas de Hidratação
+                  <Droplet className="size-5 mr-2 text-accent-blue" /> Dicas de Hidratação
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 space-y-2 text-gray-700 dark:text-muted-foreground">
