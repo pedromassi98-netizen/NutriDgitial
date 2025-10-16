@@ -20,7 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, Pill, CheckCircle2 } from "lucide-react";
+import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, Pill, CheckCircle2, Lightbulb, Leaf, Coffee, Water } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator";
 import { getSupplementRecommendations, RecommendedSupplement } from "@/utils/supplementationCalculations";
@@ -418,6 +418,46 @@ const DietPlanPage = () => {
               </div>
             </>
           )}
+
+          {/* Nova Seção de Dicas */}
+          <Separator className="my-6 bg-border" />
+          <h3 className="text-2xl font-bold text-center text-gray-800 dark:text-foreground mb-4 flex items-center justify-center">
+            <Lightbulb className="size-6 mr-2 text-primary" /> Dicas Essenciais
+          </h3>
+          <div className="space-y-4">
+            <Card className="shadow-sm rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700">
+              <CardHeader className="bg-primary-subtle dark:bg-muted/50 p-4 rounded-t-xl">
+                <CardTitle className="text-xl font-semibold text-gray-800 dark:text-foreground flex items-center">
+                  <Leaf className="size-5 mr-2 text-accent-green" /> Dicas para Alimentação
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 space-y-2 text-gray-700 dark:text-muted-foreground">
+                <ul className="list-none space-y-1">
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Vegetais à vontade! Eles quase não interferem nas calorias, mas são ricos em fibras, vitaminas e minerais. Portanto, não se esqueça de consumi-los.</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Prefira temperos naturais. Evite os ultraprocessados.</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Monte pratos coloridos. Quanto mais cores, mais variedade de nutrientes você consome.</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Evite pular refeições. Isso pode aumentar a fome e dificultar o controle da alimentação.</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Coma devagar. Mastigar bem melhora a digestão e ajuda o cérebro a perceber a saciedade.</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700">
+              <CardHeader className="bg-primary-subtle dark:bg-muted/50 p-4 rounded-t-xl">
+                <CardTitle className="text-xl font-semibold text-gray-800 dark:text-foreground flex items-center">
+                  <Water className="size-5 mr-2 text-accent-blue" /> Dicas de Hidratação
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 space-y-2 text-gray-700 dark:text-muted-foreground">
+                <ul className="list-none space-y-1">
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Beba água ao longo do dia. Às vezes, a sede pode ser confundida com fome.</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Mesmo os sucos NATURAIS, ainda contêm açúcar, o que pode atrapalhar seu processo de emagrecimento.</li>
+                  <li className="flex items-center"><CheckCircle2 className="size-4 mr-2 text-accent-green" /> Chás, Bebidas Zero e café podem ser ingeridos à gosto.</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+          {/* Fim da Nova Seção de Dicas */}
 
           <Separator className="my-6 bg-border" />
 
