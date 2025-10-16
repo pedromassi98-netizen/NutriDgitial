@@ -289,7 +289,7 @@ const DietPlanPage = () => {
   }
 
   return (
-    <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4">
+    <div className="min-h-svh flex flex-col items-center justify-center text-foreground p-4 diet-page-background">
       <Card ref={cardRef} className="w-full max-w-2xl bg-card text-card-foreground shadow-xl rounded-xl border-none">
         <CardHeader className="bg-primary-subtle rounded-t-xl p-6 text-center">
           <div className="flex items-center justify-center mb-2">

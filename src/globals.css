@@ -56,6 +56,10 @@
     /* Gradient colors for light mode */
     --gradient-start: 140 60% 30%; /* Darker green */
     --gradient-end: 140 60% 20%; /* Even darker green */
+
+    /* Specific gradient for DietPlanPage */
+    --diet-page-gradient-start: 140 80% 95%; /* Very light, vibrant green */
+    --diet-page-gradient-end: 0 0% 100%; /* Pure white */
   }
 
   .dark {
@@ -107,6 +111,10 @@
     /* Gradient colors for dark mode */
     --gradient-start: 140 70% 10%; /* Very dark green */
     --gradient-end: 140 70% 15%; /* Slightly lighter dark green */
+
+    /* Specific gradient for DietPlanPage in dark mode (can be same as light for consistency or adjusted) */
+    --diet-page-gradient-start: 140 30% 20%; /* Darker green for dark mode */
+    --diet-page-gradient-end: 222.2 47.4% 11.2%; /* Background color for dark mode */
   }
 
   * {
@@ -132,10 +140,14 @@
     @apply text-foreground;
   }
 
-  .dark body {
-    background-image: linear-gradient(to bottom, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+  .diet-page-background {
+    background-image: linear-gradient(to bottom, hsl(var(--diet-page-gradient-start)), hsl(var(--diet-page-gradient-end)));
     background-attachment: fixed;
-    @apply text-foreground;
+  }
+
+  .dark .diet-page-background {
+    background-image: linear-gradient(to bottom, hsl(var(--diet-page-gradient-start)), hsl(var(--diet-page-gradient-end)));
+    background-attachment: fixed;
   }
 
   /* Explicit typographic hierarchy for standard HTML elements */
