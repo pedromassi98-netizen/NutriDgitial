@@ -161,6 +161,7 @@ const UserFoodPreferencesForm = () => {
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o almoço..."
                         mealTypeFilter="lunch"
+                        categoryFilter={['protein', 'carb', 'legume']} {/* Removido 'vegetable' */}
                       />
                     </FormControl>
                     <FormMessage />
@@ -201,6 +202,7 @@ const UserFoodPreferencesForm = () => {
                         onChange={field.onChange}
                         placeholder="Selecione alimentos para o jantar..."
                         mealTypeFilter="dinner"
+                        categoryFilter={['protein', 'carb', 'legume']} {/* Removido 'vegetable' */}
                       />
                     </FormControl>
                     <FormMessage />
