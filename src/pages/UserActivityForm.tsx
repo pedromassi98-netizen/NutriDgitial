@@ -11,6 +11,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription, // Importar FormDescription
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MadeWithDyad } from "@/components/made-with-dyad";
@@ -110,6 +111,9 @@ const UserActivityForm = () => {
                   render={({ field }) => (
                     <FormItem className="space-y-3">
                       <FormLabel className="text-lg font-semibold">Qual o seu nível de atividade?</FormLabel>
+                      <FormDescription className="text-sm text-muted-foreground mt-1">
+                        Selecione seu nível de treino com atenção — essa informação é essencial para ajustar suas calorias e macros corretamente.
+                      </FormDescription>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
