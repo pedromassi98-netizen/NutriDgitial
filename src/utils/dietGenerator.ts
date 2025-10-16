@@ -52,7 +52,62 @@ const calculateAdjustedQuantityAndDetails = (
   };
 };
 
-// Nova função para selecionar e gerar o plano de dieta dinamicamente
+// Helper function to add an item to the meal with calculated details and substitutions
+const addItemToMeal = (
+  meal: Meal,
+  foodItem: FoodItem,
+  quantityForCalculation: number,
+  substitutionsForThisItem: string[] = [], // Now directly passed
+  addedFoodIds: string[] // To track what's already in the meal
+) => {
+  if (quantityForCalculation <= 0 && foodItem.unit !== 'a gosto') {
+    if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
+      quantityForCalculation = 1;
+    } else if (foodItem.unit === 'g' || foodItem.unit === 'ml') {
+      quantityForCalculation = 10;
+    } else {
+      return;
+    }
+  }
+
+  let actualGrams = 0;
+  let displayQuantity = '';
+
+  if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
+    actualGrams = quantityForCalculation * (foodItem.servingSizeGrams || 1);
+    displayQuantity = `${quantityForCalculation} ${foodItem.unit}`;
+  } else if (foodItem.unit === 'g') {
+    actualGrams = quantityForCalculation;
+    displayQuantity = `${quantityForCalculation}g`;
+  } else if (foodItem.unit === 'ml') {
+    actualGrams = quantityForCalculation;
+    displayQuantity = `${actualGrams}ml`;
+  } else if (foodItem.unit === 'a gosto') {
+    actualGrams = 0;
+    displayQuantity = 'a gosto';
+  }
+
+  const itemCalories = (foodItem.caloriesPer100g / 100) * actualGrams;
+  const itemProtein = (foodItem.proteinPer100g / 100) * actualGrams;
+  const itemCarbs = (foodItem.carbsPer100g / 100) * actualGrams;
+  const itemFat = (foodItem.fatPer100g / 100) * actualGrams;
+
+  meal.items.push({
+    food: foodItem.name,
+    quantity: displayQuantity,
+    substitutions: substitutionsForThisItem, // Use the passed substitutions
+    calories: Math.round(itemCalories),
+    protein: Math.round(itemProtein),
+    carbs: Math.round(itemCarbs),
+    fat: Math.round(itemFat),
+  });
+  addedFoodIds.push(foodItem.id); // Track added food
+  meal.totalMealCalories += itemCalories;
+  meal.totalMealProtein += itemProtein;
+  meal.totalMealCarbs += itemCarbs;
+  meal.totalMealFat += itemFat;
+};
+
 export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalCalories: number, totalProtein: number, totalCarbs: number, totalFat: number } | null => {
   const { profile, activity, goals, routine, foodPreferences } = formData;
 
@@ -84,28 +139,15 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     categories: FoodItem['category'][],
     preferredIds: string[],
     mealType: FoodItem['mealTypes'][number],
-    excludeIds: string[] = [],
-    minProtein: boolean = false,
-    minCarbs: boolean = false,
-    minFat: boolean = false
+    excludeIds: string[] = []
   ) => {
     let filtered = foodDatabase.filter(item =>
-      categories.some(cat => item.category === cat) && // Use some() for multiple categories
+      categories.some(cat => item.category === cat) &&
       item.mealTypes.includes(mealType) &&
       !excludeIds.includes(item.id) &&
       item.unit !== 'a gosto' &&
-      item.caloriesPer100g > 0 // Only include items with calories for primary selection
+      item.caloriesPer100g > 0
     );
-
-    if (minProtein) {
-      filtered = filtered.filter(item => item.proteinPer100g > 0);
-    }
-    if (minCarbs) {
-      filtered = filtered.filter(item => item.carbsPer100g > 0);
-    }
-    if (minFat) {
-      filtered = filtered.filter(item => item.fatPer100g > 0);
-    }
 
     const preferredItems = filtered.filter(item => preferredIds.includes(item.id));
     const otherItems = filtered.filter(item => !preferredIds.includes(item.id));
@@ -154,117 +196,9 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       totalMealFat: 0,
     };
 
-    let currentMealCalories = 0;
-    let currentMealProtein = 0;
-    let currentMealCarbs = 0;
-    let currentMealFat = 0;
-    const addedFoodIds: string[] = [];
+    const addedFoodIds: string[] = []; // Reset for each meal
 
-    const addItemToMeal = (foodItem: FoodItem, quantityForCalculation: number, originalItemCalories?: number) => {
-      // Ensure a minimum quantity if calculation results in 0 or less for caloric items
-      if (quantityForCalculation <= 0 && foodItem.unit !== 'a gosto') {
-          if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
-              quantityForCalculation = 1; // At least one unit
-          } else if (foodItem.unit === 'g' || foodItem.unit === 'ml') {
-              quantityForCalculation = 10; // At least 10g/ml
-          } else {
-              return; // Cannot add if quantity is zero and not 'a gosto'
-          }
-      }
-
-      let actualGrams = 0;
-      let displayQuantity = '';
-
-      if (foodItem.unit === 'unidade' || foodItem.unit === 'fatia') {
-        actualGrams = quantityForCalculation * (foodItem.servingSizeGrams || 1);
-        displayQuantity = `${quantityForCalculation} ${foodItem.unit}`;
-      } else if (foodItem.unit === 'g') {
-        actualGrams = quantityForCalculation;
-        displayQuantity = `${quantityForCalculation}g`;
-      } else if (foodItem.unit === 'ml') {
-        actualGrams = quantityForCalculation;
-        displayQuantity = `${actualGrams}ml`;
-      } else if (foodItem.unit === 'a gosto') {
-        actualGrams = 0;
-        displayQuantity = 'a gosto';
-      }
-
-      const itemCalories = (foodItem.caloriesPer100g / 100) * actualGrams;
-      const itemProtein = (foodItem.proteinPer100g / 100) * actualGrams;
-      const itemCarbs = (foodItem.carbsPer100g / 100) * actualGrams;
-      const itemFat = (foodItem.fatPer100g / 100) * actualGrams;
-
-      const substitutions: string[] = [];
-      if (foodItem.substitutions && foodItem.substitutions.length > 0) {
-        foodItem.substitutions.forEach(substituteId => {
-          const substitute = foodDatabase.find(item => item.id === substituteId);
-          if (substitute) {
-            let substituteDisplay = '';
-            if (foodItem.id === 'eggs' && substitute.id === 'mozzarella_cheese') {
-              // 1 ovo = 25g mussarela
-              const eggsQuantity = quantityForCalculation; // number of units
-              const equivalentMozzarellaGrams = eggsQuantity * 25;
-              substituteDisplay = `${substitute.name} (${equivalentMozzarellaGrams}g)`;
-            } else if (foodItem.id === 'french_bread' && (substitute.id === 'whole_wheat_bread' || substitute.id === 'sandwich_bread')) {
-              // 1 pão francês = 2 fatias de pão de forma/integral
-              const frenchBreadQuantity = quantityForCalculation; // number of units
-              const equivalentSlices = frenchBreadQuantity * 2;
-              substituteDisplay = `${substitute.name} (${equivalentSlices} fatia${equivalentSlices > 1 ? 's' : ''})`;
-            } else if (foodItem.id === 'french_bread' && substitute.id === 'cuscuz_milho') {
-              // 1 pão francês (50g) = 120g de cuscuz de milho cozido
-              const frenchBreadQuantity = quantityForCalculation; // number of units
-              const equivalentCuscuzGrams = frenchBreadQuantity * 120;
-              substituteDisplay = `${substitute.name} (${equivalentCuscuzGrams}g)`;
-            }
-            else if (foodItem.id === 'tapioca') {
-              const tapiocaQuantityInGrams = actualGrams; // This is the quantity of tapioca in grams
-
-              if (substitute.id === 'french_bread') {
-                // 100g tapioca = 1 unidade de pão francês
-                const equivalentFrenchBreadUnits = Math.round(tapiocaQuantityInGrams / 100);
-                if (equivalentFrenchBreadUnits > 0) {
-                  substituteDisplay = `${substitute.name} (${equivalentFrenchBreadUnits} unidade${equivalentFrenchBreadUnits > 1 ? 's' : ''})`;
-                }
-              } else if (substitute.id === 'whole_wheat_bread' || substitute.id === 'sandwich_bread') {
-                // 100g tapioca = 2 fatias de pão integral/de forma
-                const equivalentBreadSlices = Math.round((tapiocaQuantityInGrams / 100) * 2);
-                if (equivalentBreadSlices > 0) {
-                  substituteDisplay = `${substitute.name} (${equivalentBreadSlices} fatia${equivalentBreadSlices > 1 ? 's' : ''})`;
-                }
-              }
-            }
-            else {
-              // Fallback para substituições genéricas baseadas em calorias se não houver regra específica
-              const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
-              if (adjustedDetails) {
-                substituteDisplay = `${substitute.name} (${adjustedDetails.displayQuantity})`;
-              }
-            }
-            if (substituteDisplay) {
-              substitutions.push(substituteDisplay);
-            }
-          }
-        });
-      }
-
-
-      meal.items.push({
-        food: foodItem.name,
-        quantity: displayQuantity,
-        substitutions: substitutions,
-        calories: Math.round(itemCalories),
-        protein: Math.round(itemProtein),
-        carbs: Math.round(itemCarbs),
-        fat: Math.round(itemFat),
-      });
-      addedFoodIds.push(foodItem.id);
-      currentMealCalories += itemCalories;
-      currentMealProtein += itemProtein;
-      currentMealCarbs += itemCarbs;
-      currentMealFat += itemFat;
-    };
-
-    // Adicionar "Vegetais à gosto" para almoço e jantar
+    // Add "Vegetais à gosto" for lunch and dinner
     if (mealConfig.key === 'lunch' || mealConfig.key === 'dinner') {
       meal.items.push({
         food: 'Vegetais à gosto',
@@ -275,14 +209,24 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         carbs: 0,
         fat: 0,
       });
-      addedFoodIds.push('vegetais_a_gosto_placeholder'); // Adiciona um ID placeholder para evitar conflitos
+      addedFoodIds.push('vegetais_a_gosto_placeholder');
     }
 
-    // 1. Adicionar Proteína Principal (APENAS categoria 'protein')
-    const primaryProteins = filterFoodItems(['protein'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], [], true, false, false);
-    if (primaryProteins.length > 0) {
-      const proteinItem = primaryProteins[0];
-      const gramsNeeded = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8; // Aim for 80% of target protein from primary source
+    // Helper to get preferred items of a category for the current meal
+    const getMealCategoryPreferred = (category: FoodItem['category']) => {
+      return foodDatabase.filter(item =>
+        mealConfig.preferred.includes(item.id) &&
+        item.category === category &&
+        item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
+        item.caloriesPer100g > 0
+      );
+    };
+
+    // --- 1. Adicionar Proteína Principal e suas substituições ---
+    const preferredProteinsForMeal = getMealCategoryPreferred('protein');
+    if (preferredProteinsForMeal.length > 0) {
+      const proteinItem = preferredProteinsForMeal[0]; // Pick the first preferred as primary
+      const gramsNeeded = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8;
       let quantityForCalculation = gramsNeeded;
 
       if (proteinItem.unit === 'unidade' || proteinItem.unit === 'fatia') {
@@ -291,18 +235,27 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       } else if (proteinItem.unit === 'g' || proteinItem.unit === 'ml') {
         quantityForCalculation = Math.round(gramsNeeded);
       }
-      
-      const calculatedDetails = calculateAdjustedQuantityAndDetails(proteinItem, (proteinItem.caloriesPer100g / 100) * quantityForCalculation);
-      if (calculatedDetails) {
-        addItemToMeal(proteinItem, quantityForCalculation, calculatedDetails.calories);
+
+      const substitutionsForProtein: string[] = [];
+      if (preferredProteinsForMeal.length >= 2) {
+        // Only add other preferred items as substitutions
+        preferredProteinsForMeal.slice(1).forEach(substitute => {
+          const itemCalories = (proteinItem.caloriesPer100g / 100) * quantityForCalculation; // Calories of the main item
+          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
+          if (adjustedDetails) {
+            substitutionsForProtein.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
+          }
+        });
       }
+      
+      addItemToMeal(meal, proteinItem, quantityForCalculation, substitutionsForProtein, addedFoodIds);
     }
 
-    // 2. Adicionar Carboidrato Principal (APENAS categoria 'carb')
-    const primaryCarbs = filterFoodItems(['carb'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds, false, true, false);
-    if (primaryCarbs.length > 0) {
-      const carbItem = primaryCarbs[0];
-      const gramsNeeded = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8; // Aim for 80% of target carbs from primary source
+    // --- 2. Adicionar Carboidrato Principal e suas substituições ---
+    const preferredCarbsForMeal = getMealCategoryPreferred('carb');
+    if (preferredCarbsForMeal.length > 0) {
+      const carbItem = preferredCarbsForMeal[0]; // Pick the first preferred as primary
+      const gramsNeeded = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8;
       let quantityForCalculation = gramsNeeded;
 
       if (carbItem.unit === 'unidade' || carbItem.unit === 'fatia') {
@@ -312,13 +265,22 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         quantityForCalculation = Math.round(gramsNeeded);
       }
 
-      const calculatedDetails = calculateAdjustedQuantityAndDetails(carbItem, (carbItem.caloriesPer100g / 100) * quantityForCalculation);
-      if (calculatedDetails) {
-        addItemToMeal(carbItem, quantityForCalculation, calculatedDetails.calories);
+      const substitutionsForCarb: string[] = [];
+      if (preferredCarbsForMeal.length >= 2) {
+        // Only add other preferred items as substitutions
+        preferredCarbsForMeal.slice(1).forEach(substitute => {
+          const itemCalories = (carbItem.caloriesPer100g / 100) * quantityForCalculation; // Calories of the main item
+          const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, itemCalories);
+          if (adjustedDetails) {
+            substitutionsForCarb.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
+          }
+        });
       }
+      
+      addItemToMeal(meal, carbItem, quantityForCalculation, substitutionsForCarb, addedFoodIds);
     }
 
-    // 3. Adicionar Leguminosas e Laticínios (se preferidos e não adicionados como proteína/carb principal)
+    // --- 3. Adicionar Leguminosas e Laticínios (se preferidos e não adicionados como proteína/carb principal) ---
     const additionalPreferredFoods = foodDatabase.filter(item =>
       (mealConfig.preferred.includes(item.id)) &&
       (item.category === 'legume' || item.category === 'dairy') &&
@@ -328,38 +290,35 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     );
 
     additionalPreferredFoods.forEach(foodItem => {
-      // Adiciona leguminosas e laticínios como itens adicionais, se houver espaço nos macros
-      // e se o item ainda não foi adicionado como principal
       if (!addedFoodIds.includes(foodItem.id)) {
         const quantityToAdd = foodItem.defaultQuantity;
         const itemCalories = (foodItem.caloriesPer100g / 100) * quantityToAdd;
         const itemProtein = (foodItem.proteinPer100g / 100) * quantityToAdd;
         const itemCarbs = (foodItem.carbsPer100g / 100) * quantityToAdd;
 
-        // Only add if it doesn't push macros too far over target
-        if (currentMealCalories + itemCalories < mealTargetCalories * 1.2 &&
-            currentMealProtein + itemProtein < mealTargetProtein * 1.5 &&
-            currentMealCarbs + itemCarbs < mealTargetCarbs * 1.5) {
-          addItemToMeal(foodItem, quantityToAdd);
+        if (meal.totalMealCalories + itemCalories < mealTargetCalories * 1.2 &&
+            meal.totalMealProtein + itemProtein < mealTargetProtein * 1.5 &&
+            meal.totalMealCarbs + itemCarbs < mealTargetCarbs * 1.5) {
+          addItemToMeal(meal, foodItem, quantityToAdd, [], addedFoodIds);
         }
       }
     });
 
-    // 4. Adicionar Gordura Saudável (priorizando as preferidas)
-    const eligiblePreferredFats = filterFoodItems(['fat'], preferredFatFoodIds, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds, false, false, true);
+    // --- 4. Adicionar Gordura Saudável (priorizando as preferidas) ---
+    const eligiblePreferredFats = filterFoodItems(['fat'], preferredFatFoodIds, mealConfig.key as FoodItem['mealTypes'][number], addedFoodIds);
 
-    if (eligiblePreferredFats.length > 0 && currentMealFat < mealTargetFat * 0.9) {
+    if (eligiblePreferredFats.length > 0 && meal.totalMealFat < mealTargetFat * 0.9) {
       const fatItem = eligiblePreferredFats[Math.floor(Math.random() * eligiblePreferredFats.length)];
-      const remainingFatCalories = mealTargetFat * 0.9 - currentMealFat;
-      const quantityForCalculation = (remainingFatCalories / (fatItem.fatPer100g / 100)) * 0.5; // Use up to 50% of remaining fat target
+      const remainingFatCalories = mealTargetFat * 0.9 - meal.totalMealFat;
+      const quantityForCalculation = (remainingFatCalories / (fatItem.fatPer100g / 100)) * 0.5;
       
       if (quantityForCalculation > 0) {
-        addItemToMeal(fatItem, Math.max(fatItem.defaultQuantity, Math.round(quantityForCalculation)));
+        addItemToMeal(meal, fatItem, Math.max(fatItem.defaultQuantity, Math.round(quantityForCalculation)), [], addedFoodIds);
       }
     }
 
-    // 5. Adicionar Frutas (APENAS para Café da manhã e Lanche, com limite de 2 por dia)
-    if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
+    // --- 5. Adicionar Frutas (APENAS para Café da manhã e Lanche, com limite de 2 por dia) ---
+    if ((mealConfig.key === 'breakfast' || mealConfig.key === 'snack') && fruitsAddedToday < 2) {
       const eligibleFruits = foodDatabase.filter(item =>
         preferredFruitFoodIds.includes(item.id) &&
         item.category === 'fruit' &&
@@ -370,12 +329,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
 
       // Tenta adicionar frutas preferidas primeiro
       for (const fruitItem of eligibleFruits) {
-        if (fruitsAddedToday >= 2) break; // Máximo de 2 frutas para o dia
+        if (fruitsAddedToday >= 2) break;
 
         const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
-        if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
-            currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
-          addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+        if (meal.totalMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
+            meal.totalMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
+          addItemToMeal(meal, fruitItem, fruitItem.defaultQuantity, [], addedFoodIds);
           fruitsAddedToday++;
         }
       }
@@ -393,25 +352,20 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
           if (fruitsAddedToday >= 2) break;
 
           const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
-          if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
-              currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
-            addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+          if (meal.totalMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
+              meal.totalMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
+            addItemToMeal(meal, fruitItem, fruitItem.defaultQuantity, [], addedFoodIds);
             fruitsAddedToday++;
           }
         }
       }
     }
 
-    // A seção de "Adicionar Vegetais "a gosto"" foi removida daqui para almoço/jantar,
-    // pois já foi adicionada uma entrada genérica no início do loop.
-    // Para outras refeições (café da manhã/lanche), se houvesse vegetais "a gosto" definidos,
-    // eles seriam adicionados aqui, mas o foodDatabase atual não os lista para essas refeições.
-
-    // Calcular totais da refeição
-    meal.totalMealCalories = Math.round(currentMealCalories);
-    meal.totalMealProtein = Math.round(currentMealProtein);
-    meal.totalMealCarbs = Math.round(currentMealCarbs);
-    meal.totalMealFat = Math.round(currentMealFat);
+    // Update meal totals after all items are added
+    meal.totalMealCalories = Math.round(meal.totalMealCalories);
+    meal.totalMealProtein = Math.round(meal.totalMealProtein);
+    meal.totalMealCarbs = Math.round(meal.totalMealCarbs);
+    meal.totalMealFat = Math.round(meal.totalMealFat);
 
     meals.push(meal);
 
@@ -430,8 +384,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   };
 };
 
-// A função parseDietPlanText ainda pode ser útil para planos estáticos ou para depuração,
-// mas não será usada na geração dinâmica.
+// The parseDietPlanText function remains unchanged as it's for static plans.
 export const parseDietPlanText = (text: string): Meal[] => {
   const meals: Meal[] = [];
   const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
