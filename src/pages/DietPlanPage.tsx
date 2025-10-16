@@ -302,7 +302,7 @@ const DietPlanPage = () => {
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           {/* Seção de Resumo Diário */}
-          <Card className="shadow-md rounded-xl border-none bg-white p-4">
+          <Card className="shadow-md rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700 p-4">
             <CardHeader className="p-0 mb-4">
               <CardTitle className="text-2xl font-bold text-gray-800 text-center">Resumo Diário</CardTitle>
             </CardHeader>
@@ -340,7 +340,7 @@ const DietPlanPage = () => {
           <h3 className="text-2xl font-bold text-center text-gray-800 dark:text-foreground mb-4">Seu Plano de Refeições</h3>
           <div className="space-y-4">
             {dietPlan.map((meal, index) => (
-              <Card key={index} className="shadow-sm rounded-xl border-none bg-white dark:bg-card">
+              <Card key={index} className="shadow-sm rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700">
                 <CardHeader className="bg-primary-subtle dark:bg-muted/50 p-4 rounded-t-xl flex flex-row items-center justify-between">
                   <CardTitle className="text-xl font-semibold text-gray-800 dark:text-foreground flex items-center">
                     <UtensilsCrossed className="size-5 mr-2 text-primary" /> {meal.name} <span className="text-base font-normal text-gray-600 dark:text-muted-foreground ml-2">({meal.time})</span>
@@ -396,7 +396,7 @@ const DietPlanPage = () => {
               </h3>
               <div className="space-y-4">
                 {recommendedSupplements.map((supp, index) => (
-                  <Card key={index} className="shadow-sm rounded-xl border-none bg-white dark:bg-card">
+                  <Card key={index} className="shadow-sm rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700">
                     <CardHeader className="bg-primary-subtle dark:bg-muted/50 p-4 rounded-t-xl">
                       <CardTitle className="text-xl font-semibold text-gray-800 dark:text-foreground">{supp.name}</CardTitle>
                     </CardHeader>
