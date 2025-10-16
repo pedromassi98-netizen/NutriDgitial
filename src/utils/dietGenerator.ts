@@ -136,6 +136,8 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     mealTimes.splice(2, 0, { name: 'Lanche', time: routine.snackTime, key: 'snack', preferred: preferredSnackFoodIds });
   }
 
+  let fruitsAddedToday = 0; // Contador global de frutas adicionadas no dia
+
   for (const mealConfig of mealTimes) {
     const mealTargetCalories = targetCalories * mealDistribution[mealConfig.key as keyof typeof mealDistribution].calories;
     const mealTargetProtein = targetMacros.protein * mealDistribution[mealConfig.key as keyof typeof mealDistribution].protein;
@@ -262,6 +264,20 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       currentMealFat += itemFat;
     };
 
+    // Adicionar "Vegetais à gosto" para almoço e jantar
+    if (mealConfig.key === 'lunch' || mealConfig.key === 'dinner') {
+      meal.items.push({
+        food: 'Vegetais à gosto',
+        quantity: 'a gosto',
+        substitutions: [],
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+      });
+      addedFoodIds.push('vegetais_a_gosto_placeholder'); // Adiciona um ID placeholder para evitar conflitos
+    }
+
     // 1. Adicionar Proteína Principal (APENAS categoria 'protein')
     const primaryProteins = filterFoodItems(['protein'], mealConfig.preferred, mealConfig.key as FoodItem['mealTypes'][number], [], true, false, false);
     if (primaryProteins.length > 0) {
@@ -342,68 +358,54 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       }
     }
 
-    // 5. Adicionar Frutas (priorizando as preferidas e tentando incluir até 2)
-    const eligiblePreferredFruits = foodDatabase.filter(item =>
-      preferredFruitFoodIds.includes(item.id) &&
-      item.category === 'fruit' &&
-      item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
-      !addedFoodIds.includes(item.id) &&
-      item.caloriesPer100g > 0
-    );
-
-    let fruitsAddedCount = 0;
-    for (const fruitItem of eligiblePreferredFruits) {
-      if (fruitsAddedCount >= 2) break; // Limitar a 2 frutas
-
-      const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
-
-      if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
-          currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
-        addItemToMeal(fruitItem, fruitItem.defaultQuantity);
-        fruitsAddedCount++;
-      }
-    }
-
-    // Fallback para frutas se menos de 2 frutas preferidas foram adicionadas ou se as preferidas não foram elegíveis
-    if (fruitsAddedCount < 2) {
-      const fallbackFruits = foodDatabase.filter(item =>
+    // 5. Adicionar Frutas (APENAS para Café da manhã e Lanche, com limite de 2 por dia)
+    if (mealConfig.key === 'breakfast' || mealConfig.key === 'snack') {
+      const eligibleFruits = foodDatabase.filter(item =>
+        preferredFruitFoodIds.includes(item.id) &&
         item.category === 'fruit' &&
         item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
         !addedFoodIds.includes(item.id) &&
         item.caloriesPer100g > 0
       );
 
-      for (const fruitItem of fallbackFruits) {
-        if (fruitsAddedCount >= 2) break;
+      // Tenta adicionar frutas preferidas primeiro
+      for (const fruitItem of eligibleFruits) {
+        if (fruitsAddedToday >= 2) break; // Máximo de 2 frutas para o dia
 
         const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
         if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
             currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
           addItemToMeal(fruitItem, fruitItem.defaultQuantity);
-          fruitsAddedCount++;
+          fruitsAddedToday++;
+        }
+      }
+
+      // Se menos de 2 frutas foram adicionadas, tenta adicionar frutas de fallback
+      if (fruitsAddedToday < 2) {
+        const fallbackFruits = foodDatabase.filter(item =>
+          item.category === 'fruit' &&
+          item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
+          !addedFoodIds.includes(item.id) &&
+          item.caloriesPer100g > 0
+        );
+
+        for (const fruitItem of fallbackFruits) {
+          if (fruitsAddedToday >= 2) break;
+
+          const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
+          if (currentMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
+              currentMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
+            addItemToMeal(fruitItem, fruitItem.defaultQuantity);
+            fruitsAddedToday++;
+          }
         }
       }
     }
 
-    // 6. Adicionar Vegetais "a gosto"
-    const agostos = foodDatabase.filter(item =>
-      item.unit === 'a gosto' &&
-      item.category === 'vegetable' &&
-      item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
-      !addedFoodIds.includes(item.id)
-    );
-    agostos.forEach(veggieItem => {
-      meal.items.push({
-        food: veggieItem.name,
-        quantity: 'a gosto',
-        substitutions: [],
-        calories: 0,
-        protein: 0,
-        carbs: 0,
-        fat: 0,
-      });
-      addedFoodIds.push(veggieItem.id);
-    });
+    // A seção de "Adicionar Vegetais "a gosto"" foi removida daqui para almoço/jantar,
+    // pois já foi adicionada uma entrada genérica no início do loop.
+    // Para outras refeições (café da manhã/lanche), se houvesse vegetais "a gosto" definidos,
+    // eles seriam adicionados aqui, mas o foodDatabase atual não os lista para essas refeições.
 
     // Calcular totais da refeição
     meal.totalMealCalories = Math.round(currentMealCalories);
