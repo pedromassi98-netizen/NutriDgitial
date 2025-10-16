@@ -18,6 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription, // Importar FormDescription
 } from "@/components/ui/form";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
@@ -123,6 +124,9 @@ const UserFoodPreferencesForm = () => {
         <CardContent className="p-6 space-y-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormDescription className="text-sm text-muted-foreground mb-4">
+                Ao selecionar mais de uma opção de proteína ou carboidrato por refeição, os alimentos serão adicionados como substituições automáticas nas proporções corretas.
+              </FormDescription>
               <FormField
                 control={form.control}
                 name="preferredBreakfastFoods"
