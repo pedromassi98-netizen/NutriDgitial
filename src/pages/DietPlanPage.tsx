@@ -461,8 +461,9 @@ const DietPlanPage = () => {
 
           <Separator className="my-6 bg-border" />
 
-          <div className="text-center text-muted-foreground text-sm">
+          <div className="text-center text-muted-foreground text-sm space-y-2">
             <p>Lembre-se: Este é um plano sugerido. Consulte um profissional de saúde para um acompanhamento personalizado.</p>
+            <p>Recomendamos revisar sua dieta a cada 2 a 3 meses para garantir que continue trazendo resultados.</p>
           </div>
         </CardContent>
         <div className="p-6 space-y-4">
