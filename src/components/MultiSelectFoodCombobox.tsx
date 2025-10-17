@@ -23,7 +23,7 @@ interface MultiSelectFoodComboboxProps {
   placeholder?: string;
   label?: string;
   mealTypeFilter?: FoodItem['mealTypes'][number];
-  categoryFilter?: FoodItem['category']; // Nova prop para filtrar por categoria
+  categoryFilter?: FoodItem['category'] | FoodItem['category'][]; // Alterado para aceitar string ou array de strings
 }
 
 const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
@@ -32,7 +32,7 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   placeholder = "Selecione alimentos...",
   label,
   mealTypeFilter,
-  categoryFilter, // Usar a nova prop
+  categoryFilter,
 }) => {
   const [open, setOpen] = React.useState(false);
   const [selectedFoods, setSelectedFoods] = React.useState<string[]>(value);
@@ -44,8 +44,6 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
   const handleSelect = (foodId: string) => {
     let newSelection: string[];
 
-    // A opção 'none_fruits' não deve mais aparecer, então esta lógica é simplificada.
-    // Se o usuário selecionar uma fruta, ela é adicionada/removida normalmente.
     if (selectedFoods.includes(foodId)) {
       newSelection = selectedFoods.filter((id) => id !== foodId);
     } else {
@@ -77,8 +75,16 @@ const MultiSelectFoodCombobox: React.FC<MultiSelectFoodComboboxProps> = ({
         return false;
       }
       // Filtra por categoria se especificado
-      if (categoryFilter && food.category !== categoryFilter) {
-        return false;
+      if (categoryFilter) {
+        if (Array.isArray(categoryFilter)) {
+          if (!categoryFilter.includes(food.category)) {
+            return false;
+          }
+        } else {
+          if (food.category !== categoryFilter) {
+            return false;
+          }
+        }
       }
       return true;
     })
