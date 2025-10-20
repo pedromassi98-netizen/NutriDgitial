@@ -147,7 +147,8 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     category: FoodItem['category'],
     mealType: FoodItem['mealTypes'][number],
     preferredIds: string[],
-    excludeIds: string[] = []
+    excludeIds: string[] = [],
+    requiredMacro: 'protein' | 'carbs' | 'fat' | null = null // New parameter
   ) => {
     let eligible = baseFoodList.filter(item => // Usar a baseFoodList filtrada aqui
       item.category === category &&
@@ -156,6 +157,14 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       item.unit !== 'a gosto' &&
       item.caloriesPer100g > 0
     );
+
+    if (requiredMacro === 'protein') {
+      eligible = eligible.filter(item => item.proteinPer100g > 0);
+    } else if (requiredMacro === 'carbs') {
+      eligible = eligible.filter(item => item.carbsPer100g > 0);
+    } else if (requiredMacro === 'fat') {
+      eligible = eligible.filter(item => item.fatPer100g > 0);
+    }
 
     const preferredItems = eligible.filter(item => preferredIds.includes(item.id));
     const otherItems = eligible.filter(item => !preferredIds.includes(item.id));
@@ -169,11 +178,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   let currentTotalCarbs = 0;
   let currentTotalFat = 0;
 
+  // Distribuição de macros e calorias por refeição (somando 1.0 para cada)
   const mealDistribution = {
-    breakfast: { calories: 0.20, protein: 0.20, carbs: 0.25, fat: 0.20 },
+    breakfast: { calories: 0.20, protein: 0.20, carbs: 0.20, fat: 0.20 },
     lunch: { calories: 0.35, protein: 0.35, carbs: 0.35, fat: 0.35 },
-    snack: { calories: 0.10, protein: 0.10, carbs: 0.10, fat: 0.10 },
-    dinner: { calories: 0.30, protein: 0.30, carbs: 0.25, fat: 0.30 },
+    snack: { calories: 0.15, protein: 0.15, carbs: 0.15, fat: 0.15 },
+    dinner: { calories: 0.30, protein: 0.30, carbs: 0.30, fat: 0.30 },
   };
 
   const mealTimes = [
@@ -221,14 +231,15 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // --- 1. Adicionar Proteína Principal e suas substituições ---
-    let availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], mealConfig.preferred, addedFoodIds);
+    let availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], mealConfig.preferred, addedFoodIds, 'protein');
     if (availableProteins.length === 0) {
       console.warn(`No suitable protein found for ${mealConfig.name} based on preferences. Falling back to any protein.`);
-      availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds); // Get any protein
+      availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds, 'protein'); // Get any protein
     }
     if (availableProteins.length > 0) {
       const proteinItem = availableProteins[0]; // Pick the first available as primary
-      const gramsNeededForProtein = (mealTargetProtein / (proteinItem.proteinPer100g / 100)) * 0.8; // Base on protein macro target
+      // Aim for 100% of mealTargetProtein from this item
+      const gramsNeededForProtein = (mealTargetProtein / (proteinItem.proteinPer100g / 100)); 
 
       let primaryProteinQuantityForDisplay = proteinItem.defaultQuantity; // Default to item's default
       let primaryProteinActualGrams = proteinItem.defaultQuantity;
@@ -258,14 +269,15 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // --- 2. Adicionar Carboidrato Principal e suas substituições ---
-    let availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], mealConfig.preferred, addedFoodIds);
+    let availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], mealConfig.preferred, addedFoodIds, 'carbs');
     if (availableCarbs.length === 0) {
       console.warn(`No suitable carb found for ${mealConfig.name} based on preferences. Falling back to any carb.`);
-      availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds); // Get any carb
+      availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds, 'carbs'); // Get any carb
     }
     if (availableCarbs.length > 0) {
       const carbItem = availableCarbs[0]; // Pick the first available as primary
-      const gramsNeededForCarb = (mealTargetCarbs / (carbItem.carbsPer100g / 100)) * 0.8; // Base on carb macro target
+      // Aim for 100% of mealTargetCarbs from this item
+      const gramsNeededForCarb = (mealTargetCarbs / (carbItem.carbsPer100g / 100));
 
       let primaryCarbQuantityForDisplay = carbItem.defaultQuantity;
       let primaryCarbActualGrams = carbItem.defaultQuantity;
@@ -310,6 +322,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
         const itemProtein = (foodItem.proteinPer100g / 100) * quantityToAdd;
         const itemCarbs = (foodItem.carbsPer100g / 100) * quantityToAdd;
 
+        // Only add if it doesn't significantly overshoot the meal's macro targets
         if (meal.totalMealCalories + itemCalories < mealTargetCalories * 1.2 &&
             meal.totalMealProtein + itemProtein < mealTargetProtein * 1.5 &&
             meal.totalMealCarbs + itemCarbs < mealTargetCarbs * 1.5) {
@@ -319,52 +332,36 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     });
 
     // --- 4. Adicionar Gordura Saudável (priorizando as preferidas) ---
-    const eligiblePreferredFats = getEligibleFoodsForCategory('fat', mealConfig.key as FoodItem['mealTypes'][number], preferredFatFoodIds, addedFoodIds);
+    const eligiblePreferredFats = getEligibleFoodsForCategory('fat', mealConfig.key as FoodItem['mealTypes'][number], preferredFatFoodIds, addedFoodIds, 'fat');
 
     if (eligiblePreferredFats.length > 0 && meal.totalMealFat < mealTargetFat * 0.9) {
       const fatItem = eligiblePreferredFats[Math.floor(Math.random() * eligiblePreferredFats.length)];
-      const remainingFatCalories = mealTargetFat * 0.9 - meal.totalMealFat;
-      const quantityForCalculation = (remainingFatCalories / (fatItem.fatPer100g / 100)) * 0.5;
+      // Calculate remaining fat needed to reach mealTargetFat, considering existing fat
+      const remainingFatGrams = mealTargetFat - meal.totalMealFat;
       
-      if (quantityForCalculation > 0) {
-        addItemToMeal(meal, fatItem, Math.max(fatItem.defaultQuantity, Math.round(quantityForCalculation)), [], addedFoodIds);
+      if (remainingFatGrams > 0 && fatItem.fatPer100g > 0) {
+        const gramsNeededForFat = (remainingFatGrams / (fatItem.fatPer100g / 100));
+        // Ensure a minimum quantity, but don't overshoot too much
+        const quantityToAdd = Math.max(fatItem.defaultQuantity, Math.round(gramsNeededForFat));
+        addItemToMeal(meal, fatItem, quantityToAdd, [], addedFoodIds);
       }
     }
 
     // --- 5. Adicionar Frutas (APENAS para Café da manhã e Lanche, com limite de 2 por dia) ---
     if ((mealConfig.key === 'breakfast' || mealConfig.key === 'snack') && fruitsAddedToday < 2) {
-      const eligibleFruits = getEligibleFoodsForCategory('fruit', mealConfig.key as FoodItem['mealTypes'][number], preferredFruitFoodIds, addedFoodIds);
+      const eligibleFruits = getEligibleFoodsForCategory('fruit', mealConfig.key as FoodItem['mealTypes'][number], preferredFruitFoodIds, addedFoodIds, 'carbs'); // Fruits are primarily carbs
 
-      // Tenta adicionar frutas preferidas primeiro
       for (const fruitItem of eligibleFruits) {
         if (fruitsAddedToday >= 2) break;
 
         const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
+        const estimatedFruitCarbs = (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity;
+
+        // Only add if it doesn't significantly overshoot the meal's calorie/carb targets
         if (meal.totalMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
-            meal.totalMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
+            meal.totalMealCarbs + estimatedFruitCarbs < mealTargetCarbs * 1.1) {
           addItemToMeal(meal, fruitItem, fruitItem.defaultQuantity, [], addedFoodIds);
           fruitsAddedToday++;
-        }
-      }
-
-      // Se menos de 2 frutas foram adicionadas, tenta adicionar frutas de fallback
-      if (fruitsAddedToday < 2) {
-        const fallbackFruits = baseFoodList.filter(item => // Usar a baseFoodList filtrada aqui
-          item.category === 'fruit' &&
-          item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
-          !addedFoodIds.includes(item.id) &&
-          item.caloriesPer100g > 0
-        );
-
-        for (const fruitItem of fallbackFruits) {
-          if (fruitsAddedToday >= 2) break;
-
-          const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
-          if (meal.totalMealCalories + estimatedFruitCalories < mealTargetCalories * 1.1 &&
-              meal.totalMealCarbs + (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity < mealTargetCarbs * 1.1) {
-            addItemToMeal(meal, fruitItem, fruitItem.defaultQuantity, [], addedFoodIds);
-            fruitsAddedToday++;
-          }
         }
       }
     }
@@ -382,6 +379,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     currentTotalCarbs += meal.totalMealCarbs;
     currentTotalFat += meal.totalMealFat;
   }
+
+  // DEBUG: Final values before returning
+  console.log("DEBUG: Final currentTotalCalories:", currentTotalCalories);
+  console.log("DEBUG: Final currentTotalProtein:", currentTotalProtein);
+  console.log("DEBUG: Final currentTotalCarbs:", currentTotalCarbs);
+  console.log("DEBUG: Final currentTotalFat:", currentTotalFat);
 
   return {
     meals,

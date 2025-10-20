@@ -18,12 +18,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas"; // Corrigido aqui
+import html2canvas from "html2canvas";
 import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, CheckCircle2, Lightbulb, Leaf, Coffee } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator";
-// Removido import { getSupplementRecommendations, RecommendedSupplement } from "@/utils/supplementationCalculations";
-import { cn } from "@/lib/utils"; // Importar cn para classes condicionais
+import { cn } from "@/lib/utils";
 
 const DietPlanPage = () => {
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ const DietPlanPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
-  // Removido [recommendedSupplements, setRecommendedSupplements] = useState<RecommendedSupplement[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -74,6 +72,7 @@ const DietPlanPage = () => {
           return;
         }
 
+        console.log("DEBUG: Generated Plan from dietGenerator:", generatedPlan); // Log para depuração
         setDietPlan(generatedPlan.meals);
         setTotalCalories(generatedPlan.totalCalories);
         setTotalProtein(generatedPlan.protein);
@@ -82,9 +81,6 @@ const DietPlanPage = () => {
 
         const requiredWater = (calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000).toFixed(1);
         setWaterIntake(requiredWater);
-
-        // Removido a chamada para getSupplementRecommendations
-        // setRecommendedSupplements(supplements);
 
         setLoading(false);
       } catch (e: any) {
@@ -106,7 +102,6 @@ const DietPlanPage = () => {
     console.log("DietPlanPage - current waterIntake state:", waterIntake);
     console.log("DietPlanPage - current loading state:", loading);
     console.log("DietPlanPage - current error state:", error);
-    // Removido console.log para recommendedSupplements
   }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error]);
 
   const generatePdf = async () => {
@@ -306,22 +301,22 @@ const DietPlanPage = () => {
             <CardContent className="p-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-muted/30 rounded-lg p-3 text-center shadow-sm">
                 <span className="text-sm font-medium text-gray-600 dark:text-muted-foreground">Calorias</span>
-                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalCalories}</span>
+                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalCalories ?? 0}</span>
                 <span className="text-xs text-gray-500 dark:text-muted-foreground">kcal</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-muted/30 rounded-lg p-3 text-center shadow-sm">
                 <span className="text-sm font-medium text-gray-600 dark:text-muted-foreground">Proteína</span>
-                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalProtein}</span>
+                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalProtein ?? 0}</span>
                 <span className="text-xs text-gray-500 dark:text-muted-foreground">g</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-muted/30 rounded-lg p-3 text-center shadow-sm">
                 <span className="text-sm font-medium text-gray-600 dark:text-muted-foreground">Carboidratos</span>
-                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalCarbs}</span>
+                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalCarbs ?? 0}</span>
                 <span className="text-xs text-gray-500 dark:text-muted-foreground">g</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-muted/30 rounded-lg p-3 text-center shadow-sm">
                 <span className="text-sm font-medium text-gray-600 dark:text-muted-foreground">Gorduras</span>
-                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalFat}</span>
+                <span className="text-xl font-bold text-accent-green dark:text-accent-green">{totalFat ?? 0}</span>
                 <span className="text-xs text-gray-500 dark:text-muted-foreground">g</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-muted/30 rounded-lg p-3 text-center shadow-sm">
@@ -384,8 +379,6 @@ const DietPlanPage = () => {
               </Card>
             ))}
           </div>
-
-          {/* Seção de Suplementação Recomendada removida */}
 
           {/* Nova Seção de Dicas */}
           <Separator className="my-6 bg-border" />
