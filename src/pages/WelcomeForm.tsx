@@ -20,7 +20,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { User, Mail, Phone } from "lucide-react";
@@ -120,9 +119,8 @@ const WelcomeForm = () => {
       </Card>
       <div className="mt-8 p-4 max-w-md mx-auto text-center text-white text-sm">
         <p className="font-bold mb-1">Aviso Importante</p>
-        <p>Este aplicativo utiliza inteligência artificial para gerar sugestões de dietas e não substitui o acompanhamento de um nutricionista, médico ou outro profissional de saúde qualificado. As informações fornecidas são apenas para fins educacionais e informativos. Não devem ser interpretadas como aconselhamento médico, diagnóstico ou tratamento. Antes de iniciar qualquer dieta ou fazer mudanças significativas em sua alimentação, consulte um profissional de saúde, especialmente se você tiver condições médicas pré-existentes, alergias alimentares, estiver grávida ou amamentando. Ao usar este aplicativo, você reconhece e concorda que assume total responsabilidade por suas escolhas alimentares e de saúde.</p>
+        <p>Este aplicativo utiliza inteligência artificial para gerar sugestões de dietas e não substitui o acompanhamento de um nutricionista, médico ou outro profissional de saúde qualificado. As informações fornecidas são apenas para fins educacionais e informativas. Não devem ser interpretadas como aconselhamento médico, diagnóstico ou tratamento. Antes de iniciar qualquer dieta ou fazer mudanças significativas em sua alimentação, consulte um profissional de saúde, especialmente se você tiver condições médicas pré-existentes, alergias alimentares, estiver grávida ou amamentando. Ao usar este aplicativo, você reconhece e concorda que assume total responsabilidade por suas escolhas alimentares e de saúde.</p>
       </div>
-      <MadeWithDyad />
     </div>
   );
 };
