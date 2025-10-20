@@ -18,7 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
-import html2canvas from "html22canvas";
+import html2canvas from "html2canvas"; // Corrigido aqui
 import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, CheckCircle2, Lightbulb, Leaf, Coffee } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator";
@@ -76,9 +76,9 @@ const DietPlanPage = () => {
 
         setDietPlan(generatedPlan.meals);
         setTotalCalories(generatedPlan.totalCalories);
-        setTotalProtein(generatedPlan.totalProtein);
-        setTotalCarbs(generatedPlan.totalCarbs);
-        setTotalFat(generatedPlan.totalFat);
+        setTotalProtein(generatedPlan.protein);
+        setTotalCarbs(generatedPlan.carbs);
+        setTotalFat(generatedPlan.fat);
 
         const requiredWater = (calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000).toFixed(1);
         setWaterIntake(requiredWater);
