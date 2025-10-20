@@ -107,16 +107,23 @@ export const calculateTDEE = (bmr: number, trainingLevel: UserActivityFormData['
 };
 
 export const adjustCaloriesForGoal = (tdee: number, goal: UserGoalsFormData['goal']): number => {
+  let adjustedCalories = tdee;
   switch (goal) {
     case "weight_loss":
-      return tdee - 500; // Aim for ~0.5kg/week loss
+      adjustedCalories = tdee - 500; // Aim for ~0.5kg/week loss
+      break;
     case "muscle_gain":
-      return tdee + 300; // Aim for muscle gain
+      adjustedCalories = tdee + 300; // Aim for muscle gain
+      break;
     case "maintenance":
     case "healthy_eating":
     default:
-      return tdee;
+      adjustedCalories = tdee;
+      break;
   }
+  // Ensure a minimum calorie intake, e.g., 1200 for women, 1500 for men, or a general safe minimum
+  // This prevents calorie targets from going too low, which can lead to health issues and macro calculation errors.
+  return Math.max(1200, adjustedCalories); // Using a general safe minimum of 1200 kcal
 };
 
 export const calculateWaterIntake = (weight: number, trainingLevel: UserActivityFormData['trainingLevel']): number => {
