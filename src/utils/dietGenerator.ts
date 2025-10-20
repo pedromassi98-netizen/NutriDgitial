@@ -244,8 +244,8 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       const primaryProteinTotalCalories = (proteinItem.caloriesPer100g / 100) * primaryProteinActualGrams;
 
       const substitutionsForProtein: string[] = [];
-      // Use all available proteins (excluding the primary one) for substitutions
-      availableProteins.slice(1).forEach(substitute => {
+      // Use all available proteins (excluding the primary one) for substitutions, limited to 3
+      availableProteins.slice(1).slice(0, 3).forEach(substitute => { // LIMITADO A 3 SUBSTITUIÇÕES
         const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, primaryProteinTotalCalories);
         if (adjustedDetails) {
           substitutionsForProtein.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
@@ -281,8 +281,8 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
       const primaryCarbTotalCalories = (carbItem.caloriesPer100g / 100) * primaryCarbActualGrams;
 
       const substitutionsForCarb: string[] = [];
-      // Use all available carbs (excluding the primary one) for substitutions
-      availableCarbs.slice(1).forEach(substitute => {
+      // Use all available carbs (excluding the primary one) for substitutions, limited to 3
+      availableCarbs.slice(1).slice(0, 3).forEach(substitute => { // LIMITADO A 3 SUBSTITUIÇÕES
         const adjustedDetails = calculateAdjustedQuantityAndDetails(substitute, primaryCarbTotalCalories);
         if (adjustedDetails) {
           substitutionsForCarb.push(`${substitute.name} (${adjustedDetails.displayQuantity})`);
