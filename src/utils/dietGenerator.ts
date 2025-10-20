@@ -123,14 +123,33 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
   const preferredFruitFoodIds = getPreferredFoodIds(foodPreferences.preferredFruits);
   const preferredFatFoodIds = getPreferredFoodIds(foodPreferences.preferredFats);
 
+  // --- Lógica de Filtragem de Alimentos com base nas Restrições e Alimentos Não Gostados ---
+  const rawRestrictions = foodPreferences.dietaryRestrictions?.toLowerCase() || "";
+  const isGlutenFreeRequired = rawRestrictions.includes("glúten") || rawRestrictions.includes("gluten") || rawRestrictions.includes("sem glúten");
+  const isLactoseFreeRequired = rawRestrictions.includes("lactose") || rawRestrictions.includes("sem lactose");
+  const dislikedFoodIds = foodPreferences.dislikedFoods || [];
+
+  const baseFoodList = foodDatabase.filter(food => {
+    if (isGlutenFreeRequired && food.isGlutenFree === false) {
+      return false;
+    }
+    if (isLactoseFreeRequired && food.isLactoseFree === false) {
+      return false;
+    }
+    if (dislikedFoodIds.includes(food.id)) {
+      return false;
+    }
+    return true;
+  });
+
   // Helper function to get eligible foods for a category, prioritizing preferred ones
   const getEligibleFoodsForCategory = (
     category: FoodItem['category'],
     mealType: FoodItem['mealTypes'][number],
-    preferredIds: string[], // This now correctly expects string[]
+    preferredIds: string[],
     excludeIds: string[] = []
   ) => {
-    let eligible = foodDatabase.filter(item =>
+    let eligible = baseFoodList.filter(item => // Usar a baseFoodList filtrada aqui
       item.category === category &&
       item.mealTypes.includes(mealType) &&
       !excludeIds.includes(item.id) &&
@@ -276,7 +295,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     }
 
     // --- 3. Adicionar Leguminosas e Laticínios (se preferidos e não adicionados como proteína/carb principal) ---
-    const additionalPreferredFoods = foodDatabase.filter(item =>
+    const additionalPreferredFoods = baseFoodList.filter(item => // Usar a baseFoodList filtrada aqui
       (mealConfig.preferred.includes(item.id)) &&
       (item.category === 'legume' || item.category === 'dairy') &&
       item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
@@ -330,7 +349,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
 
       // Se menos de 2 frutas foram adicionadas, tenta adicionar frutas de fallback
       if (fruitsAddedToday < 2) {
-        const fallbackFruits = foodDatabase.filter(item =>
+        const fallbackFruits = baseFoodList.filter(item => // Usar a baseFoodList filtrada aqui
           item.category === 'fruit' &&
           item.mealTypes.includes(mealConfig.key as FoodItem['mealTypes'][number]) &&
           !addedFoodIds.includes(item.id) &&
