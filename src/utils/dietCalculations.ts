@@ -36,13 +36,7 @@ const dailyRoutineFormSchema = z.object({
   sleepTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Por favor, insira um horário válido (HH:MM)."),
 });
 
-const userSupplementationFormSchema = z.object({
-  usesSupplements: z.enum(["yes", "no"]),
-  currentSupplements: z.array(z.string()).optional(),
-  wantsToToUseSupplements: z.enum(["yes", "no"]).optional(),
-  supplementationGoals: z.array(z.string()).optional(),
-  otherSupplementationGoals: z.string().optional(),
-});
+// Removido userSupplementationFormSchema
 
 const userFoodPreferencesFormSchema = z.object({
   preferredBreakfastFoods: z.array(z.string()).optional(),
@@ -59,7 +53,7 @@ export type UserProfileFormData = z.infer<typeof userProfileFormSchema>;
 export type UserActivityFormData = z.infer<typeof userActivityFormSchema>;
 export type UserGoalsFormData = z.infer<typeof userGoalsFormSchema>;
 export type DailyRoutineFormData = z.infer<typeof dailyRoutineFormSchema>;
-export type UserSupplementationFormData = z.infer<typeof userSupplementationFormSchema>;
+// Removido export type UserSupplementationFormData
 export type UserFoodPreferencesFormData = z.infer<typeof userFoodPreferencesFormSchema>;
 
 export interface AllFormData {
@@ -68,7 +62,7 @@ export interface AllFormData {
   activity?: UserActivityFormData;
   goals?: UserGoalsFormData;
   routine?: DailyRoutineFormData;
-  supplementation?: UserSupplementationFormData;
+  // Removido supplementation?: UserSupplementationFormData;
   foodPreferences?: UserFoodPreferencesFormData;
 }
 

@@ -11,9 +11,9 @@ const routeToStepMap: { [key: string]: number } = {
   "/activity": 2,
   "/goals": 3,
   "/daily-routine": 4,
-  "/supplementation": 5,
-  "/food-preferences": 6,
-  "/diet-plan": 7,
+  // "/supplementation": 5, // Removido
+  "/food-preferences": 5, // Preferências alimentares agora é o passo 5
+  "/diet-plan": 6, // Diet Plan agora é o passo 6
 };
 
 const ProgressBar = ({ totalSteps }: ProgressBarProps) => {

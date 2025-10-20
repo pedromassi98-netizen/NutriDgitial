@@ -54,7 +54,7 @@ const DailyRoutineForm = () => {
     const currentData: AllFormData = JSON.parse(localStorage.getItem("nutriDigitalFormData") || "{}");
     localStorage.setItem("nutriDigitalFormData", JSON.stringify({ ...currentData, routine: values }));
 
-    navigate("/supplementation");
+    navigate("/food-preferences"); // Navega diretamente para preferências alimentares
   }
 
   return (

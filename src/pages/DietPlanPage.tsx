@@ -20,10 +20,10 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, Pill, CheckCircle2, Lightbulb, Leaf, Coffee } from "lucide-react";
+import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, CheckCircle2, Lightbulb, Leaf, Coffee } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator";
-import { getSupplementRecommendations, RecommendedSupplement } from "@/utils/supplementationCalculations";
+// Removido import { getSupplementRecommendations, RecommendedSupplement } from "@/utils/supplementationCalculations";
 import { cn } from "@/lib/utils"; // Importar cn para classes condicionais
 
 const DietPlanPage = () => {
@@ -33,12 +33,12 @@ const DietPlanPage = () => {
   const [totalProtein, setTotalProtein] = useState<number | null>(null);
   const [totalCarbs, setTotalCarbs] = useState<number | null>(null);
   const [totalFat, setTotalFat] = useState<number | null>(null);
-  const [waterIntake, setWaterIntake] = useState<string | null>(null); // Alterado para string
-  const [loading, setLoading] = useState(true); // Initial data loading
+  const [waterIntake, setWaterIntake] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false); // New state for PDF generation
-  const [isSendingEmail, setIsSendingEmail] = useState(false); // New state for email sending
-  const [recommendedSupplements, setRecommendedSupplements] = useState<RecommendedSupplement[]>([]);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  // Removido [recommendedSupplements, setRecommendedSupplements] = useState<RecommendedSupplement[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -56,7 +56,7 @@ const DietPlanPage = () => {
 
         const formData: AllFormData = JSON.parse(storedData);
 
-        const { welcome, profile, activity, goals, routine, supplementation, foodPreferences } = formData;
+        const { welcome, profile, activity, goals, routine, foodPreferences } = formData;
 
         if (!welcome || !profile || !activity || !goals || !routine || !foodPreferences) {
           setError("Dados incompletos para gerar a dieta. Por favor, preencha todos os formulários.");
@@ -81,11 +81,11 @@ const DietPlanPage = () => {
         setTotalCarbs(generatedPlan.totalCarbs);
         setTotalFat(generatedPlan.totalFat);
 
-        const requiredWater = (calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000).toFixed(1); // Usando toFixed(1)
+        const requiredWater = (calculateWaterIntake(profile.weight, activity.trainingLevel) / 1000).toFixed(1);
         setWaterIntake(requiredWater);
 
-        const supplements = getSupplementRecommendations(formData);
-        setRecommendedSupplements(supplements);
+        // Removido a chamada para getSupplementRecommendations
+        // setRecommendedSupplements(supplements);
 
         setLoading(false);
       } catch (e: any) {
@@ -107,8 +107,8 @@ const DietPlanPage = () => {
     console.log("DietPlanPage - current waterIntake state:", waterIntake);
     console.log("DietPlanPage - current loading state:", loading);
     console.log("DietPlanPage - current error state:", error);
-    console.log("DietPlanPage - current recommendedSupplements state:", recommendedSupplements);
-  }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error, recommendedSupplements]);
+    // Removido console.log para recommendedSupplements
+  }, [dietPlan, totalCalories, totalProtein, totalCarbs, totalFat, waterIntake, loading, error]);
 
   const generatePdf = async () => {
     if (!cardRef.current) return null;
@@ -388,36 +388,7 @@ const DietPlanPage = () => {
             ))}
           </div>
 
-          {recommendedSupplements.length > 0 && (
-            <>
-              <Separator className="my-6 bg-border" />
-              <h3 className="text-2xl font-bold text-center text-gray-800 dark:text-foreground mb-4 flex items-center justify-center">
-                <Pill className="size-6 mr-2 text-primary" /> Suplementação Recomendada
-              </h3>
-              <div className="space-y-4">
-                {recommendedSupplements.map((supp, index) => (
-                  <Card key={index} className="shadow-sm rounded-xl border bg-white dark:bg-card border-black dark:border-gray-700">
-                    <CardHeader className="bg-primary-subtle dark:bg-muted/50 p-4 rounded-t-xl">
-                      <CardTitle className="text-xl font-semibold text-gray-800 dark:text-foreground">{supp.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 space-y-2 text-gray-700 dark:text-muted-foreground">
-                      <p className="text-base">
-                        Dosagem: <span className="font-bold text-foreground dark:text-foreground">{supp.dosage}</span>
-                      </p>
-                      {supp.notes && (
-                        <p className="text-sm">
-                          Notas: {supp.notes}
-                        </p>
-                      )}
-                      <p className="text-sm">
-                        Razão: {supp.reason}
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </>
-          )}
+          {/* Seção de Suplementação Recomendada removida */}
 
           {/* Nova Seção de Dicas */}
           <Separator className="my-6 bg-border" />

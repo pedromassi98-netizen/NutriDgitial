@@ -66,10 +66,10 @@ const addItemToMeal = (
     displayQuantity = `${quantityForCalculation} ${foodItem.unit}`;
   } else if (foodItem.unit === 'g') {
     actualGrams = quantityForCalculation;
-    displayQuantity = `${actualGrams}g`;
+    displayQuantity = `${quantityForCalculation}g`;
   } else if (foodItem.unit === 'ml') {
     actualGrams = quantityForCalculation;
-    displayQuantity = `${actualGrams}ml`;
+    displayQuantity = `${quantityForCalculation}ml`;
   } else if (foodItem.unit === 'a gosto') {
     actualGrams = 0;
     displayQuantity = 'a gosto';
@@ -205,8 +205,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     let availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], mealConfig.preferred, addedFoodIds);
     if (availableProteins.length === 0) {
       console.warn(`No suitable protein found for ${mealConfig.name} based on preferences. Falling back to any protein.`);
-      // Fallback: get any protein for this meal type if no preferred ones are found
-      availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds);
+      availableProteins = getEligibleFoodsForCategory('protein', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds); // Get any protein
     }
     if (availableProteins.length > 0) {
       const proteinItem = availableProteins[0]; // Pick the first available as primary
@@ -243,8 +242,7 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     let availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], mealConfig.preferred, addedFoodIds);
     if (availableCarbs.length === 0) {
       console.warn(`No suitable carb found for ${mealConfig.name} based on preferences. Falling back to any carb.`);
-      // Fallback: get any carb for this meal type if no preferred ones are found
-      availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds);
+      availableCarbs = getEligibleFoodsForCategory('carb', mealConfig.key as FoodItem['mealTypes'][number], [], addedFoodIds); // Get any carb
     }
     if (availableCarbs.length > 0) {
       const carbItem = availableCarbs[0]; // Pick the first available as primary
