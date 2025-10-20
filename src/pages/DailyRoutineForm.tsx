@@ -20,7 +20,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Sun, Coffee, Utensils, Apple, Moon, Clock, Lightbulb, CheckCircle2 } from "lucide-react"; // Importar ícones
@@ -184,7 +183,6 @@ const DailyRoutineForm = () => {
           </Form>
         </CardContent>
       </Card>
-      <MadeWithDyad />
     </div>
   );
 };

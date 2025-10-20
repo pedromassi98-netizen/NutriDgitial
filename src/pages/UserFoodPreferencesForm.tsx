@@ -20,7 +20,6 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useNavigate } from "react-router-dom";
 import { AllFormData } from "@/utils/dietCalculations";
 import { Utensils, Coffee, Apple, Soup, Grape, Droplet, UtensilsCrossed } from "lucide-react";
@@ -57,7 +56,7 @@ const formSchema = z.object({
           hasProtein = true;
         }
         if (foodItem.category === 'carb') {
-          hasCarb = true;
+          hasCarB = true;
         }
       }
     }
@@ -279,7 +278,6 @@ const UserFoodPreferencesForm = () => {
           </Form>
         </CardContent>
       </Card>
-      <MadeWithDyad />
     </div>
   );
 };

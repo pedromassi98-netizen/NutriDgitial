@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import {
   AllFormData,
   calculateWaterIntake,
@@ -19,7 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import html2canvas from "html22canvas";
 import { UtensilsCrossed, Droplet, Download, Mail, Beef, Carrot, Apple, CheckCircle2, Lightbulb, Leaf, Coffee } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateDietPlan } from "@/utils/dietGenerator";
@@ -262,7 +261,6 @@ const DietPlanPage = () => {
             <p className="text-lg">Por favor, aguarde um momento.</p>
           </CardContent>
         </Card>
-        <MadeWithDyad />
       </div>
     );
   }
@@ -283,7 +281,6 @@ const DietPlanPage = () => {
             </Button>
           </CardContent>
         </Card>
-        <MadeWithDyad />
       </div>
     );
   }
@@ -459,7 +456,6 @@ const DietPlanPage = () => {
           </Button>
         </div>
       </Card>
-      <MadeWithDyad />
     </div>
   );
 };
