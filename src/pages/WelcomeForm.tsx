@@ -118,7 +118,7 @@ const WelcomeForm = () => {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="bg-warning p-4 rounded-b-xl text-warning-foreground text-sm text-left space-y-2">
+        <CardFooter className="bg-warning p-4 rounded-b-xl text-warning-foreground text-base text-left space-y-3">
           <h3 className="font-bold text-base mb-1">Aviso Importante</h3>
           <p>Este aplicativo utiliza inteligência artificial para gerar sugestões de dietas e não substitui o acompanhamento de um nutricionista, médico ou outro profissional de saúde qualificado.</p>
           <p>As informações fornecidas são apenas para fins educacionais e informativos. Não devem ser interpretadas como aconselhamento médico, diagnóstico ou tratamento.</p>
