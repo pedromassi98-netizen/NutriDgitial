@@ -332,10 +332,13 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
     });
 
     // --- 4. Adicionar Gordura Saudável (priorizando as preferidas) ---
-    const eligiblePreferredFats = getEligibleFoodsForCategory('fat', mealConfig.key as FoodItem['mealTypes'][number], preferredFatFoodIds, addedFoodIds, 'fat');
+    let eligiblePreferredFats = getEligibleFoodsForCategory('fat', mealConfig.key as FoodItem['mealTypes'][number], preferredFatFoodIds, addedFoodIds, 'fat');
 
     if (eligiblePreferredFats.length > 0 && meal.totalMealFat < mealTargetFat * 0.9) {
-      const fatItem = eligiblePreferredFats[Math.floor(Math.random() * eligiblePreferredFats.length)];
+      // Selecionar aleatoriamente entre as gorduras preferidas elegíveis
+      const randomIndex = Math.floor(Math.random() * eligiblePreferredFats.length);
+      const fatItem = eligiblePreferredFats[randomIndex];
+      
       // Calculate remaining fat needed to reach mealTargetFat, considering existing fat
       const remainingFatGrams = mealTargetFat - meal.totalMealFat;
       
@@ -349,10 +352,12 @@ export const generateDietPlan = (formData: AllFormData): { meals: Meal[], totalC
 
     // --- 5. Adicionar Frutas (APENAS para Café da manhã e Lanche, com limite de 2 por dia) ---
     if ((mealConfig.key === 'breakfast' || mealConfig.key === 'snack') && fruitsAddedToday < 2) {
-      const eligibleFruits = getEligibleFoodsForCategory('fruit', mealConfig.key as FoodItem['mealTypes'][number], preferredFruitFoodIds, addedFoodIds, 'carbs'); // Fruits are primarily carbs
-
-      for (const fruitItem of eligibleFruits) {
-        if (fruitsAddedToday >= 2) break;
+      let eligibleFruits = getEligibleFoodsForCategory('fruit', mealConfig.key as FoodItem['mealTypes'][number], preferredFruitFoodIds, addedFoodIds, 'carbs'); // Fruits are primarily carbs
+      
+      // Se houver frutas preferidas, priorize-as e selecione uma aleatoriamente
+      if (eligibleFruits.length > 0) {
+        const randomIndex = Math.floor(Math.random() * eligibleFruits.length);
+        const fruitItem = eligibleFruits[randomIndex];
 
         const estimatedFruitCalories = (fruitItem.caloriesPer100g / 100) * fruitItem.defaultQuantity;
         const estimatedFruitCarbs = (fruitItem.carbsPer100g / 100) * fruitItem.defaultQuantity;
