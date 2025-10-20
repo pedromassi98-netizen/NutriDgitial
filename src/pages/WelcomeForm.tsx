@@ -10,7 +10,6 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter, // Importar CardFooter
 } from "@/components/ui/card";
 import {
   Form,
@@ -118,14 +117,11 @@ const WelcomeForm = () => {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="bg-warning p-4 rounded-b-xl text-warning-foreground text-sm text-left space-y-2">
-          <h3 className="font-bold text-base mb-1">Aviso Importante</h3>
-          <p>Este aplicativo utiliza inteligência artificial para gerar sugestões de dietas e não substitui o acompanhamento de um nutricionista, médico ou outro profissional de saúde qualificado.</p>
-          <p>As informações fornecidas são apenas para fins educacionais e informativos. Não devem ser interpretadas como aconselhamento médico, diagnóstico ou tratamento.</p>
-          <p>Antes de iniciar qualquer dieta ou fazer mudanças significativas em sua alimentação, consulte um profissional de saúde, especialmente se você tiver condições médicas pré-existentes, alergias alimentares, estiver grávida ou amamentando.</p>
-          <p>Ao usar este aplicativo, você reconhece e concorda que assume total responsabilidade por suas escolhas alimentares e de saúde.</p>
-        </CardFooter>
       </Card>
+      <div className="mt-8 p-4 max-w-md mx-auto text-center text-white text-sm">
+        <p className="font-bold mb-1">Aviso Importante</p>
+        <p>Este aplicativo utiliza inteligência artificial para gerar sugestões de dietas e não substitui o acompanhamento de um nutricionista, médico ou outro profissional de saúde qualificado. As informações fornecidas são apenas para fins educacionais e informativos. Não devem ser interpretadas como aconselhamento médico, diagnóstico ou tratamento. Antes de iniciar qualquer dieta ou fazer mudanças significativas em sua alimentação, consulte um profissional de saúde, especialmente se você tiver condições médicas pré-existentes, alergias alimentares, estiver grávida ou amamentando. Ao usar este aplicativo, você reconhece e concorda que assume total responsabilidade por suas escolhas alimentares e de saúde.</p>
+      </div>
       <MadeWithDyad />
     </div>
   );
