@@ -56,7 +56,7 @@ const formSchema = z.object({
           hasProtein = true;
         }
         if (foodItem.category === 'carb') {
-          hasCarB = true;
+          hasCarb = true; // Corrigido de 'hasCarB' para 'hasCarb'
         }
       }
     }
